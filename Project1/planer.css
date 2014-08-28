@@ -1,0 +1,24 @@
+/*
+  Block Definitions
+*/
+
+header{
+	border: 3px solid #e860fc;
+	border-radius: 3px;
+	background-color: #a70e78;
+}
+
+/*
+  Class
+*/
+
+.menuContent{
+	font-style: Georgia;
+	background-color: #38FF6F;
+	border: 3px solid #e860fc;
+	border-radius: 3px;
+}
+
+/*
+  Id
+*/
