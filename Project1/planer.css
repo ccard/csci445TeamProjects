@@ -6,6 +6,8 @@ header{
 	border: 3px solid #e860fc;
 	border-radius: 3px;
 	background-color: #a70e78;
+	width: 80%;
+	height: 100px;
 }
 
 /*
@@ -19,6 +21,17 @@ header{
 	border-radius: 3px;
 }
 
+.menuBarItem{
+	background-color: #27CDE8;
+	border: 3px solid #e860fc;
+	border-radius: 3px;
+	float: left;
+}
+
 /*
   Id
 */
+
+#aboutPage{
+	font-style: "Times New Roman"
+}
