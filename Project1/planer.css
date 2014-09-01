@@ -2,10 +2,19 @@
   Block Definitions
 */
 
+body{
+	background: url("stainedglass.jpg");
+}
+
 header{
-	border: 3px solid #e860fc;
-	border-radius: 3px;
-	background-color: #a70e78;
+	border: 3px solid black;
+	border-top-right-radius: 15px;
+	border-top-left-radius: 15px;
+	background-color: rgba(255,169,0,0.9);
+	background-image: url("2color.png"),url("2color.png");
+	background-size: 100px 80px;
+	background-repeat: no-repeat;
+	background-position: left,right;
 	height: 100px;
 }
 
@@ -15,26 +24,33 @@ header{
 
 .menuContent{
 	font-style: Georgia;
-	background-color: #38FF6F;
-	border: 3px solid #e860fc;
+	background-color: rgba(255,255,255,0.9);
+	border: 3px solid black;
 	border-radius: 3px;
 }
 
 .menuBarItem{
-	background-color: #27CDE8;	border-radius: 3px;
+	background-color: rgba(255,169,0,0.9);;
 	float: left;
 	width: 50%;
+	border: 1px solid black;
 }
 
 /*
   Id
 */
+#headTitle{
+	text-align: center;
+	text-shadow: 5px 5px 5px #94BEFF;
+	font-size: 300%;
+}
 
 #menuBar{
-	background-color: #38FF6F;
+	background-color: rgba(255,169,0,0.9);;
 	z-index: 5;
-	border: 3px solid #e860fc;
-	border-radius: 3px;
+	font-size: 120%;
+	border-left: 3px solid black;
+	border-right: 3px solid black;
 }
 
 #menuBar:after{
@@ -62,7 +78,6 @@ header{
 
 #gamePage{
 	font-style: "Times New Roman";
-	width: 100px;
-	height: 100px;
+	
 	z-index: -1;
 }
