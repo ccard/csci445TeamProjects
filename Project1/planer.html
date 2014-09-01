@@ -26,6 +26,27 @@
 					var id = setInterval(frame,100);
 				}
 			}
+			function animateAbout(){
+				var gameDiv = document.getElementById('gamePage');
+				var aboutDiv = document.getElementById('aboutPage');
+				if(gameDiv.style.display != "none"){
+					gameDiv.style.display ="none";
+				}
+				if(aboutDiv.style.display == "none"){
+					aboutDiv.style.opacity = 0.0;
+					aboutDiv.style.display = "block";
+					var opacity = 0;
+					function frame(){
+						opacity += 0.1;
+						aboutDiv.style.opacity = opacity;
+						if(opacity == 1.0){
+							clearInterval(id);
+						}
+						
+					}
+					var id = setInterval(frame,100);
+				}
+			}
 		</script>
 	</head>
 	<body>
@@ -33,8 +54,8 @@
 			<header>
 			</header>
 			<nav id="menuBar">
-				<button class="menuBarItem" id="menuitem-about">About
-				<button class="menuBarItem" id="menuitem-game" onclick="animateGame()">Game
+				<button class="menuBarItem" id="menuitem-about" onclick="animateAbout()">About</button>
+				<button class="menuBarItem" id="menuitem-game" onclick="animateGame()">Game</button>
 			</nav>
 			
 			<div class="menuContent" id="aboutPage" >

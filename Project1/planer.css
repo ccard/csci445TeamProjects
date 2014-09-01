@@ -6,7 +6,6 @@ header{
 	border: 3px solid #e860fc;
 	border-radius: 3px;
 	background-color: #a70e78;
-	width: 80%;
 	height: 100px;
 }
 
@@ -22,20 +21,32 @@ header{
 }
 
 .menuBarItem{
-	background-color: #27CDE8;
-	border: 3px solid #e860fc;
-	border-radius: 3px;
+	background-color: #27CDE8;	border-radius: 3px;
 	float: left;
+	width: 50%;
 }
 
 /*
   Id
 */
 
+#menuBar{
+	background-color: #38FF6F;
+	z-index: 5;
+	border: 3px solid #e860fc;
+	border-radius: 3px;
+}
+
+#menuBar:after{
+	content: '';
+	display: inline-block;
+}
+
 #mainContainer{
-	width: 85%;
+	width: 80%;
 	margin-left: auto;
 	margin-right: auto;
+	position: relative;
 }
 
 #canvasContainer{
@@ -45,15 +56,13 @@ header{
 
 #aboutPage{
 	font-style: "Times New Roman";
-	width: 80%;
+	display: block;
+	z-index: -1;
 }
 
 #gamePage{
 	font-style: "Times New Roman";
 	width: 100px;
 	height: 100px;
-}
-
-#backGround{
 	z-index: -1;
 }
