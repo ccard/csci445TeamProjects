@@ -32,6 +32,22 @@ header{
   Id
 */
 
+#canvasContainer{
+	width: 500px;
+	height: 500px;
+}
+
 #aboutPage{
-	font-style: "Times New Roman"
+	font-style: "Times New Roman";
+	width: 80%;
+}
+
+#gamePage{
+	font-style: "Times New Roman";
+	width: 100px;
+	height: 100px;
+}
+
+#backGround{
+	z-index: -1;
 }
