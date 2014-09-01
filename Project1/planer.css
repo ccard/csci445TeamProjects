@@ -32,6 +32,12 @@ header{
   Id
 */
 
+#mainContainer{
+	width: 85%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 #canvasContainer{
 	width: 500px;
 	height: 500px;

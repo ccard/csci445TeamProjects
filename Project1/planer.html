@@ -28,22 +28,25 @@
 			}
 		</script>
 	</head>
-	<header>
-	</header>
-	<nav id="menuBar">
-		<button class="menuBarItem" id="menuitem-about">About
-		<button class="menuBarItem" id="menuitem-game" onclick="animateGame()">Game
-	</nav>
-	<div id="menuContentContainer">
-		<div class="menuContent" id="aboutPage" >
-			<p> This is our awsome game <br>  <br><br><br><br><br><br><br><br> Yah</p>
-		</div>
-		<div class="menuContent" id="gamePage" style="display: none;" >
-			<div class="menuBar" id="gameMenu">
+	<body>
+		<div id="mainContainer">
+			<header>
+			</header>
+			<nav id="menuBar">
+				<button class="menuBarItem" id="menuitem-about">About
+				<button class="menuBarItem" id="menuitem-game" onclick="animateGame()">Game
+			</nav>
+			
+			<div class="menuContent" id="aboutPage" >
+				<p> This is our awsome game <br>  <br><br><br><br><br><br><br><br> Yah</p>
 			</div>
-			<div id="canvasContainer">
-				<canvas id="gameArea"/>
+			<div class="menuContent" id="gamePage" style="display: none;" >
+				<div class="menuBar" id="gameMenu">
+				</div>
+				<div id="canvasContainer">
+					<canvas id="gameArea"/>
+				</div>
 			</div>
 		</div>
-	</div>
+	</body>
 </html>
