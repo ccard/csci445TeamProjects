@@ -1,73 +1,30 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>2 Color</title>
-		<metadata name="Authers" auther="Chris Card, Mike Hughes"/>
-		<link rel="stylesheet" type="text/css" href="planer.css"/>
-		<script language="javascript">
-			function animateGame(){
-				var gameDiv = document.getElementById('gamePage');
-				var aboutDiv = document.getElementById('aboutPage');
-				if(aboutDiv.style.display != "none"){
-					aboutDiv.style.display ="none";
-				}
-				if(gameDiv.style.display == "none"){
-					gameDiv.style.opacity = 0.0;
-					gameDiv.style.display = "block";
-					var opacity = 0;
-					function frame(){
-						opacity += 0.1;
-						gameDiv.style.opacity = opacity;
-						if(opacity == 1.0){
-							clearInterval(id);
-						}
-						
-					}
-					var id = setInterval(frame,100);
-				}
-			}
-			function animateAbout(){
-				var gameDiv = document.getElementById('gamePage');
-				var aboutDiv = document.getElementById('aboutPage');
-				if(gameDiv.style.display != "none"){
-					gameDiv.style.display ="none";
-				}
-				if(aboutDiv.style.display == "none"){
-					aboutDiv.style.opacity = 0.0;
-					aboutDiv.style.display = "block";
-					var opacity = 0;
-					function frame(){
-						opacity += 0.1;
-						aboutDiv.style.opacity = opacity;
-						if(opacity == 1.0){
-							clearInterval(id);
-						}
-						
-					}
-					var id = setInterval(frame,100);
-				}
-			}
-		</script>
-	</head>
-	<body>
-		<div id="mainContainer">
-			<header>
-			</header>
-			<nav id="menuBar">
-				<button class="menuBarItem" id="menuitem-about" onclick="animateAbout()">About</button>
-				<button class="menuBarItem" id="menuitem-game" onclick="animateGame()">Game</button>
-			</nav>
-			
-			<div class="menuContent" id="aboutPage" >
-				<p> This is our awsome game <br>  <br><br><br><br><br><br><br><br> Yah</p>
-			</div>
-			<div class="menuContent" id="gamePage" style="display: none;" >
-				<div class="menuBar" id="gameMenu">
-				</div>
-				<div id="canvasContainer">
-					<canvas id="gameArea"/>
-				</div>
-			</div>
-		</div>
-	</body>
+  <head>
+    <title>2 Color</title>
+    <metadata name="Authers" auther="Chris Card, Mike Hughes"/>
+    <link rel="stylesheet" type="text/css" href="planer.css"/>
+    <script src="planer.js" type="text/javascript" language="javascript"></script>
+  </head>
+  <body>
+    <div id="mainContainer">
+      <header>
+      </header>
+      <nav id="menuBar">
+        <button class="menuBarItem" id="menuitem-about" onclick="animateAbout()">About</button>
+        <button class="menuBarItem" id="menuitem-game" onclick="animateGame()">Game</button>
+      </nav>
+      
+      <div class="menuContent" id="aboutPage" >
+        <p> This is our awsome game <br>  <br><br><br><br><br><br><br><br> Yah</p>
+      </div>
+      <div class="menuContent" id="gamePage" style="display: none;" >
+        <div class="menuBar" id="gameMenu">
+        </div>
+        <div id="canvasContainer">
+          <canvas id="gameArea"/>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
