@@ -68,6 +68,15 @@ header{
 #canvasContainer{
 	width: 500px;
 	height: 500px;
+
+	width: 95%;
+	height: 95%;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-left: auto;
+	margin-right: auto;
+	position: relative;
+	z-index: 0;
 }
 
 #aboutPage{
@@ -80,4 +89,14 @@ header{
 	font-style: "Times New Roman";
 	
 	z-index: -1;
+}
+#canvasContainer {
+
+}
+#gameArea {
+    width: 100%;
+    height: 100%;
+    background-color: #000000;
+    overflow: scroll;
+    z-index: 1;
 }
