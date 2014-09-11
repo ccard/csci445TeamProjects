@@ -18,7 +18,7 @@ onload=genPointList;
 
 var maxX = 500;  //canvas dimensions. Figure out how to get these from the HTML page.
 var maxY = 500;
-var maxPoints = 4;
+var maxPoints = 3; // including 0, this is really 4 points
 
 // 
 var relativeSize=maxX/5;  // edges will be about this long in relation to maxX
@@ -62,7 +62,7 @@ function rand(min, max) {
 
 //decide how many points to generate: 3 to 6 points
 function numPointsToMake() {
-	var min=3;
+	var min=2;  // including 0, this is one more point than what min says.
 	return rand(min,maxPoints);
 }
 
@@ -125,7 +125,7 @@ function testPoints(point) {
 			// Draw the first point of the shape
 			ctx.moveTo(point[0].x,point[0].y); 
 
-			for(i = 1; i < point.length - 1; i++) {
+			for(i = 1; i < point.length ; i++) {
 			
 				ctx.lineTo(point[i].x,point[i].y);				
 			}
@@ -140,7 +140,7 @@ function testPoints(point) {
 			//https://developer.mozilla.org/en-US/docs/Drawing_text_using_a_canvas#fillText%28%29
 			ctx.font = "20pt Arial"
 			for(i = 0; i < point.length; i++) {
-				ctx.fillText("Point " + i + " x: " + point[i].x + ", y: " + point[i].y, 500, i * 50);			
+				ctx.fillText("Point " + (i +1) + " x: " + point[i].x + ", y: " + point[i].y, 500, (i + 1) * 50);			
 
 			}
 
