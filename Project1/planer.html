@@ -12,11 +12,18 @@
         <h1 id="headTitle">2 Color Graph Game</h1>
       </header>
       <nav id="menuBar">
-        <button class="menuBarItem" id="menuitem-about" onclick="animateAbout()">About</button>
-        <button class="menuBarItem" id="menuitem-game" onclick="animateGame()">Game</button>
+        <div id="menuRow">
+        <div class="menuBarItem" id="menuitem-about" onclick="animateAbout()">
+          About
+        </div>
+        <!--<button class="menuBarItem" id="menuitem-about" onclick="animateAbout()">About</button>-->
+        <div class="menuBarItem" id="menuitem-game" onclick="animateGame()">
+          Game
+        </div>
+      </div>
       </nav>
       
-      <div class="menuContent" id="aboutPage" >
+      <div class="menuContent classShow" id="aboutPage" >
         <div id="aboutText">
           
           2 Color Graph is a single player game. You will be presented with a planer graph. A graph is planer if it can be drawn on a plane without graph edges crossing.<br>
@@ -34,7 +41,7 @@
         </div>
         <!-- End of importable section  -->
       </div>
-      <div class="menuContent" id="gamePage" style="display: none;">
+      <div class="menuContent classHide" id="gamePage">
         <div class="menuBar" id="gameMenu"> </div>
         <div id="canvasContainer">
           <canvas id="gameArea"/>
