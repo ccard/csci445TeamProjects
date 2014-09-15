@@ -28,6 +28,11 @@ function animateAbout() {
     }
 }
 
+window.onload = function(){
+    document.getElementById("mainContainer").classList.toggle('preload');
+    document.getElementById("mainContainer").classList.toggle('postload');
+};
+
 //TODO: init game and other functions to interact with html
 
 
