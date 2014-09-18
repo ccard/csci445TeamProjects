@@ -1,6 +1,12 @@
+/*
+    This function hides the about page and shows the game page
+    by triggering transitions when a class is added and removed.
+*/
 function animateGame() {
     var gameDiv = document.getElementById('gamePage');
     var aboutDiv = document.getElementById('aboutPage');
+    //The styles in the css file are computed so this is how the code
+    //retrives those styles
     var aboutStyle = window.getComputedStyle(aboutDiv, null);
     var gameStyle = window.getComputedStyle(gameDiv, null);
     if (aboutStyle.visibility == "visible") {
@@ -9,10 +15,14 @@ function animateGame() {
     }
     if (gameStyle.visibility == "hidden") {
         gameDiv.classList.toggle('classHide');
-        gameDiv.classList.toggle('classShow');
+        gameDiv.classList.toggle('classShow'); //This triggers the transition that shows the gamepage
     }
 }
 
+/*
+    This functions hides the game page and shows the about page
+    by triggering transitions when a class is changed
+*/
 function animateAbout() {
     var gameDiv = document.getElementById('gamePage');
     var aboutDiv = document.getElementById('aboutPage');
@@ -28,6 +38,10 @@ function animateAbout() {
     }
 }
 
+/*
+    This binds the DOMs onload function to our own load function
+    that is called after the page is loaded by the browser
+*/
 window.onload = function(){
     document.getElementById("mainContainer").classList.toggle('preload');
     document.getElementById("mainContainer").classList.toggle('postload');

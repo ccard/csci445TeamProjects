@@ -6,47 +6,51 @@
     <link rel="stylesheet" type="text/css" href="Team16F14.css"/>
     <script src="Team16F14.js" type="text/javascript" language="javascript"></script>
   </head>
+
   <body>
     <div class="preload" id="mainContainer">
+      
       <header>
         <h1 id="headTitle">2 Color Graph Game</h1>
       </header>
+
       <nav id="menuBar">
         <div id="menuRow">
-        <div class="menuBarItem" id="menuitem-about" onclick="animateAbout()">
-          About
+          <div class="menuBarItem" id="menuitem-about" onclick="animateAbout()">
+            About
+          </div>
+          <!--<button class="menuBarItem" id="menuitem-about" onclick="animateAbout()">About</button>-->
+          <div class="menuBarItem" id="menuitem-game" onclick="animateGame()">
+            Game
+          </div>
         </div>
-        <!--<button class="menuBarItem" id="menuitem-about" onclick="animateAbout()">About</button>-->
-        <div class="menuBarItem" id="menuitem-game" onclick="animateGame()">
-          Game
-        </div>
-      </div>
       </nav>
       
       <div class="menuContent classShow" id="aboutPage" >
         <div id="aboutText">
-          
           2 Color Graph is a single player game. You will be presented with a planer graph. A graph is planer if it can be drawn on a plane without graph edges crossing.<br>
           <br>"A planer graph divides the plane into a set of regions, also called <i>faces.</i> Each region is bounded by a simple cuycle of the graph: the path bounding each region starts and ends at the same vertex and uses each edge only once. The number of edges in this boundary is the <i>degree</i> of the face." [Graph Coloring,8]<br>
           <br>Your task is to color the faces of the graph with two colors, where the same color can not be in adjacent cells. No, you don't need to use Euler's Graph Theorum to solve the puzzle, where Vertexs-Edges+Faces=2.  But, remembering <i>O</i>(|V|+|E|) might be useful.<br>
           <br>The planer graph is on one side of the screen and the available colors are on the other side. Left click on a chosen color and move it to the section of the graph where you want to place it.  <br>
           <br>
-          </div> <!-- end div id="aboutText" -->
-          <div id="aboutReferences">
-            <a href="http://www.personal.kent.edu/~rmuhamma/GraphTheory/MyGraphTheory/planarity.htm" target=”_blank”>Graph Planarity</a>
-            <a href="http://www.cs.cornell.edu/courses/cs3110/2009sp/recitations/rec22.html" target=”_blank”>Graph Algorithms</a>
-            <a href="https://courses.engr.illinois.edu/cs173/fa2010/lectures/planargraphs.pdf" target=”_blank”>Graph Coloring</a>
-            <a href="http://jeremykun.com/2011/07/14/graph-coloring-or-proof-by-crayon/" target=”_blank”>Paris in Crayon</a>
-          </div>
         </div>
-        <!-- End of importable section  -->
-      </div>
-      <div class="menuContent classHide" id="gamePage">
-        <div class="menuBar" id="gameMenu"> </div>
-        <div id="canvasContainer">
-          <canvas id="gameArea"/>
+
+        <div id="aboutReferences">
+          <a href="http://www.personal.kent.edu/~rmuhamma/GraphTheory/MyGraphTheory/planarity.htm" target=”_blank”>Graph Planarity</a>
+          <a href="http://www.cs.cornell.edu/courses/cs3110/2009sp/recitations/rec22.html" target=”_blank”>Graph Algorithms</a>
+          <a href="https://courses.engr.illinois.edu/cs173/fa2010/lectures/planargraphs.pdf" target=”_blank”>Graph Coloring</a>
+          <a href="http://jeremykun.com/2011/07/14/graph-coloring-or-proof-by-crayon/" target=”_blank”>Paris in Crayon</a>
         </div>
       </div>
     </div>
-  </body>
+
+    <div class="menuContent classHide" id="gamePage">
+      <div class="menuBar" id="gameMenu"> </div>
+      
+      <div id="canvasContainer">
+        <canvas id="gameArea"/>
+      </div>
+    </div>
+  </div>
+</body>
 </html>
