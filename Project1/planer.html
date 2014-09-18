@@ -2,10 +2,11 @@
 <html>
   <head>
     <title>2 Color</title>
-    <metadata name="Authors" auther="Chris Card, Mike Hughes"/>
+    <metadata name="Authors" author="Chris Card, Mike Hughes"/>
     <link rel="stylesheet" type="text/css" href="planer.css"/>
     <script src="planer.js" type="text/javascript" language="javascript"></script>
   </head>
+ 
   <body>
     <div id="mainContainer">
       <header>
@@ -35,6 +36,15 @@
         <!-- End of importable section  -->
       </div>
       <div class="menuContent" id="gamePage" style="display: none;">
+        <div id="gameMenu">
+          <div id="gameMenu-button-holder">
+            <button class="gameMenuButton-color" id="gameMenu-color-useBlue" onclick="useBlue()"/>
+            <button class="gameMenuButton-color" id="gameMenu-color-useRed" onclick="useRed()"/>
+            <button class="gameMenuButton-color" id="gameMenu-color-useWhite" onclick="useWhite()"/>
+            <button class="gameMenuButton" id="gameMenuButton-submit" onclick="submit()">submit</button>
+            <button class="gameMenuButton" id="gameMenuButton-reset" onclick="reset()">clear</button>
+          </div>
+        </div>
         <div class="menuBar" id="gameMenu"> </div>
         <div id="canvasContainer">
           <canvas id="gameArea"/>

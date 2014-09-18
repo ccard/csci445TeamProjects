@@ -41,6 +41,7 @@ function animateAbout(){
   }
 }
 
+
 //TODO: init game and other functions to interact with html
 
 
@@ -104,6 +105,7 @@ function GameRunner () {
        }
      };
   }
+
 
   //init mouse events
 
