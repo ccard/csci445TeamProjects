@@ -1,0 +1,153 @@
+/*
+  Block Definitions
+*/
+
+body{
+	background: url("stainedglass.jpg");
+}
+
+header{
+	border: 3px solid black;
+	border-top-right-radius: 15px;
+	border-top-left-radius: 15px;
+	background-color: rgba(255,169,0,0.9);
+	background-image: url("2color.png"),url("2color.png");
+	background-size: 100px 80px;
+	background-repeat: no-repeat;
+	background-position: left,right;
+	height: 100px;
+}
+
+/*
+  Class
+*/
+
+.preload{
+	max-width:0%;
+	/*visibility: hidden;*/
+}
+
+.postload{	
+	-webkit-animation: reveal 4s;
+	animation: reveal 4s;
+}
+
+@-webkit-keyframes reveal{
+	from{max-width: 0%;}
+	to {max-width: 100%;}
+}
+
+@keyframes reveal{
+	from{max-width: 0%;}
+	to {max-width: 100%;}
+}
+
+.menuContent{
+	font-style: Georgia;
+	background-color: rgba(255,255,255,0.9);
+	border: 3px solid black;
+	border-radius: 3px;
+	padding: 5px;
+	
+}
+
+.menuBarItem{
+	background-color: rgba(255,169,0,0.9);;
+	position: inline;
+	width: 50%;
+	border: 1px solid black;
+	text-align: center;
+}
+
+.classShow{
+	visibility: visible;
+	max-height: 1000px;
+	max-width: 100%;
+	-webkit-transition: max-height 0.5s linear,max-width 1s linear, visibility 0s;
+	-moz-transition: max-height 0.5s linear,max-width 1s linear, visibility 0s;
+	-ms-transition: max-height 0.5s linear,max-width 0.5s linear, visibility 0s;
+	transition: max-height 0.5s linesar,max-width 1s linear, visibility 0s;
+}
+
+.classHide{
+	position: absolute;
+	left: -10000px;
+	overflow: hidden;
+	max-height: 0px;
+	max-width: 0px;
+	visibility: hidden;
+	-webkit-transition: max-height 0.5s linear,max-width 0.5s linear, visibility 0s;
+	-moz-transition: max-height 0.5s linear,max-width 0.5s linear, visibility 0s;
+	-ms-transition: max-height 0.5s linear,max-width 0.5s linear, visibility 0s;
+	transition: max-height 0.5s linear,max-width 0.5s linear, visibility 0s;
+}
+
+
+/*
+  Id
+*/
+#headTitle{
+	text-align: center;
+	text-shadow: 5px 5px 5px #94BEFF;
+	font-size: 300%;
+}
+
+#menuBar{
+	background-color: rgba(255,169,0,0.9);;
+	z-index: 5;
+	font-size: 120%;
+	border-left: 2px solid black;
+	border-right: 2px solid black;
+	display: table;
+	width: 99.8%;
+}
+
+#menuRow{
+	display: table-row;
+}
+
+#menuitem-about{
+	display: table-cell;
+}
+#menuitem-game{
+	display: table-cell;
+}
+
+#mainContainer{
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+	position: relative;
+}
+
+#canvasContainer{
+
+	margin-top: 5px;
+	margin-bottom: 5px;
+	margin-right: auto;
+	margin-left: auto;
+	z-index: 0;
+	position: relative;
+}
+
+#aboutPage{
+	font-style: "Times New Roman";
+	font-size: 120%;
+	z-index: -1;
+	opacity: 0.99;
+}
+
+#gamePage{
+	font-style: "Times New Roman";
+	z-index: -1;
+	width: 79%;
+	margin-left: auto;
+	margin-right: auto;
+}
+#gameArea {
+    width: 500px;
+    height: 500px;
+    background-color: #000000;
+    overflow: scroll;
+    z-index: 1;
+}
