@@ -48,12 +48,15 @@ window.onload = function(){
 };
 
 //TODO: init game and other functions to interact with html
-
+function initGame(){
+    var game = GameRunner();
+}
 
 //Game controll
 function GameRunner() {
 
     var canvas = document.getElementById("gameArea");
+    canvas.getContext("2d").clearRect(0,0,canvas.width,canvas.height);
     var graphFaces = [];
 
     //TODO: functions for submit and clearing 
@@ -79,7 +82,7 @@ function GameRunner() {
                 if (this.points.length >= 3) {
                     var context = canvas.getContext("2d");
                     context.save();
-                    cotext.beginPath();
+                    context.beginPath();
                     context.fillStyle = this.c;
                     context.lineWidth = 2;
                     context.strokeStyle = "#000";
@@ -109,10 +112,21 @@ function GameRunner() {
                 }
             }
         };
+        return this;
     }
 
     //init mouse events
 
     //init board by random seed
+    var num_points = rand(2,3);
 
+    var points_list = genPointList(canvas.width,canvas.height,num_points);
+
+    for(i=0; i < points_list.length; i++){
+        graphFaces.push(graphFace(points_list[i],"#FFF"));
+    }
+
+    for (var i = graphFaces.length - 1; i >= 0; i--) {
+        graphFaces[i].renderFace(canvas);
+    };
 }

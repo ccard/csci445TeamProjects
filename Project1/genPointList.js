@@ -23,12 +23,13 @@ var maxY;
 var maxPoints = 2; // including 0, add 1 to this number
 var relativeSize = 2;  // scales down the shape, smaller number gives bigger shape
 
-var localTest = true;  // for drawing on a test canvas
+var localTest = false;  // for drawing on a test canvas
 
-function genPointList() {  
-	var canvas = document.getElementById("canvas");
-	canvas.addEventListener("mousedown", getPosition, false);
+function genPointList(width,height,nump) {  
+	//var canvas = document.getElementById("canvas");
+	//canvas.addEventListener("mousedown", getPosition, false);
 
+	var points_ret = []; //array of arrays with 3 points
 	do {  //do loop cycles through sets of points until a good set is made
 		var prePoint = [];		//holds presorted list of points
 		var prePoint1 = [];
@@ -36,13 +37,13 @@ function genPointList() {
 		var polyPoint = [];  	//sorted by Polygon shape
 		var numPoints;			//random number of points to make
 
-		maxX = canvas.width;  //canvas dimensions. 
-		maxY = canvas.height;		
+		maxX = width;  //canvas dimensions. 
+		maxY = height;		
 
 		numPoints = numPointsToMake();
 		
 		// generate an unsorted list of points
-		for (i=0; i <= numPoints; i++) {
+		for (i=0; i <= nump; i++) {
 			prePoint.push(new Point(randX(),randY()));	
 		}
 
@@ -51,11 +52,14 @@ function genPointList() {
 		sortedPoint.sort(sortPoints);//sortedPoint becomes the working list. "sortPoints" is a local function.
 		polyPoint = polySort(sortedPoint);   // local function
 
+		points_ret.push(polyPoint);
+
 	} while(badGeometry(polyPoint));
 
 	// show the array of points. 
 	//testPoints(sortedPoint);  //use a sort-By-X list
-	testPoints(polyPoint);		// use a poly-sorted list 
+	//testPoints(polyPoint);		// use a poly-sorted list 
+	return points_ret;
 
 // --------- Helper functions ------------
 } 
@@ -153,22 +157,22 @@ function polySort(inList) {
 
 function badGeometry(points) {
 	
-// 	var r1; var r2; var r3;
-// 	var good = false;
-// 	var x0=points[0].x; var y0=points[0].y;
-// 	var x1=points[1].x; var y1=points[1].y;
-// 	var x2=points[2].x; var y2=points[2].y;
+	var r1; var r2; var r3;
+	var good = false;
+	var x0=points[0].x; var y0=points[0].y;
+	var x1=points[1].x; var y1=points[1].y;
+	var x2=points[2].x; var y2=points[2].y;
 
-// 	var lenOne   = Math.sqrt(    Math.pow( ( x1 - x0 ), 2 ) + Math.pow( ( y1 - y0 ), 2 )   );
-// 	var lenTwo   = Math.sqrt(    Math.pow( ( x2 - x1 ), 2 ) + Math.pow( ( y2 - y1 ), 2 )   );
-// 	var lenThree = Math.sqrt(    Math.pow( ( x0 - x2 ), 2 ) + Math.pow( ( y0 - y2 ), 2 )   );
-// //if lenOne,  and lenTwo  and lenThree are within 50% of each other 
-// 	r1 = lenOne / lenTwo;
-// 	r2 = lenTwo / lenThree;
-// 	r3 = lenThree / lenOne;
-// if(       (r1 > .5) && (r1 < 2) && (r2 > .5) && (r2 < 2) && (r3 > .5) && (r3 < 2)                              ) {
-// 	return true;
-// }
+	var lenOne   = Math.sqrt(    Math.pow( ( x1 - x0 ), 2 ) + Math.pow( ( y1 - y0 ), 2 )   );
+	var lenTwo   = Math.sqrt(    Math.pow( ( x2 - x1 ), 2 ) + Math.pow( ( y2 - y1 ), 2 )   );
+	var lenThree = Math.sqrt(    Math.pow( ( x0 - x2 ), 2 ) + Math.pow( ( y0 - y2 ), 2 )   );
+//if lenOne,  and lenTwo  and lenThree are within 50% of each other 
+	r1 = lenOne / lenTwo;
+	r2 = lenTwo / lenThree;
+	r3 = lenThree / lenOne;
+if(       (r1 > .5) && (r1 < 2) && (r2 > .5) && (r2 < 2) && (r3 > .5) && (r3 < 2)                              ) {
+	return true;
+}
 
 //alert(" Line Length  1: " + lenOne.toFixed(0) + ", \n\r Line Length  2: " + lenTwo.toFixed(0) + ", \n\r Line Length  3; " + lenThree.toFixed(0) + ",\n\r Acceptable set?  " + good);
 
@@ -176,11 +180,8 @@ function badGeometry(points) {
 
 }
 
-function clearCanvas(context, canvas) {
+function clearCanvas(context) {
   context.clearRect(0, 0, canvas.width, canvas.height);
-  var w = canvas.width;
-  canvas.width = 1;
-  canvas.width = w;
 }   
 
 function morethings() {  //have not tried these functions yet
@@ -248,19 +249,19 @@ function testPoints(point, polyPoint) {
 
 }
 
-// eventhandlers
-canvas.addEventListener("mousedown", getPosition, false);
+// // eventhandlers
+// canvas.addEventListener("mousedown", getPosition, false);
 
-function getPosition(event) {
+// function getPosition(event) {
 
-  var x = event.x;
-  var y = event.y;
+//   var x = event.x;
+//   var y = event.y;
 
-   x -= canvas.offsetLeft;
-  y -= canvas.offsetTop;
+//    x -= canvas.offsetLeft;
+//   y -= canvas.offsetTop;
 
-  alert("x:" + x + " y:" + y);
+//   alert("x:" + x + " y:" + y);
 
-}
+// }
 
 
