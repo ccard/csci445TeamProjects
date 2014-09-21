@@ -3,7 +3,17 @@ Mike Hughes
 John Phillips
 
 Features:
-We implemented many features in this project the first one we added was a css3 animation when the page is first loaded so the content looks like it is expanding from the center of the page. Another animation is when the about and game page buttons are clicked causing a css3 transition to happen causing the about and game divs to appear and expand out from the center of the page.
+We implemented many features in this project the first one we added was a css3 
+animation when the page is first loaded so the content looks like it is 
+expanding from the center of the page. Another animation is when the about and 
+game page buttons are clicked causing a css3 transition to happen causing the 
+about and game divs to appear and expand out from the center of the page.
 
 Challenges:
-There were many challenges in this project.  One of the challenges was to get the css animations and transitions to be triggered by javascript.  Originally we had these animations run through javascript but after a few switches between the about and game divs the animation would start to flicker.  So we found a way to this by switching the class on the html elements which triggered the css transitions. Another challenge that we came across was creating planer graph faces that where big enough to click in.
+There were many challenges in this project.  One of the challenges was to get 
+the css animations and transitions to be triggered by javascript.  Originally 
+we had these animations run through javascript but after a few switches between 
+the about and game divs the animation would start to flicker.  So we found a 
+way to this by switching the class on the html elements which triggered the css 
+transitions. Another challenge that we came across was creating planer graph 
+faces that where big enough to click in.
