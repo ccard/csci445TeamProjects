@@ -57,28 +57,28 @@ function animateAbout() {
   Listener function for the blue button. Changes the current color to blue.
 */
 function useBlue() {
-    window.game.faceColor = "#0000FF";
+    window.game.setFaceColor("#0000FF");
 }
 
 /*
  Listener function for the red button. Changes color to  red.
 */
 function useRed() {
-    window.game.faceColor = "#FF0000";
+    window.game.setFaceColor("#FF0000");
 }
 
 /*
  Listener funciton for white button. Changes color to white.
 */
 function useWhite() {
-    window.game.faceColor = "#FFFFFF";
+    window.game.setFaceColor("#FFFFFF");
 }
 
 /*
  Listener function for 'clear' button. Clears all faces.
 */
 function clearAll() {
-
+    window.game.clear();
 }
 
 /*
@@ -111,7 +111,9 @@ function GameRunner() {
     var graphFaces = [];
     //TODO: functions for submit and clearing 
     this.faceColor = "#FFFFFF";
-
+    this.setFaceColor = function(newColor) {
+        this.faceColor = newColor; 
+    }
     function graphFace(pointList, color) {
 
         /*
@@ -128,19 +130,20 @@ function GameRunner() {
         //both less than, 
         this.containsPoint = function(x, y) {
             //alert('this.points: ' + this.points);
-
+            var p = new Point(x, y);
             for(var i=0; i<this.points.length; ++i) {
                 var ijFirst = true;
                 var sign = 0;
+                var ip = Subtract(p, this.points[i]);
+
                 for(var j=0; j<this.points.length; ++j) {
                     if(j === i)
                         continue;
-
                     var ij = Subtract(this.points[j], this.points[i]);
-                    var p = new Point(x, y);
+
                     // alert('x, y: ' + x + ', ' + y);
                     // alert('j : ' + this.points[j].x + ', ' + this.points[j].y);
-                    var ip = Subtract(p, this.points[i]);
+
                     //alert('ip: ' + ip.x + ', ' + ip.y);
                     if(ijFirst) {
                         var crossValue = CrossZ(ij, ip);
@@ -167,6 +170,7 @@ function GameRunner() {
         };
 
         this.renderFace = function(canvas, color) {
+            this.c = color;
             if (canvas && this.points) {
                 if (this.points.length >= 3) {
                     var context = canvas.getContext("2d");
@@ -208,8 +212,14 @@ function GameRunner() {
             }
         };
         return this;
-    }
+    };
+    this.clear = function() {
+        this.faceColor = "#FFF";
+        for(var i=0; i<graphFaces.length; ++i) {
+            graphFaces[i].renderFace(canvas, this.faceColor);
+        }
 
+    }
 
     this.handleClick = function(event) {
         var canvas = document.getElementById("gameArea");
