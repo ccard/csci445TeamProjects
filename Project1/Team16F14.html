@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>2 Color</title>
-    <metadata name="Authors" auther="Chris Card, Mike Hughes"/>
-    <link rel="stylesheet" type="text/css" href="Team16F14.css"/>
-    <script src="Team16F14.js" type="text/javascript" language="javascript"></script>
-    <script src="genPointList.js" type="text/javascript" language="javascript"></script>
 
+  <head>
+    <script src="genPointList.js" type="text/javascript" language="javascript"></script>
+    <script src="Team16F14.js" type="text/javascript" language="javascript"></script>
+    <title>2 Color</title>
+    <metadata name="Authors" auther="Chris Card, Mike Hughes"></metadata>
+    <link rel="stylesheet" type="text/css" href="Team16F14.css"/>
   </head>
 
   <body>
@@ -36,29 +36,27 @@
           <br>The planer graph is on one side of the screen and the available colors are on the other side. Left click on a chosen color and move it to the section of the graph where you want to place it.  <br>
           <br>
         </div>
-
       </div>
-
+   
       <div class="menuContent classHide" id="gamePage">
         <div class="menuBar" id="gameMenu"> 
           <button class="gameMenuColorButton" id="blueButton" onclick="useBlue()"></button>
           <button class="gameMenuColorButton" id="redButton" onclick="useRed()"></button>
           <button class="gameMenuColorButton" id="whiteButton" onclick="useWhite()"></button>
-          <button class="gameMenuButton" id="newGameButton" onclick="newGame()">new game</button>
+          <button class="gameMenuButton" id="newGameButton" onclick="initGame()">new game</button>
           <button class="gameMenuButton" id="clearEverythingButton" onclick="clearAll()">clear</button>
-
         </div>
         <div id="canvasContainer">
           <canvas id="gameArea"/>
+        </div>       
         <div id="aboutReferences">
           <a href="http://www.personal.kent.edu/~rmuhamma/GraphTheory/MyGraphTheory/planarity.htm" target=”_blank”>Graph Planarity</a>
           <a href="http://www.cs.cornell.edu/courses/cs3110/2009sp/recitations/rec22.html" target=”_blank”>Graph Algorithms</a>
           <a href="https://courses.engr.illinois.edu/cs173/fa2010/lectures/planargraphs.pdf" target=”_blank”>Graph Coloring</a>
           <a href="http://jeremykun.com/2011/07/14/graph-coloring-or-proof-by-crayon/" target=”_blank”>Paris in Crayon</a>
         </div>
-      </div>
-    </div>
 
+    </div>
     <div class="menuContent classHide" id="gamePage">
       <div class="menuBar" id="gameMenu"> </div>
       <button onclick="initGame()" value="Break everything"></button>

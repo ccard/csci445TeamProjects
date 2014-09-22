@@ -20,6 +20,20 @@ function animateGame() {
 }
 
 /*
+ get the x, y offset of an html element.
+ Source: http://stackoverflow.com/questions/442404/retrieve-the-position-x-y-of-an-html-element
+*/
+function getOffset( el ) {
+    var _x = 0;
+    var _y = 0;
+    while( el && !isNaN( el.offsetLeft ) && !isNaN( el.offsetTop ) ) {
+        _x += el.offsetLeft - el.scrollLeft;
+        _y += el.offsetTop - el.scrollTop;
+        el = el.offsetParent;
+    }
+    return { top: _y, left: _x };
+}
+/*
     This functions hides the game page and shows the about page
     by triggering transitions when a class is changed
 */
@@ -43,21 +57,21 @@ function animateAbout() {
   Listener function for the blue button. Changes the current color to blue.
 */
 function useBlue() {
-    
+    window.game.faceColor = "#0000FF";
 }
 
 /*
  Listener function for the red button. Changes color to  red.
 */
 function useRed() {
-
+    window.game.faceColor = "#FF0000";
 }
 
 /*
  Listener funciton for white button. Changes color to white.
 */
 function useWhite() {
-
+    window.game.faceColor = "#FFFFFF";
 }
 
 /*
@@ -80,11 +94,11 @@ function newGame() {
 window.onload = function(){
     document.getElementById("mainContainer").classList.toggle('preload');
     document.getElementById("mainContainer").classList.toggle('postload');
-};
+}
 
 //TODO: init game and other functions to interact with html
 function initGame(){
-    var game = GameRunner();
+    window.game = GameRunner();
 }
 
 //Game controll
@@ -92,11 +106,11 @@ function GameRunner() {
 
 
     var canvas = document.getElementById("gameArea");
+
     canvas.getContext("2d").clearRect(0,0,canvas.width,canvas.height);
     var graphFaces = [];
-
     //TODO: functions for submit and clearing 
-
+    this.faceColor = "#FFFFFF";
 
     function graphFace(pointList, color) {
 
@@ -112,44 +126,73 @@ function GameRunner() {
 
         //basically if there is an x, y pair where they are
         //both less than, 
-        this.containsPoint = function(x, y, color, canvas) {
-            for(var i=  0; i<this.points.length; ++i) {
-                var sign = 1;
+        this.containsPoint = function(x, y) {
+            //alert('this.points: ' + this.points);
+
+            for(var i=0; i<this.points.length; ++i) {
+                var ijFirst = true;
+                var sign = 0;
                 for(var j=0; j<this.points.length; ++j) {
-                    if(j == i)
+                    if(j === i)
                         continue;
-                    var ij = Subtract(j, i);
-                    var ip = Subtract(Point(x, y), i);
-                    sign *= Cross(ij, pj);
+
+                    var ij = Subtract(this.points[j], this.points[i]);
+                    var p = new Point(x, y);
+                    // alert('x, y: ' + x + ', ' + y);
+                    // alert('j : ' + this.points[j].x + ', ' + this.points[j].y);
+                    var ip = Subtract(p, this.points[i]);
+                    //alert('ip: ' + ip.x + ', ' + ip.y);
+                    if(ijFirst) {
+                        var crossValue = CrossZ(ij, ip);
+                    } else {
+                        var crossValue = CrossZ(ip, ij);
+                    }
+                    ijFirst = !ijFirst;
+                    if(sign == 0) {
+                        // alert(' ij: ' + ij.x + ', ' + ij.y + ' ' + ij.z + ' ip: ' + ip.x + ', ' + ip.y + ', ' + ip.z + ' cross: ' + Cross(ij, ip));
+                        var sign = crossValue; 
+                    } else {
+                        // alert('sign: ' + sign + ' cross: ' + crossValue);
+                        if( (sign <0 && crossValue > 0) || (sign > 0 && crossValue < 0) ) {
+                            return false;
+                        }
+                    }
+
                 }
-                if(sign < 0) {
+/*                if( (sign < 0 && signAccum > 0) || (sign > 0 && signAccum < 0)) {
                     return false;
-                }
+                }*/
             }
             return true;
         };
 
-        this.renderFace = function(canvas) {
+        this.renderFace = function(canvas, color) {
             if (canvas && this.points) {
                 if (this.points.length >= 3) {
                     var context = canvas.getContext("2d");
                     context.save();
                     context.beginPath();
-                    context.fillStyle = this.c;
+                    context.fillStyle = color;
                     context.lineWidth = 2;
                     context.strokeStyle = "#000";
-                    for (var i = this.points.length - 1; i >= 0; i--) {
-                        context.moveTo(this.points[i].x, this.points[i].y);
-                        if (i === 0) {
+                    context.moveTo(this.points[0].x, this.points[0].y);
+                    for (var i = 1; i < this.points.length; ++i) {
+                        context.lineTo(this.points[i].x, this.points[i].y);
+
+                     /*   if (i === 0) {
                             context.lineTo(this.points[this.points.length - 1].x, this.points[this.points.length - 1].y);
                         } else {
                             context.lineTo(this.points[i - 1].x, this.points[i - 1].y);
-                        }
+                        }*/
                     }
-
+                    context.closePath();
                     context.stroke();
                     context.fill();
                     context.closePath();
+
+
+
+
 
                     context.fillStyle = "#000";
                     for (var i = this.points.length - 1; i >= 0; i--) {
@@ -160,17 +203,34 @@ function GameRunner() {
                         context.closePath();
                     }
 
-                    context.restore();
+                    //context.restore();
                 }
             }
         };
         return this;
     }
 
+
+    this.handleClick = function(event) {
+        var canvas = document.getElementById("gameArea");
+        var canvasOffset = getOffset(canvas);
+        var eventX = event.clientX;
+        var eventY = event.clientY;
+        //alert('client x,y: ' + eventX + ' ' + eventY);
+        var finalX = eventX - canvasOffset.left;
+        var finalY = eventY - canvasOffset.top;
+        //alert('final x, y: ' + finalX + ' ' + finalY);
+        for(var i=0; i<graphFaces.length; ++i) {
+            if(graphFaces[i].containsPoint(finalX, finalY)) {
+                graphFaces[i].renderFace(canvas, window.game.faceColor);
+            } 
+        }
+    }
     //init mouse events
+    canvas.addEventListener('click', this.handleClick);
 
     //init board by random seed
-    var num_points = rand(2,3);
+    var num_points = 3;//rand(2,3);
 
     var points_list = genPointList(canvas.width,canvas.height,num_points);
 
@@ -179,6 +239,7 @@ function GameRunner() {
     }
 
     for (var i = graphFaces.length - 1; i >= 0; i--) {
-        graphFaces[i].renderFace(canvas);
-    };
+        graphFaces[i].renderFace(canvas, this.faceColor);
+    }
+    return this;
 }

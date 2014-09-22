@@ -4,6 +4,7 @@
 
 body{
 	background: url("stainedglass.jpg");
+	z-index: -1;
 }
 
 header{
@@ -65,7 +66,7 @@ header{
 }
 
 .menuBarItem{
-	background-color: rgba(255,169,0,0.9);;
+	background-color: rgba(255,169,0,0.9);
 	position: inline;
 	width: 50%;
 	border: 1px solid black;
@@ -115,7 +116,7 @@ header{
 }
 
 #menuBar{
-	background-color: rgba(255,169,0,0.9);;
+	background-color: rgba(255,169,0,0.9);
 	z-index: 5;
 	font-size: 120%;
 	border-left: 2px solid black;
@@ -172,7 +173,7 @@ header{
 	width: 75px;
 	border-width: 2px;
 	border-style: solid;
-	z-index: -1;
+	z-index: 0;
 	height: 100%;
 }
 
