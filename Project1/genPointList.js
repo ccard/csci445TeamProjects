@@ -43,7 +43,7 @@ function genPointList(width,height,nump) {
 		numPoints = numPointsToMake();
 		
 		// generate an unsorted list of points
-		for (i=0; i <= nump; i++) {
+		for (i=0; i <= numPoints; i++) {
 			prePoint.push(new Point(randX(),randY()));	
 		}
 
@@ -64,11 +64,12 @@ function genPointList(width,height,nump) {
 // --------- Helper functions ------------
 } 
 
-function Cross(a, b) {
-    var x = a.x*b.z - a.z*b.y;
-    var y = -a.x*b.z + b.x*a.z;
+function CrossZ(a, b) {
+    //var x = a.x*b.z - a.z*b.y;
+    //var y = -a.x*b.z + b.x*a.z;
     var z = a.x*b.y - b.x*a.y;
-	return Point(x, y, z);
+    return z;
+	//return Math.sqrt(x*x + y*y + z*z);
 }
 
 /*
@@ -77,15 +78,18 @@ function Cross(a, b) {
 function Subtract(a, b) {
 	var x = a.x - b.x;
 	var y= a.y - b.y;
-	var z = a.z - b.z;
-	return Point(x, y, z);
-
+	return new Point(x, y);
 }
-function Point(x, y) {
 
+
+function Point(x, y) {
+	this.z = 0; //for cross products.
 	this.x = x;
 	this.y = y;
+	return this;
 }
+
+
 
 // random number generator that all the functions use
 function rand(min, max) {
@@ -95,7 +99,7 @@ function rand(min, max) {
 //decide how many points to generate: 3 to 6 points
 function numPointsToMake() {
 	var min=2;  // including 0, this is one more point than what min says.
-	return rand(min,maxPoints);
+	return 2;//rand(min,maxPoints);
 }
 
 
@@ -228,7 +232,6 @@ function testPoints(point, polyPoint) {
 			ctx.moveTo(point[0].x,point[0].y); 
 
 			for(i = 1; i < point.length ; i++) {
-			
 				ctx.lineTo(point[i].x,point[i].y);				
 			}
 
