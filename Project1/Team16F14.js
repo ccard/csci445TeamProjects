@@ -91,12 +91,15 @@ function initGame(){
 function GameRunner() {
 
 
-    var canvas = document.getElementById("gameArea");
+    canvas = document.getElementById("gameArea");
     canvas.getContext("2d").clearRect(0,0,canvas.width,canvas.height);
-    var graphFaces = [];
+    graphFaces = [];
 
     //TODO: functions for submit and clearing 
 
+    this.getGraphFaces = function (){
+        return this.graphFaces;
+    }
 
     function graphFace(pointList, color) {
 
@@ -108,7 +111,6 @@ function GameRunner() {
        */
         this.c = color;
         this.points = pointList;
-    
 
         //basically if there is an x, y pair where they are
         //both less than, 
@@ -178,7 +180,7 @@ function GameRunner() {
         graphFaces.push(graphFace(points_list[i],"#FFF"));
     }
 
-    for (var i = graphFaces.length - 1; i >= 0; i--) {
+    for (var i =graphFaces.length - 1; i >= 0; i--) {
         graphFaces[i].renderFace(canvas);
     };
 }

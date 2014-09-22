@@ -174,6 +174,7 @@ header{
 	border-style: solid;
 	z-index: -1;
 	height: 100%;
+	padding-left: 5px;
 }
 
 #aboutPage{
@@ -186,7 +187,7 @@ header{
 #gamePage{
 	font-style: "Times New Roman";
 	z-index: -1;
-	width: 79%;
+	width: 98.7%;
 	margin-left: auto;
 	margin-right: auto;
 }
@@ -217,8 +218,10 @@ header{
 }
 
 #gameArea {
-    
+    margin-left: 100px;
+    margin-right: auto;
     background-color: #fff;
     overflow: scroll;
     z-index: 1;
+    border: 2px solid #000;
 }
