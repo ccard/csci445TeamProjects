@@ -4,9 +4,26 @@
 <meta charset="UTF-8">
 	<title>Generate Points</title>
 	<script src="genPointList.js"></script>
+
+	 <style type="text/css">
+
+      #canvas{background-color: #000000;} 
+
+    </style>
+
 </head>
 <body>
+	
+
+	<button type="button" onclick="genPointList()">click me!</button>
+	<p id="status"></p>
+	<br><br>
 	<!-- Unless canvas size is specified default size is 300 w x 150 h -->
-	<canvas id="canvas" width="770" height="700" ></canvas>
+	<canvas id="canvas" width="770" height="700" 
+		style="border:1px solid #000000;">
+	</canvas>
+	
+
+	
 </body>
 </html>

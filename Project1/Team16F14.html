@@ -5,6 +5,7 @@
     <metadata name="Authors" auther="Chris Card, Mike Hughes"/>
     <link rel="stylesheet" type="text/css" href="Team16F14.css"/>
     <script src="Team16F14.js" type="text/javascript" language="javascript"></script>
+    <script src="genPointList.js" type="text/javascript" language="javascript"></script>
 
   </head>
 
@@ -60,9 +61,9 @@
 
     <div class="menuContent classHide" id="gamePage">
       <div class="menuBar" id="gameMenu"> </div>
-      
+      <button onclick="initGame()" value="Break everything"></button>
       <div id="canvasContainer">
-        <canvas id="gameArea"/>
+        <canvas id="gameArea" width="500px" height="500px"></canvas>
       </div>
     </div>
   </div>
