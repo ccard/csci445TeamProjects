@@ -17,3 +17,9 @@ the about and game divs the animation would start to flicker.  So we found a
 way to this by switching the class on the html elements which triggered the css 
 transitions. Another challenge that we came across was creating planer graph 
 faces that where big enough to click in.
+	After we click in those graph faces, we then have to determine if they 
+got clicked in, which involved some cross-product math. Javascript is also 
+a challenge since it is such a non-traditional language, the syntax is difficult
+to figure out. Also, with a modern web page with different styles and such, 
+sometimes z-indexes are hard to figure out, so you have to carefully organize
+z-indexes so the proper things register clicks. 
