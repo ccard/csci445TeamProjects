@@ -22,21 +22,34 @@ header{
   Class
 */
 
+/*
+ 	this classs hids the page content so when the page is initally loaded
+ 	by the browser the content is not shown
+*/
 .preload{
 	max-width:0%;
-	/*visibility: hidden;*/
 }
 
+/*
+	When this class is added to the main content page it sets up the 
+	animation so the page content expands after the page is loaded
+*/
 .postload{	
 	-webkit-animation: reveal 4s;
 	animation: reveal 4s;
 }
 
+/*
+	Defines the reveal animation for the main content in chrome,O,safari 
+*/
 @-webkit-keyframes reveal{
 	from{max-width: 0%;}
 	to {max-width: 100%;}
 }
 
+/*
+	defines the reveal animation for all other browsers
+*/
 @keyframes reveal{
 	from{max-width: 0%;}
 	to {max-width: 100%;}
@@ -44,7 +57,7 @@ header{
 
 .menuContent{
 	font-style: Georgia;
-	background-color: rgba(255,255,255,0.9);
+	background-color: rgba(255,255,255,0.9);/*This makes the background opaqiue not the content*/
 	border: 3px solid black;
 	border-radius: 3px;
 	padding: 5px;
@@ -59,6 +72,11 @@ header{
 	text-align: center;
 }
 
+/*
+	This sets up the css transition to show the content when the 
+	two menu buttons are clicked
+	and toggles this class 
+*/
 .classShow{
 	visibility: visible;
 	max-height: 1000px;
@@ -69,6 +87,10 @@ header{
 	transition: max-height 0.5s linesar,max-width 1s linear, visibility 0s;
 }
 
+/*
+	This sets up the transistion to hide the game page or the menu page when 
+	this class istoggled
+*/
 .classHide{
 	position: absolute;
 	left: -10000px;
@@ -102,6 +124,17 @@ header{
 	width: 99.8%;
 }
 
+#blueButton {
+	background-color: blue;
+}
+
+#redButton {
+	background-color: red;
+}
+
+#whiteButton {
+	background-color: white;
+}
 #menuRow{
 	display: table-row;
 }
@@ -130,6 +163,19 @@ header{
 	position: relative;
 }
 
+
+#gameMenu {
+	background-color: rgba(255,169,0,0.9);
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	width: 75px;
+	border-width: 2px;
+	border-style: solid;
+	z-index: -1;
+	height: 100%;
+}
+
 #aboutPage{
 	font-style: "Times New Roman";
 	font-size: 120%;
@@ -144,6 +190,32 @@ header{
 	margin-left: auto;
 	margin-right: auto;
 }
+
+.gameMenuColorButton {
+	height: 70px;
+	width: 70px;
+	border-style: solid;
+	border-width: 1px;
+	border-color:black;
+	box-shadow: none;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	text-shadow: 0px 0px;
+	z-index: 1;
+}
+.gameMenuButton {
+	height: 20px;
+	width: 70px;
+	border-style: solid;
+	border-width: 1px;
+	border-color:black;
+	box-shadow: none;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	text-shadow: 0px 0px;
+	z-index: 1;
+}
+
 #gameArea {
     width: 500px;
     height: 500px;

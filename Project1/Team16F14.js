@@ -1,6 +1,12 @@
+/*
+    This function hides the about page and shows the game page
+    by triggering transitions when a class is added and removed.
+*/
 function animateGame() {
     var gameDiv = document.getElementById('gamePage');
     var aboutDiv = document.getElementById('aboutPage');
+    //The styles in the css file are computed so this is how the code
+    //retrives those styles
     var aboutStyle = window.getComputedStyle(aboutDiv, null);
     var gameStyle = window.getComputedStyle(gameDiv, null);
     if (aboutStyle.visibility == "visible") {
@@ -9,10 +15,14 @@ function animateGame() {
     }
     if (gameStyle.visibility == "hidden") {
         gameDiv.classList.toggle('classHide');
-        gameDiv.classList.toggle('classShow');
+        gameDiv.classList.toggle('classShow'); //This triggers the transition that shows the gamepage
     }
 }
 
+/*
+    This functions hides the game page and shows the about page
+    by triggering transitions when a class is changed
+*/
 function animateAbout() {
     var gameDiv = document.getElementById('gamePage');
     var aboutDiv = document.getElementById('aboutPage');
@@ -28,6 +38,45 @@ function animateAbout() {
     }
 }
 
+
+/*
+  Listener function for the blue button. Changes the current color to blue.
+*/
+function useBlue() {
+    
+}
+
+/*
+ Listener function for the red button. Changes color to  red.
+*/
+function useRed() {
+
+}
+
+/*
+ Listener funciton for white button. Changes color to white.
+*/
+function useWhite() {
+
+}
+
+/*
+ Listener function for 'clear' button. Clears all faces.
+*/
+function clearAll() {
+
+}
+
+/*
+ Listener function for 'new game' button. Makes a new game. 
+*/
+function newGame() {
+
+}
+/*
+    This binds the DOMs onload function to our own load function
+    that is called after the page is loaded by the browser
+*/
 window.onload = function(){
     document.getElementById("mainContainer").classList.toggle('preload');
     document.getElementById("mainContainer").classList.toggle('postload');
@@ -38,6 +87,7 @@ window.onload = function(){
 
 //Game controll
 function GameRunner() {
+
 
     var canvas = document.getElementById("gameArea");
     var graphFaces = [];
@@ -52,12 +102,28 @@ function GameRunner() {
       pointlist point objects and has at least three points
 
       color is expected to to be a hex number i.e. #0f00ff
-    */
+       */
         this.c = color;
         this.points = pointList;
+    
 
+        //basically if there is an x, y pair where they are
+        //both less than, 
         this.containsPoint = function(x, y, color, canvas) {
-            // TODO: check if point is in a polygon
+            for(var i=  0; i<this.points.length; ++i) {
+                var sign = 1;
+                for(var j=0; j<this.points.length; ++j) {
+                    if(j == i)
+                        continue;
+                    var ij = Subtract(j, i);
+                    var ip = Subtract(Point(x, y), i);
+                    sign *= Cross(ij, pj);
+                }
+                if(sign < 0) {
+                    return false;
+                }
+            }
+            return true;
         };
 
         this.renderFace = function(canvas) {

@@ -50,7 +50,25 @@ function genPointList() {
 // --------- Helper functions ------------
 } 
 
+function Cross(a, b) {
+    var x = a.x*b.z - a.z*b.y;
+    var y = -a.x*b.z + b.x*a.z;
+    var z = a.x*b.y - b.x*a.y;
+	return Point(x, y, z);
+}
+
+/*
+ return a-b. so you get the vector ba.
+*/
+function Subtract(a, b) {
+	var x = a.x - b.x;
+	var y= a.y - b.y;
+	var z = a.z - b.z;
+	return Point(x, y, z);
+
+}
 function Point(x, y) {
+
 	this.x = x;
 	this.y = y;
 }

@@ -1,7 +1,7 @@
 function animateGame(){
   var gameDiv = document.getElementById('gamePage');
   var aboutDiv = document.getElementById('aboutPage');
-  if(aboutDiv.style.display != "none"){
+  if(aboutDiv.style.display != "none") {
     aboutDiv.style.display ="none";
   }
   if(gameDiv.style.display == "none"){
@@ -11,10 +11,9 @@ function animateGame(){
     function frame(){
       opacity += 0.1;
       gameDiv.style.opacity = opacity;
-      if(opacity == 1.0){
+      if(opacity == 1.0) {
         clearInterval(id);
       }
-      
     }
     var id = setInterval(frame,100);
   }
