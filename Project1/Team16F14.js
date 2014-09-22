@@ -104,7 +104,6 @@ function initGame(){
 //Game controll
 function GameRunner() {
 
-
     var canvas = document.getElementById("gameArea");
 
     canvas.getContext("2d").clearRect(0,0,canvas.width,canvas.height);
@@ -124,7 +123,6 @@ function GameRunner() {
        */
         this.c = color;
         this.points = pointList;
-    
 
         //basically if there is an x, y pair where they are
         //both less than, 
