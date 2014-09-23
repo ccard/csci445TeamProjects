@@ -7,7 +7,8 @@
 
 	 <style type="text/css">
 
-      #canvas{background-color: #000000;} 
+      #canvas{
+      	background-color: #000000; } 
 
     </style>
 
@@ -15,7 +16,9 @@
 <body>
 	
 
-	<button type="button" onclick="genPointList()">click me!</button>
+	<button type="button" onclick="genPointList(canvas.width, canvas.height, 5 )">click me!</button>
+
+
 	<p id="status"></p>
 	<br><br>
 	<!-- Unless canvas size is specified default size is 300 w x 150 h -->
