@@ -70,6 +70,24 @@ function genPointList(width,height, numShapes) {
 	return points_ret;
 
 } 
+
+function CrossZ(a, b) {
+    //var x = a.x*b.z - a.z*b.y;
+    //var y = -a.x*b.z + b.x*a.z;
+    var z = a.x*b.y - b.x*a.y;
+    return z;
+	//return Math.sqrt(x*x + y*y + z*z);
+}
+
+/*
+ return a-b. so you get the vector ba.
+*/
+function Subtract(a, b) {
+	var x = a.x - b.x;
+	var y= a.y - b.y;
+	return new Point(x, y);
+}
+
 // --------- Helper functions ------------
 
 function Point(x, y) {

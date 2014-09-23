@@ -190,10 +190,7 @@ function GameRunner() {
                     context.closePath();
                     context.stroke();
                     context.fill();
-                    context.closePath();
-
-
-
+                    //context.closePath();
 
 
                     context.fillStyle = "#000";
@@ -205,7 +202,7 @@ function GameRunner() {
                         context.closePath();
                     }
 
-                    //context.restore();
+                    context.restore();
                 }
             }
         };
@@ -243,7 +240,7 @@ function GameRunner() {
     var points_list = genPointList(canvas.width,canvas.height,num_points);
 
     for(i=0; i < points_list.length; i++){
-        graphFaces.push(graphFace(points_list[i],"#FFF"));
+        graphFaces.push(new graphFace(points_list[i],"#FFF"));
     }
 
     for (var i = graphFaces.length - 1; i >= 0; i--) {
