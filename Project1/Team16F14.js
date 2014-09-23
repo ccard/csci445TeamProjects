@@ -235,7 +235,7 @@ function GameRunner() {
     canvas.addEventListener('click', this.handleClick);
 
     //init board by random seed
-    var num_points = 3;//rand(2,3);
+    var num_points = rand(4,9);//rand(2,3);
 
     var points_list = genPointList(canvas.width,canvas.height,num_points);
 
