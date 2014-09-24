@@ -3,11 +3,14 @@ Mike Hughes
 John Phillips
 
 Features:
-We implemented many features in this project the first one we added was a css3 
+We implemented many features in this project. The first one we added was a css3 
 animation when the page is first loaded so the content looks like it is 
 expanding from the center of the page. Another animation is when the about and 
 game page buttons are clicked causing a css3 transition to happen causing the 
 about and game divs to appear and expand out from the center of the page.
+         Another feature is a unit-test of the shapes that were used during game
+development. The shapes could be tested before they were presented to the main 
+controller of the application.
 
 Challenges:
 There were many challenges in this project.  One of the challenges was to get 
@@ -23,3 +26,9 @@ a challenge since it is such a non-traditional language, the syntax is difficult
 to figure out. Also, with a modern web page with different styles and such, 
 sometimes z-indexes are hard to figure out, so you have to carefully organize
 z-indexes so the proper things register clicks. 
+        Another challenge was the shapes that would be presented to the player.
+The original plan was to use Voronoi diagrams. That was a bit much to do as a
+first Javascript program, so we tried polygon shapes, and then simple, 
+randomly generated, conected triangles. Next, we gave Linear Sweeps and 
+Fortune's algorithm a try. Our 11th hour solution was a set of pre-defined 
+points with a sliding window to pick different shapes. 
