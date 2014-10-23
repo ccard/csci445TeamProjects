@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
   <head>
     <script src="genPointList.js" type="text/javascript" language="javascript"></script>
     <script src="Team16F14.js" type="text/javascript" language="javascript"></script>
@@ -29,7 +28,7 @@
       <div class="menuContent classShow" id="aboutPage" >
         <div id="aboutText">
           2 Color Graph is a single player game. You will be presented with a planer graph. A graph is planer if it can be drawn on a plane without graph edges crossing.<br>
-          <br>"A planer graph divides the plane into a set of regions, also called <i>faces.</i> Each region is bounded by a simple cuycle of the graph: the path bounding each region starts and ends at the same vertex and uses each edge only once. The number of edges in this boundary is the <i>degree</i> of the face." [Graph Coloring,8]<br>
+          <br>"A planer graph divides the plane into a set of regions, also called <i>faces.</i> Each region is bounded by a simple cycle of the graph: the path bounding each region starts and ends at the same vertex and uses each edge only once. The number of edges in this boundary is the <i>degree</i> of the face." [Graph Coloring,8]<br>
           <br>Your task is to color the faces of the graph with two colors, where the same color can not be in adjacent cells. No, you don't need to use Euler's Graph Theorum to solve the puzzle, where Vertexs-Edges+Faces=2.  But, remembering <i>O</i>(|V|+|E|) might be useful.<br>
           <br>The planer graph is on one side of the screen and the available colors are on the other side. Left click on a chosen color and move it to the section of the graph where you want to place it.  <br>
           <br>
@@ -41,7 +40,7 @@
           <a href="http://jeremykun.com/2011/07/14/graph-coloring-or-proof-by-crayon/" target=”_blank”>Paris in Crayon</a>
         </div>
       </div>
-   
+      
       <div class="menuContent classHide" id="gamePage">
         <div class="menuBar" id="gameMenu">
           <button class="gameMenuColorButton" id="blueButton" onclick="useBlue()"></button>
@@ -51,9 +50,9 @@
           <button class="gameMenuButton" id="clearEverythingButton" onclick="clearAll()">clear</button>
         </div>
         <div id="instructions">
-          <p>Select a color from the menu on the left then click a triangle.  The goal is to 
-            color the graph with red and blue such that no two adjacent faces have the same color.
-          </p> 
+          <p>Select a color from the menu on the left then click a triangle.  The goal is to
+          color the graph with red and blue such that no two adjacent faces have the same color.
+          </p>
         </div>
         <div id="canvasContainer">
           <canvas id="gameArea" width="800px" height="400px"></canvas>
