@@ -22,7 +22,7 @@ Route::get('pets', function(){
 });
 
 Route::get('pets/type/dog', function(){
-	$dogs = Pet::where('specie_id',2);
+	$dogs = Pet::where('specie_id',2)->get();
 	return View::make('pets.dogs')->with('dogs', $dogs);
 });
 

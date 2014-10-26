@@ -26,7 +26,7 @@
 			<li><a href="{{url('pets/ordered')}}">Order by age</a></li>
 		</ui>
 	</div>
-</div>
+<!-- </div> -->
 @stop
 @section('footer')
 	<div class="text-center">
