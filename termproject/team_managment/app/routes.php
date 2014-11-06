@@ -13,5 +13,10 @@
 
 Route::get('/', function()
 {
-	return View::make('hello');
+	//Replace when authentication becomes available
+	return Redirect::to('home');
 });
+
+Route::get('home', function() {
+	return V
+})
