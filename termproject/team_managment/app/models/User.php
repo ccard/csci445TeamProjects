@@ -31,6 +31,10 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		return $this->password;
 	}
 
+	public function isAdmin(){
+		return $this->is_admin;
+	}
+
 	public function partnerPreferences(){
 		return $this->belongsToMany('PartnerPreferences');
 	}

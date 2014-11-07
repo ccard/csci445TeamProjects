@@ -29,8 +29,19 @@ Route::get('login', function(){
 });
 
 Route::get('home', function() {
-	//if admin vs regular user
-	return View::make('someview');
+	if (Auth::user()->isAdmin()){
+		return View::make('team_managment.adminhome');
+	else {
+		if(count(Auth::user()->projectPreferences())){
+			return View::make('userhome');
+		} else {
+			return Redirect::to('firstlogin')->with('method','post');
+		}
+	}
+});
+
+Route::get('firstlogin', function(){
+	return View::make('team_managment.firsttimelogin');
 });
 
 /*------------------------------------------------------------------------
@@ -44,3 +55,8 @@ Route::post('login',function(){
 		return Redirect::back()->withInput()->with('error',"Invalid credentials!");
 	}
 });
+
+Route::post('firstlogin',function(){
+	//perform inserts into appropriate tables etc
+	return Redirect::to('home')->with('message','Your info has been saved');
+})
