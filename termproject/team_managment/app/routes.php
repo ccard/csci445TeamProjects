@@ -11,12 +11,36 @@
 |
 */
 
+
+/*------------------------------------------------------------------------
+ Get routes
+*/
 Route::get('/', function()
 {
-	//Replace when authentication becomes available
-	return Redirect::to('home');
+	if(Auth::check()){
+		return Redirect::to('home');
+	} else {
+		return Redirect::to('login');
+	}
+});
+
+Route::get('login', function(){
+	return View::make('login');
 });
 
 Route::get('home', function() {
-	return V
-})
+	//if admin vs regular user
+	return View::make('someview');
+});
+
+/*------------------------------------------------------------------------
+ Post routes
+ */
+
+Route::post('login',function(){
+	if(Auth::attempt(Input::only('username','password'))){
+		return Redirect::intended('/');
+	} else {
+		return Redirect::back()->withInput()->with('error',"Invalid credentials!");
+	}
+});

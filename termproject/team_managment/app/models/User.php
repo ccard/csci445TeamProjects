@@ -32,7 +32,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	public function partnerPreferences(){
-		return $this->belongsToMany('PartnerPreferences')
+		return $this->belongsToMany('PartnerPreferences');
 	}
 
 	public function projectPreferences(){
