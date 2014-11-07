@@ -25,7 +25,7 @@ Route::get('/', function()
 });
 
 Route::get('login', function(){
-	return View::make('login');
+	return View::make('team_managment.login');
 });
 
 Route::get('home', function() {
