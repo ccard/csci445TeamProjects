@@ -30,7 +30,11 @@
 				{{{ Session::get('error') }}}
 			</div>
 			@endif
-			@yield('content')
+			@if(Auth::check())
+				@yield('content')
+			@else
+				@yield('nonauthcontent')
+			@endif
 		</div>
 	</body>
 </html>

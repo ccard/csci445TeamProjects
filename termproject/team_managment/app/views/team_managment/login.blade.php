@@ -1,8 +1,13 @@
 @extends('masterform')
 @section('subHeading')
-Welcome
+Welcome!
 @stop
 @section('formcontent')
+	<div class="alert alert-success">
+		You are already logged in please go to your <a href="{{url('/')}}" class="btn btn-link">home</a> page!
+	</div>
+@stop
+@section('nonauthformcontent')
 	{{ Form::open() }}
 	<div class="form-group">
 		{{Form::label('User name:')}} {{ Form::text('username', Input::old('username'), array('placeholder'=>'jdoe@mymail.mines.edu')) }}
