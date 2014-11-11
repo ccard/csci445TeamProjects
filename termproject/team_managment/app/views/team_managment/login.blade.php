@@ -9,12 +9,24 @@ Welcome!
 @stop
 @section('nonauthformcontent')
 	{{ Form::open() }}
-	<div class="form-group">
-		{{Form::label('User name:')}} {{ Form::text('username', Input::old('username'), array('placeholder'=>'jdoe@mymail.mines.edu')) }}
+	<div class="form-horizontal">
+		<div class="col-lg-2"></div>
+		<div class="form-group">
+			{{Form::label('User name:',null,array("class"=>"col-sm-2 control-label"))}} 
+			<div class="col-sm-5">
+				{{ Form::text('username', Input::old('username'), array('placeholder'=>'jdoe@mymail.mines.edu',"class"=>"form-control", 0=>'required')) }}
+			</div>
+		</div>
+		<div class="col-lg-2"></div>
+		<div class="form-group">
+			{{ Form::label('Password:',null,array("class"=>"col-sm-2 control-label")) }} 
+			<div class="col-sm-5">
+				{{ Form::password('password', array('placeholder' => 'placetext',"class"=>"form-control", 0=>'required')) }}
+			</div>
+		</div>
+		<div class="form-group text-center">
+		{{ Form::submit("Login" , array("class"=>"btn btn-primary")) }}
 	</div>
-	<div class="form-group">
-		{{ Form::label('Password:') }} {{ Form::password('password', array('placeholder' => 'placetext')) }}
+		{{ Form::close() }}
 	</div>
-	{{ Form::submit("Login" , array("class"=>"btn btn-primary")) }}
-	{{ Form::close() }}
 @stop
