@@ -22,7 +22,7 @@ Please fill out your information
 				</div>
 			</div>
 			<div class="form-group">
-				{{ Form::label('Relevent goals/experience',null,array("class"=>"col-sm-2 control-label")) }}
+				{{ Form::label('Relevent Goals/Experience',null,array("class"=>"col-sm-2 control-label")) }}
 				<div class="col-sm-10">
 					{{ Form::textarea('expirencetext', null, array('placeholder'=>'i.e. Programed alot',"class"=>"form-control", "rows"=>"3")) }}
 				</div>
@@ -37,19 +37,19 @@ Please fill out your information
 			<div class="form-group">
 				{{ Form::label('1st choice',null,array("class"=>"col-sm-2 control-label")) }}
 				<div class="col-sm-10">
-					{{ Form::select('1st_proj_id', $projoptions,null,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required')) }}
+					{{ Form::select('first_proj_id', $projoptions,null,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required')) }}
 				</div>
 			</div>
 			<div class="form-group">
 				{{ Form::label('2nd choice',null,array("class"=>"col-sm-2 control-label")) }}
 				<div class="col-sm-10">
-					{{ Form::select('2nd_proj_id', $projoptions,null,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required')) }}
+					{{ Form::select('second_proj_id', $projoptions,null,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required')) }}
 				</div>
 			</div>
 			<div class="form-group">
 				{{ Form::label('3rd choice',null,array("class"=>"col-sm-2 control-label")) }}
 				<div class="col-sm-10">
-					{{ Form::select('3rd_proj_id', $projoptions,null,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required')) }}
+					{{ Form::select('third_proj_id', $projoptions,null,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required')) }}
 				</div>
 			</div>
 		</div>
@@ -75,11 +75,11 @@ Please fill out your information
 			</div>
 			<div class="text-center row">
 				<div class="form-group checkbox-inline">
-					{{ Form::radio('prefs','disabled',array('id'=>'partner'))}}
+					{{ Form::radio('pref_part_or_proj','true')}}
 					{{ Form::label('partner','Prefer Partners',array("class"=>"control-label", "style"=>"margin-right: 15px")) }}
 				</div>
 				<div class="form-group checkbox-inline">
-					{{ Form::radio('prefs','enabled',true,array('id'=>'project'))}}
+					{{ Form::radio('pref_part_or_proj', 'false', true)}}
 					{{ Form::label('project','Prefer Project',array("class"=>"control-label")) }}
 				</div>
 			</div>

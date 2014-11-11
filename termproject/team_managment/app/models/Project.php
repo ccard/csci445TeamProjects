@@ -7,7 +7,7 @@
 	{
 		protected $fillable = array('title','company');
 		public $timestamps=false;
-		public function rojectPreferences(){
+		public function projectPreferences(){
 			return $this->belongsToMany('ProjectPreferences');
 		}
 

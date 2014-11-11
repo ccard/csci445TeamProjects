@@ -27,27 +27,6 @@ Route::get('login', function(){
 	return View::make('team_managment.login');
 });
 
-Route::get('home', function() {
-	if (Auth::user()->isAdmin()){
-		return View::make('team_managment.adminhome');
-	} else {
-		if(count(Auth::user()->projectPreferences())){
-			return View::make('team_managment.userhome');
-		} else {
-			return Redirect::to('home/firstlogin');//->with('method','put');
-		}
-	}
-});
-
-Route::get('home/firstlogin', function(){
-	//Pass in user information
-	return View::make('team_managment.firsttimelogin')->with('user',Auth::user())->with('method','post');
-});
-
-/*------------------------------------------------------------------------
- Post routes
- */
-
 Route::post('login',function(){
 	if(Auth::attempt(Input::only('username','password'))){
 		return Redirect::intended('/');
@@ -56,8 +35,43 @@ Route::post('login',function(){
 	}
 });
 
+Route::group(array('before'=>'auth'), function(){
+Route::get('home', function() {
+	if (Auth::user()->isAdmin()){
+		return View::make('team_managment.adminhome');
+	} else {
+		//If the user has no project preferences then they must be redirected to the firstogin page
+		if(count(Auth::user()->projectPreferences())){
+			$project = array(); //TODO: replace this with a query to database to get project name and all associted student names and emails
+			//in the form of array('projname'=>"name", 'members'=>array('email'=>"name"))
+			return View::make('team_managment.userhome')->with('user',Auth::user())->with('project',$project);
+		} else {
+			return Redirect::to('home/firstlogin');
+		}
+	}
+});
+
+Route::get('home/firstlogin', function(){
+	//Pass in user information to the form must be TODO make sure this works
+	return View::make('team_managment.firsttimelogin')->with('user',Auth::user())->with('method','put');
+});
+
+Route::get('home/accountinfo', function(){
+	if (Auth::user()->isAdmin()) {
+		return View::make('team_managment.adminaccount');
+	} else {
+		//TODO pass all relevent information to the user and admin account pages
+		return View::make('team_managment.useraccount');
+	}
+});
+
+/*------------------------------------------------------------------------
+ Post routes
+ */
+
+
 Route::put('home/firstlogin/{id}',function($id){
-	//perform inserts into appropriate tables etc
+	//TODO perform inserts into appropriate tables etc and perform input sanitation and validation
 	return Redirect::to('home')->with('message','Your info has been saved');
 });
 
@@ -72,4 +86,5 @@ View::composer('team_managment.firsttimelogin', function($view){
 	// 	$genre_options = array_combine(null,'Unspecified');
 	// }
 	$view->with('partneroptions',$partneroptions)->with('projoptions',$projectoptions);
+});
 });

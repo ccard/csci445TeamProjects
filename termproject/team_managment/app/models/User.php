@@ -23,6 +23,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	protected $hidden = array('password', 'remember_token');
 
+	protected $fillable = array('firstname','lastname','majortext','minortext','experience_id','projectpreference_id','pref_part_or_proj','project_id');
+
 	public function getAuthIdentifier() {
 		return $this->getKey();
 	}
@@ -39,15 +41,15 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		return $this->belongsToMany('PartnerPreferences');
 	}
 
-	public function projectPreferences(){
-		return $this->belongsToMany('ProjectPreferences');
+	public function projectpreference(){
+		return $this->belongsTo('ProjectPreferences');
 	}
 
 	public function project(){
 		return $this->belongsTo('ProjectTeam');
 	}
 
-	public function experiences(){
+	public function experience(){
 		return $this->hasOne('Experiences');
 	}
 
