@@ -11,7 +11,6 @@
 |
 */
 
-
 /*------------------------------------------------------------------------
  Get routes
 */
@@ -31,17 +30,18 @@ Route::get('login', function(){
 Route::get('home', function() {
 	if (Auth::user()->isAdmin()){
 		return View::make('team_managment.adminhome');
-	else {
+	} else {
 		if(count(Auth::user()->projectPreferences())){
-			return View::make('userhome');
+			return View::make('team_managment.userhome');
 		} else {
-			return Redirect::to('firstlogin')->with('method','post');
+			return Redirect::to('home/firstlogin');//->with('method','put');
 		}
 	}
 });
 
-Route::get('firstlogin', function(){
-	return View::make('team_managment.firsttimelogin');
+Route::get('home/firstlogin', function(){
+	//Pass in user information
+	return View::make('team_managment.firsttimelogin')->with('user',Auth::user())->with('method','post');
 });
 
 /*------------------------------------------------------------------------
@@ -56,7 +56,20 @@ Route::post('login',function(){
 	}
 });
 
-Route::post('firstlogin',function(){
+Route::put('home/firstlogin/{id}',function($id){
 	//perform inserts into appropriate tables etc
 	return Redirect::to('home')->with('message','Your info has been saved');
-})
+});
+
+//TODO: Replace this with the appropriate queries to get projects
+View::composer('team_managment.firsttimelogin', function($view){
+	//TODO: Replace with appropriate quires to the databse
+	$projectoptions = array_combine([1,2], ['test1','test2']);
+	$partneroptions = array_combine([1,2], ['test1','test2']);
+	// if(count($genres) > 0){
+	// 	$genre_options = array_combine($genres->lists('id'), $genres->lists('name'));
+	// } else {
+	// 	$genre_options = array_combine(null,'Unspecified');
+	// }
+	$view->with('partneroptions',$partneroptions)->with('projoptions',$projectoptions);
+});

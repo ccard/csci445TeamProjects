@@ -1,43 +1,97 @@
 @extends('masterform')
-
+@section('subHeading')
+Please fill out your information
+@stop
 @section('formcontent')
-	{{ Form::model(Auth::user(), array('method'=>$method, 'url'=>'firstlogin'))}}
-	<div class="content">
+	{{ Form::model($user, array('method'=>$method, 'url'=>'firstlogin/'.(Auth::check() ? $user->id : -1))) }}
+	<div class="content" style="margin-left: 10px">
 		<div class="page-header">
 			<h2>General Info</h2>
 		</div>
-		<div class="content">
+		<div class="content form-horizontal">
 			<div class="form-group">
-				{{ Form::label('Major') }} {{ Form::text('majortext', array('placeholder'=>'i.e. Computer Science')) }}
+				{{ Form::label('Major',null,array("class"=>"col-sm-2 control-label")) }}
+				<div class="col-sm-10">
+					{{ Form::text('majortext',null, array('placeholder'=>'i.e. Computer Science', "class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required')) }}
+				</div>
 			</div>
 			<div class="form-group">
-				{{ Form::label('Minor/ASI') }} {{ Form::text('minortext', array('placeholder'=>'i.e. Mathmatics')) }}
+				{{ Form::label('Minor/ASI',null,array("class"=>"col-sm-2 control-label")) }}
+				<div class="col-sm-10">
+					{{ Form::text('minortext',null, array('placeholder'=>'i.e. Mathmatics',"class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>	'bottom','title'=>'This is a required field', 0=>'required')) }}
+				</div>
 			</div>
 			<div class="form-group">
-				{{ Form::label('Relevent goals/experience') }} {{ Form::text('expirencetext', array('placeholder'=>'i.e. Programed alot')) }}
+				{{ Form::label('Relevent goals/experience',null,array("class"=>"col-sm-2 control-label")) }}
+				<div class="col-sm-10">
+					{{ Form::textarea('expirencetext', null, array('placeholder'=>'i.e. Programed alot',"class"=>"form-control", "rows"=>"3")) }}
+				</div>
 			</div>
 		</div>
 	</div>
-	<div class="content">
+	<div class="content" style="margin-left: 10px">
 		<div class="page-header">
 			<h2>Project Preferences</h2>
 		</div>
-		<div class="content">
+		<div class="content form-horizontal">
 			<div class="form-group">
-				{{ Form::label('1st choice') }} {{ Form::select('1st_proj_id', $projoptions) }}
+				{{ Form::label('1st choice',null,array("class"=>"col-sm-2 control-label")) }}
+				<div class="col-sm-10">
+					{{ Form::select('1st_proj_id', $projoptions,null,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required')) }}
+				</div>
 			</div>
 			<div class="form-group">
-				{{ Form::label('Minor/ASI') }} {{ Form::text('minortext', array('placeholder'=>'i.e. Mathmatics')) }}
+				{{ Form::label('2nd choice',null,array("class"=>"col-sm-2 control-label")) }}
+				<div class="col-sm-10">
+					{{ Form::select('2nd_proj_id', $projoptions,null,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required')) }}
+				</div>
 			</div>
 			<div class="form-group">
-				{{ Form::label('Relevent goals/experience') }} {{ Form::text('expirencetext', array('placeholder'=>'i.e. Programed alot')) }}
+				{{ Form::label('3rd choice',null,array("class"=>"col-sm-2 control-label")) }}
+				<div class="col-sm-10">
+					{{ Form::select('3rd_proj_id', $projoptions,null,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required')) }}
+				</div>
 			</div>
 		</div>
 	</div>
-@stop
-
-@section('nonauthformcontent')
-	<div class="alert alert-warning">
-		You are not logged in! Please <a href="{{url('/')}}" class="btn btn-link">login</a>
+	<div class="content" style="margin-left: 10px">
+		<div class="page-header">
+			<h2>Team Preferences</h2>
+		</div>
+		<div class="content form-horizontal">
+			<div class="row">
+				<div class="form-group col-lg-6">
+					{{ Form::label('Prefered Partners',null,array("class"=>"col-lg-2 control-label")) }}
+					<div class="col-lg-10">
+						{{ Form::select('pref_partner[]', $partneroptions,null,array('multiple'=>'multiple',"class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'Hold ctrl to select more than one person')) }}
+					</div>
+				</div>
+				<div class="form-group col-lg-6">
+					{{ Form::label('Dont want to work with',null,array("class"=>"col-lg-2 control-label")) }}
+					<div class="col-lg-10">
+						{{ Form::select('no_pref_partner[]', $partneroptions,null,array('multiple'=>'multiple',"class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'Hold ctrl to select more than one person')) }}
+					</div>
+				</div>
+			</div>
+			<div class="text-center row">
+				<div class="form-group checkbox-inline">
+					{{ Form::radio('prefs','disabled',array('id'=>'partner'))}}
+					{{ Form::label('partner','Prefer Partners',array("class"=>"control-label", "style"=>"margin-right: 15px")) }}
+				</div>
+				<div class="form-group checkbox-inline">
+					{{ Form::radio('prefs','enabled',true,array('id'=>'project'))}}
+					{{ Form::label('project','Prefer Project',array("class"=>"control-label")) }}
+				</div>
+			</div>
+		</div>
 	</div>
+	<div class="text-center">
+		{{ Form::submit("Save", array("class"=>"btn btn-primary","style"=>"margin-top: 20px")) }}
+	</div>
+	{{ Form::close() }}
+@stop
+@section('nonauthformcontent')
+<div class="alert alert-warning">
+	You are not logged in! Please <a href="{{url('/')}}" class="btn btn-link">login</a>
+</div>
 @stop
