@@ -3,7 +3,7 @@
 	/**
 	* 
 	*/
-	class ProjectTeam extends Eloquent
+	class Project extends Eloquent
 	{
 		protected $fillable = array('title','company');
 		public $timestamps=false;
