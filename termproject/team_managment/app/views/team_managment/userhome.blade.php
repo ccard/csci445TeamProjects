@@ -4,7 +4,7 @@
 	Your project information
 @stop
 @section('optionGroup')
-	<a class="btn btn-link" href="{{url(home/accountinfo)}}">Account Info </a>
+	<a class="btn btn-link" href="{{url('home/accountinfo')}}">Account Info </a>
 @stop
 
 @section('content')
