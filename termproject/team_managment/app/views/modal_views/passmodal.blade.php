@@ -7,6 +7,13 @@
 				Change password
 				</h3>
 			</div>
+			@if(empty($user))
+				<div class="modal-body" style="max-height: 75%">
+					<div class="alert alert-warning">
+						User information failed to load!
+					</div>
+				</div>
+			@else
 			<div class="modal-body" style="max-height: 75%">
 				<div class="content form-horizontal" >
 					{{ Form::model($user,array('method'=>'put', 'action'=>array('GenerateTeams@changePassword',$user))) }}
@@ -37,6 +44,7 @@
 				</div>
 				{{ Form::close() }}
 			</div>
+			@endif
 		</div>
 	</div>
 </div>
