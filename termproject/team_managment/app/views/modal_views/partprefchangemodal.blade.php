@@ -7,6 +7,13 @@
 				Edit Partner Preferences
 				</h3>
 			</div>
+			@if(empty($user) || empty($partneroptions) || empty($perferedchoice) || empty($avoidchoice))
+				<div class="modal-body" style="max-height: 75%">
+					<div class="alert alert-warning">
+						User information failed to load!
+					</div>
+				</div>
+			@else
 			<div class="modal-body" style="max-height: 75%">
 				<div class="content form-horizontal">
 					{{ Form::model($user,array('method'=>'put', 'action'=>array('GenerateTeams@changePartPref',$user)))}}
@@ -25,11 +32,11 @@
 						</div>
 						<div class="text-center row">
 							<div class="form-group checkbox-inline">
-								{{ Form::radio('pref_part_or_proj','true')}}
+								{{ Form::radio('pref_part_or_proj','true',($user->pref_part_or_proj == 1 ? true : null))}}
 								{{ Form::label('partner','Prefer Partners',array("class"=>"control-label", "style"=>"margin-right: 15px")) }}
 							</div>
 							<div class="form-group checkbox-inline">
-								{{ Form::radio('pref_part_or_proj', 'false', true)}}
+								{{ Form::radio('pref_part_or_proj', 'false', ($user->pref_part_or_proj == 0 ? true : null))}}
 								{{ Form::label('project','Prefer Project',array("class"=>"control-label")) }}
 							</div>
 						</div>
@@ -42,6 +49,7 @@
 				</div>
 				{{ Form::close() }}
 			</div>
+			@endif
 		</div>
 	</div>
 </div>
