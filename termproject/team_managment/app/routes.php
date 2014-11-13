@@ -66,7 +66,17 @@ Route::get('home/accountinfo', function(){
 	// } else {
 		//TODO pass all relevent information to the user and admin account pages
 		$user = Auth::user();
-		return View::make('team_managment.useraccount')->with('user',$user)->nest('passchange','modal_views.passmodal',array('user'=>$user));
+		$projectoptions = array_combine([1,2],['test1','test2']);//TODO replace with db query
+		$partneroptions = array_combine([1,2],['test1','test2']);//TODO replace with db query
+		$perferedchoice = array(1); //TODO replace with query from db
+		$avoidchoice = array(2); //TODO replace with query from db
+		return View::make('team_managment.useraccount')->with('user',$user)->with('partneroptions',$partneroptions)->with('perferedchoice',$perferedchoice)->with('avoidchoice',$avoidchoice)
+		->nest('passchange','modal_views.passmodal',array('user'=>$user))
+		->nest('namechange','modal_views.namechangmodal',array('user'=>$user))
+		->nest('degchange','modal_views.degchangemodal',array('user'=>$user))
+		->nest('expchange','modal_views.expchangemodal',array('user'=>$user))
+		->nest('projprefchange','modal_views.projprefchangemodal',array('user'=>$user,'projoptions'=>$projectoptions))
+		->nest('partprefchange','modal_views.partprefchangemodal',array('user'=>$user,'partneroptions'=>$partneroptions, 'perferedchoice'=>$perferedchoice, 'avoidchoice'=>$avoidchoice));
 	//}
 });
 
@@ -85,9 +95,19 @@ Route::put('home/firstlogin/{id}',function($id){
 	return Redirect::to('home')->with('message','Your info has been saved');
 });
 
-Route::post('home/generateteams','GenerateTeams@generateTeams'); //This will call the controller method generateTemas in GenerateTeams controller
+Route::put('home/generateteams','GenerateTeams@generateTeams'); //This will call the controller method generateTemas in GenerateTeams controller
 
-Route::post('home/accountinfo/passchange','GenerateTeams@changePassword'); //This will call the controller method changePassword in GenerateTeams controller
+Route::put('home/accountinfo/passchange','GenerateTeams@changePassword'); //This will call the controller method changePassword in GenerateTeams controller
+
+Route::put('home/accountinfo/passchange','GenerateTeams@changeName'); //This will call the controller method changeName in GenerateTeams controller
+
+Route::put('home/accountinfo/passchange','GenerateTeams@changeMajor'); //This will call the controller method changeMajor in GenerateTeams controller
+
+Route::put('home/accountinfo/passchange','GenerateTeams@changeExp'); //This will call the controller method changeExp in GenerateTeams controller
+
+Route::put('home/accountinfo/passchange','GenerateTeams@changeProjPref'); //This will call the controller method changeProjPref in GenerateTeams controller
+
+Route::put('home/accountinfo/passchange','GenerateTeams@changePartPref'); //This will call the controller method changePartPref in GenerateTeams controller
 
 //TODO: Replace this with the appropriate queries to get projects
 View::composer('team_managment.firsttimelogin', function($view){
