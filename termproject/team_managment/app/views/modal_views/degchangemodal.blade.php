@@ -7,19 +7,26 @@
 				Edit Major/Minor
 				</h3>
 			</div>
+			@if(empty($user))
+				<div class="modal-body" style="max-height: 75%">
+					<div class="alert alert-warning">
+						User information failed to load!
+					</div>
+				</div>
+			@else
 			<div class="modal-body" style="max-height: 75%">
 				<div class="content form-horizontal">
 					{{ Form::model($user,array('method'=>'put', 'action'=>array('GenerateTeams@changeMajor',$user)))}}
 					<div class="form-group">
 						{{ Form::label('Major',null,array("class"=>"control-label col-sm-3")) }}
 						<div class="col-sm-7">
-							{{ Form::text('majortext', 'major' ,array("class"=>"form-control"))}}
+							{{ Form::text('majortext', $user->majortext ,array("class"=>"form-control"))}}
 						</div>
 					</div>
 					<div class="form-group">
 						{{ Form::label('Minor/ASI',null,array("class"=>"control-label col-sm-3")) }}
 						<div class="col-sm-7">
-							{{ Form::text('minortext', 'minor' ,array("class"=>"form-control")) }}
+							{{ Form::text('minortext', $user->minortext ,array("class"=>"form-control")) }}
 						</div>
 					</div>
 				</div>
@@ -30,6 +37,7 @@
 				</div>
 				{{ Form::close() }}
 			</div>
+			@endif
 		</div>
 	</div>
 </div>
