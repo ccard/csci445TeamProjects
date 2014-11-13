@@ -11,7 +11,9 @@
 	<body>
 		<div class="container">
 			<div class="page-header">
-				@yield('backButton')
+				@if(Auth::check())
+					@yield('backButton')
+				@endif
 				<h1>CSCI 307 <small> @yield('subHeading') </small>
 				<div class="pull-right">
 					@if(Auth::check())
