@@ -37,13 +37,14 @@ Route::post('login',function(){
 
 //Route::group(array('before'=>'auth'), function(){
 Route::get('home', function() {
-	if (Auth::user()->isAdmin()){
+	//if (Auth::user()->isAdmin()){
 		//TODO query database to retrive these items
 		$users = count(array()); //the number of users in the system
+		$emails = 'test@aol.com,test2@aol.com';//populate with list of emails
 		$projects = count(array()); //the number of projects in the system
 		$projectteams = array(); //Project teams is in the following format array('projectid'=>array('projname'=>'projname', 'members'=>array('email'=>'username')))
-		return View::make('team_managment.adminhome')->with('users',$users)->with('projects',$projects)->with('projectteams', $projectteams);
-	} else {
+		return View::make('team_managment.adminhome')->with('users',$users)->with('projects',$projects)->with('projectteams', $projectteams)->with('emails',$emails);
+	/*} else {
 		//If the user has no project preferences then they must be redirected to the firstogin page
 		if(count(Auth::user()->projectPreferences())){
 			$project = array(); //TODO: replace this with a query to database to get project name and all associted student names and emails
@@ -52,7 +53,7 @@ Route::get('home', function() {
 		} else {
 			return Redirect::to('home/firstlogin');
 		}
-	}
+	}*/
 });
 
 Route::get('home/firstlogin', function(){
@@ -61,28 +62,66 @@ Route::get('home/firstlogin', function(){
 });
 
 Route::get('home/accountinfo', function(){
-	// if (Auth::user()->isAdmin()) {
-	// 	return View::make('team_managment.adminaccount');
-	// } else {
+	 if (Auth::user()->isAdmin()) {
+	 	return View::make('team_managment.adminaccount');
+	} else {
 		//TODO pass all relevent information to the user and admin account pages
 		$user = Auth::user();
 		$projectoptions = array_combine([1,2],['test1','test2']);//TODO replace with db query
 		$partneroptions = array_combine([1,2],['test1','test2']);//TODO replace with db query
 		$perferedchoice = array(1); //TODO replace with query from db
 		$avoidchoice = array(2); //TODO replace with query from db
-		return View::make('team_managment.useraccount')->with('user',$user)->with('partneroptions',$partneroptions)->with('perferedchoice',$perferedchoice)->with('avoidchoice',$avoidchoice)
-		->nest('passchange','modal_views.passmodal',array('user'=>$user))
-		->nest('namechange','modal_views.namechangmodal',array('user'=>$user))
-		->nest('degchange','modal_views.degchangemodal',array('user'=>$user))
-		->nest('expchange','modal_views.expchangemodal',array('user'=>$user))
-		->nest('projprefchange','modal_views.projprefchangemodal',array('user'=>$user,'projoptions'=>$projectoptions))
-		->nest('partprefchange','modal_views.partprefchangemodal',array('user'=>$user,'partneroptions'=>$partneroptions, 'perferedchoice'=>$perferedchoice, 'avoidchoice'=>$avoidchoice));
-	//}
+		if(Session::has('message')){
+			return View::make('team_managment.useraccount')->with('user',$user)
+				->with('partneroptions',$partneroptions)
+				->with('perferedchoice',$perferedchoice)
+				->with('avoidchoice',$avoidchoice)
+				->with('message',Session::get('message'))
+				->nest('passchange','modal_views.passmodal',array('user'=>$user))
+				->nest('namechange','modal_views.namechangmodal',array('user'=>$user))
+				->nest('degchange','modal_views.degchangemodal',array('user'=>$user))
+				->nest('expchange','modal_views.expchangemodal',array('user'=>$user))
+				->nest('projprefchange','modal_views.projprefchangemodal',array('user'=>$user,'projoptions'=>$projectoptions))
+				->nest('partprefchange','modal_views.partprefchangemodal',array('user'=>$user,'partneroptions'=>$partneroptions, 'perferedchoice'=>$perferedchoice, 'avoidchoice'=>$avoidchoice));
+		} else {
+			return View::make('team_managment.useraccount')->with('user',$user)
+				->with('partneroptions',$partneroptions)
+				->with('perferedchoice',$perferedchoice)
+				->with('avoidchoice',$avoidchoice)
+				->nest('passchange','modal_views.passmodal',array('user'=>$user))
+				->nest('namechange','modal_views.namechangmodal',array('user'=>$user))
+				->nest('degchange','modal_views.degchangemodal',array('user'=>$user))
+				->nest('expchange','modal_views.expchangemodal',array('user'=>$user))
+				->nest('projprefchange','modal_views.projprefchangemodal',array('user'=>$user,'projoptions'=>$projectoptions))
+				->nest('partprefchange','modal_views.partprefchangemodal',array('user'=>$user,'partneroptions'=>$partneroptions, 'perferedchoice'=>$perferedchoice, 'avoidchoice'=>$avoidchoice));
+		}
+	}
 });
 
 Route::get('home/editteam/{projid}', function($projid) {
-	$projectteam = array(); //of the form ('projid'=>id, 'users'=>array('userid'=>array('name'=>'name', 'email'=>'email')...))
-	return View::make('team_managment.editteam')->with('projectteam',$projectteam);
+	$projectteam = array('projid'=>'1','projname'=>'test', 'users'=>array('12'=>array('name'=>'chris','email'=>'test@aol.com'))); //of the form ('projid'=>id, 'projname'=>'projname', 'users'=>array('userid'=>array('name'=>'name', 'email'=>'email')...))
+	$nonassignusers = array_combine([1],['user']); //combined list of users where the first part is the user id and the second part is the user name
+	if(Session::has('message')){
+		return View::make('team_managment.editteam')->with('projectteam',$projectteam)->with('message',Session::get('message'))
+		->nest('adminaddteam','modal_views.adminaddteammodal',array('projid'=>$projid,'nonassignusers'=>$nonassignusers));
+	} else {
+		return View::make('team_managment.editteam')->with('projectteam',$projectteam)
+		->nest('adminaddteam','modal_views.adminaddteammodal',array('projid'=>$projid,'nonassignusers'=>$nonassignusers));
+	}
+});
+
+Route::get('users/{id}/info', function($id){
+	$method = 'get'; // to just view the information
+	$user = Auth::user();//replace with a query for the user id
+		$projectoptions = array_combine([1,2],['test1','test2']);//TODO replace with db query
+		$partneroptions = array_combine([1,2],['test1','test2']);//TODO replace with db query
+		$perferedchoice = array(1); //TODO replace with query from db
+		$avoidchoice = array(2); //TODO replace with query from db
+		return View::make('team_managment.useraccount')->with('method',$method)
+		->with('user',$user)
+		->with('partneroptions',$partneroptions)
+		->with('perferedchoice',$perferedchoice)
+		->with('avoidchoice',$avoidchoice);
 });
 
 /*------------------------------------------------------------------------
@@ -99,15 +138,23 @@ Route::put('home/generateteams','GenerateTeams@generateTeams'); //This will call
 
 Route::put('home/accountinfo/passchange','GenerateTeams@changePassword'); //This will call the controller method changePassword in GenerateTeams controller
 
-Route::put('home/accountinfo/passchange','GenerateTeams@changeName'); //This will call the controller method changeName in GenerateTeams controller
+Route::put('home/accountinfo/namechange','GenerateTeams@changeName'); //This will call the controller method changeName in GenerateTeams controller
 
-Route::put('home/accountinfo/passchange','GenerateTeams@changeMajor'); //This will call the controller method changeMajor in GenerateTeams controller
+Route::put('home/accountinfo/degchange','GenerateTeams@changeMajor'); //This will call the controller method changeMajor in GenerateTeams controller
 
-Route::put('home/accountinfo/passchange','GenerateTeams@changeExp'); //This will call the controller method changeExp in GenerateTeams controller
+Route::put('home/accountinfo/expchange','GenerateTeams@changeExp'); //This will call the controller method changeExp in GenerateTeams controller
 
-Route::put('home/accountinfo/passchange','GenerateTeams@changeProjPref'); //This will call the controller method changeProjPref in GenerateTeams controller
+Route::put('home/accountinfo/projprefchange','GenerateTeams@changeProjPref'); //This will call the controller method changeProjPref in GenerateTeams controller
 
-Route::put('home/accountinfo/passchange','GenerateTeams@changePartPref'); //This will call the controller method changePartPref in GenerateTeams controller
+Route::put('home/accountinfo/partprefchange','GenerateTeams@changePartPref'); //This will call the controller method changePartPref in GenerateTeams controller
+
+Route::put('home/accountinfo/adminaddteam','GenerateTeams@adminAddMember'); //This will call the controller method adminAddMember in GenerateTeams controller
+
+Route::delete('home/editteam/{projid}', function($projid){
+	$userid = Input::get('userid'); //retrives the user id to dis associate with projid
+	//TODO remove the users association with the project
+	return Redirect::to('home/editteam/'.$projid)->with('message','Remove has no be removed from team! '.$userid);
+});
 
 //TODO: Replace this with the appropriate queries to get projects
 View::composer('team_managment.firsttimelogin', function($view){

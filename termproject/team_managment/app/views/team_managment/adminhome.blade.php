@@ -26,9 +26,10 @@
 				{{ Form::close() }}
 			</div>
 		@else
+			<a class="btn btn-link" href="mailto:{{ $emails }}?Subject=CSCI%20307" target="_top">Email all users</a>
 			<!-- Project teams is in the following format array('projectid'=>array('projname'=>'projname', 'members'=>array('email'=>'username')))-->
 			@foreach ($projectteams as $key => $value)
-				<div class="content">
+				<div class="content" style="margin-left: 10px">
 					<div class="page-header">
 						<h2>
 						 {{ $value['projname'] }} <a class="btn btn-link pull-right" href="{{ url('home/editteam/'.$key) }}">edit</a>
@@ -50,6 +51,6 @@
 
 @section('nonauthcontent')
 	<div class="alert alert-warning">
-		You are not logged in! Please <a href="{{url('/')}}" class="btn btn-link">login</a>
+		You are not logged in! Please <a href="{{url('/')}}" class="btn-link">login</a>
 	</div>
 @stop

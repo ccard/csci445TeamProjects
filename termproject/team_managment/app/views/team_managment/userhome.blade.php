@@ -16,7 +16,7 @@
 			<div class="content" style="margin-left: 10px">
 				@foreach ($project['members'] as $key => $value)
 					<div class="partners">
-						{{$value}} - <a class="btn btn-link" href="mailto:{{$key}}?Subject=Csci%20307" target="_top">{{$key}}</a>
+						{{$value}} - <a class="btn-link" href="mailto:{{$key}}?Subject=Csci%20307" target="_top">{{$key}}</a>
 					</div>
 				@endforeach
 			</div>
