@@ -4,22 +4,29 @@
 			<div class="modal-header">
 				<h3>
 				<button type="button" id="modal-cancel" class="btn btn-link close pull-right" data-dismiss="modal" aria-hidden="true">Cancel</button>
-				Edit name
+				Edit Name
 				</h3>
 			</div>
+			@if(empty($user))
+				<div class="modal-body" style="max-height: 75%">
+					<div class="alert alert-warning">
+						User information failed to load!
+					</div>
+				</div>
+			@else
 			<div class="modal-body" style="max-height: 75%">
 				<div class="content form-horizontal">
 					{{ Form::model($user,array('method'=>'put', 'action'=>array('GenerateTeams@changeName',$user)))}}
 					<div class="form-group">
 						{{ Form::label('First name',null,array("class"=>"control-label col-sm-3")) }}
 						<div class="col-sm-7">
-							{{ Form::text('firstname', 't' ,array("class"=>"form-control"))}}
+							{{ Form::text('firstname', $user->firstname ,array("class"=>"form-control"))}}
 						</div>
 					</div>
 					<div class="form-group">
 						{{ Form::label('Last name',null,array("class"=>"control-label col-sm-3")) }}
 						<div class="col-sm-7">
-							{{ Form::text('lastname', 't' ,array("class"=>"form-control")) }}
+							{{ Form::text('lastname', $user->lastname ,array("class"=>"form-control")) }}
 						</div>
 					</div>
 				</div>
@@ -30,6 +37,7 @@
 				</div>
 				{{ Form::close() }}
 			</div>
+			@endif
 		</div>
 	</div>
 </div>
