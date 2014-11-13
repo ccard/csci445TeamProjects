@@ -61,12 +61,13 @@ Route::get('home/firstlogin', function(){
 });
 
 Route::get('home/accountinfo', function(){
-	if (Auth::user()->isAdmin()) {
-		return View::make('team_managment.adminaccount');
-	} else {
+	// if (Auth::user()->isAdmin()) {
+	// 	return View::make('team_managment.adminaccount');
+	// } else {
 		//TODO pass all relevent information to the user and admin account pages
-		return View::make('team_managment.useraccount')->with('user',Auth::user());
-	}
+		$user = Auth::user();
+		return View::make('team_managment.useraccount')->with('user',$user)->nest('passchange','modal_views.passmodal',array('user'=>$user));
+	//}
 });
 
 Route::get('home/editteam/{projid}', function($projid) {
@@ -85,6 +86,8 @@ Route::put('home/firstlogin/{id}',function($id){
 });
 
 Route::post('home/generateteams','GenerateTeams@generateTeams'); //This will call the controller method generateTemas in GenerateTeams controller
+
+Route::post('home/accountinfo/passchange','GenerateTeams@changePassword'); //This will call the controller method changePassword in GenerateTeams controller
 
 //TODO: Replace this with the appropriate queries to get projects
 View::composer('team_managment.firsttimelogin', function($view){

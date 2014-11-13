@@ -4,6 +4,9 @@
 		<meta charset="UTF-8">
 		<title>CSCI 307</title>
 		<link rel="stylesheet" href="{{{ asset('bootstrap.min.css') }}}">
+		<script src="{{ asset('jquery-2.1.1.min.js') }}"></script>
+		<script src="{{ asset('bootstrap.min.js') }}"></script>
+
 	</head>
 	<body>
 		<div class="container">
@@ -32,6 +35,9 @@
 			@endif
 			@if(Auth::check())
 				@yield('content')
+				<script type="text/javascript">
+				@yield('script')
+				</script>
 			@else
 				@yield('nonauthcontent')
 			@endif
