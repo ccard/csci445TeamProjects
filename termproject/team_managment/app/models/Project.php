@@ -8,7 +8,7 @@
 		protected $fillable = array('title','company');
 		public $timestamps=false;
 		public function projectPreferences(){
-			return $this->belongsToMany('ProjectPreferences');
+			return $this->hasMany('ProjectPreferences');
 		}
 
 		public function teams(){

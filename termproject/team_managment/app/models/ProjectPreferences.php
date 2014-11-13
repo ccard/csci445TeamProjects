@@ -11,9 +11,16 @@
 			return $this->hasMany('User');
 		}
 
-		public function project(){
-			return $this->belongsToMany('Project');
+		public function first_project(){
+			return $this->belongsTo('Project');
 		}
 
+		public function second_project(){
+			return $this->belongsTo('Project');
+		}
+
+		public function third_project(){
+			return $this->belongsTo('Project');
+		}
 	}
 ?>
