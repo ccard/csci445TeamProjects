@@ -63,7 +63,10 @@ Route::get('home/firstlogin', function(){
 
 Route::get('home/accountinfo', function(){
 	 if (Auth::user()->isAdmin()) {
-	 	return View::make('team_managment.adminaccount');
+		$user = Auth::user();
+	 	return View::make('team_managment.adminaccount')->with('user',$user)
+	 	->nest('passchange','modal_views.passmodal',array('user'=>$user))
+		->nest('namechange','modal_views.namechangmodal',array('user'=>$user));
 	} else {
 		//TODO pass all relevent information to the user and admin account pages
 		$user = Auth::user();
@@ -99,20 +102,25 @@ Route::get('home/accountinfo', function(){
 });
 
 Route::get('home/editteam/{projid}', function($projid) {
-	$projectteam = array('projid'=>'1','projname'=>'test', 'users'=>array('12'=>array('name'=>'chris','email'=>'test@aol.com'))); //of the form ('projid'=>id, 'projname'=>'projname', 'users'=>array('userid'=>array('name'=>'name', 'email'=>'email')...))
-	$nonassignusers = array_combine([1],['user']); //combined list of users where the first part is the user id and the second part is the user name
-	if(Session::has('message')){
-		return View::make('team_managment.editteam')->with('projectteam',$projectteam)->with('message',Session::get('message'))
-		->nest('adminaddteam','modal_views.adminaddteammodal',array('projid'=>$projid,'nonassignusers'=>$nonassignusers));
+	if(Auth::user()->isAdmin()){
+		$projectteam = array('projid'=>'1','projname'=>'test', 'users'=>array('12'=>array('name'=>'chris','email'=>'test@aol.com'))); //of the form ('projid'=>id, 'projname'=>'projname', 'users'=>array('userid'=>array('name'=>'name', 'email'=>'email')...))
+		$nonassignusers = array_combine([1],['user']); //combined list of users where the first part is the user id and the second part is the user name
+		if(Session::has('message')){
+			return View::make('team_managment.editteam')->with('projectteam',$projectteam)->with('message',Session::get('message'))
+			->nest('adminaddteam','modal_views.adminaddteammodal',array('projid'=>$projid,'nonassignusers'=>$nonassignusers));
+		} else {
+			return View::make('team_managment.editteam')->with('projectteam',$projectteam)
+			->nest('adminaddteam','modal_views.adminaddteammodal',array('projid'=>$projid,'nonassignusers'=>$nonassignusers));
+		}
 	} else {
-		return View::make('team_managment.editteam')->with('projectteam',$projectteam)
-		->nest('adminaddteam','modal_views.adminaddteammodal',array('projid'=>$projid,'nonassignusers'=>$nonassignusers));
+		return Redirect::back();
 	}
-});
+});	
 
 Route::get('users/{id}/info', function($id){
-	$method = 'get'; // to just view the information
-	$user = Auth::user();//replace with a query for the user id
+	if(Auth::user()->isAdmin()){
+		$method = 'get'; // to just view the information
+		$user = Auth::user();//replace with a query for the user id
 		$projectoptions = array_combine([1,2],['test1','test2']);//TODO replace with db query
 		$partneroptions = array_combine([1,2],['test1','test2']);//TODO replace with db query
 		$perferedchoice = array(1); //TODO replace with query from db
@@ -122,6 +130,9 @@ Route::get('users/{id}/info', function($id){
 		->with('partneroptions',$partneroptions)
 		->with('perferedchoice',$perferedchoice)
 		->with('avoidchoice',$avoidchoice);
+	} else {
+		return Redirect::back();
+	}
 });
 
 /*------------------------------------------------------------------------
@@ -151,9 +162,13 @@ Route::put('home/accountinfo/partprefchange','GenerateTeams@changePartPref'); //
 Route::put('home/accountinfo/adminaddteam','GenerateTeams@adminAddMember'); //This will call the controller method adminAddMember in GenerateTeams controller
 
 Route::delete('home/editteam/{projid}', function($projid){
-	$userid = Input::get('userid'); //retrives the user id to dis associate with projid
-	//TODO remove the users association with the project
-	return Redirect::to('home/editteam/'.$projid)->with('message','Remove has no be removed from team! '.$userid);
+	if(Auth::user()->isAdmin()){
+		$userid = Input::get('userid'); //retrives the user id to dis associate with projid
+		//TODO remove the users association with the project
+		return Redirect::to('home/editteam/'.$projid)->with('message','Remove has no be removed from team! '.$userid);
+	} else {
+		return Redirect::back();
+	}
 });
 
 //TODO: Replace this with the appropriate queries to get projects
