@@ -1,6 +1,8 @@
 Term Project csci445
 ===================
 
+&nbsp;&nbsp;_Team_: Team16
+
 &nbsp;&nbsp;_Authors_: Chris Card, Mike Hughes, Jothan Phillips
 
 # Intro #
