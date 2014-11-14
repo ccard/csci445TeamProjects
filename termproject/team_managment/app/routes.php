@@ -35,16 +35,16 @@ Route::post('login',function(){
 	}
 });
 
-//Route::group(array('before'=>'auth'), function(){
+Route::group(array('before'=>'auth'), function(){
 Route::get('home', function() {
-	//if (Auth::user()->isAdmin()){
+	if (Auth::user()->isAdmin()){
 		//TODO query database to retrive these items
 		$users = count(array()); //the number of users in the system
 		$emails = 'test@aol.com,test2@aol.com';//populate with list of emails
 		$projects = count(array()); //the number of projects in the system
-		$projectteams = array(); //Project teams is in the following format array('projectid'=>array('projname'=>'projname', 'members'=>array('email'=>'username')))
+		$projectteams = array(); //Project teams is in the following format array('projectid'=>array('projname'=>'projname', 'members'=>array('email'=>'name')))
 		return View::make('team_managment.adminhome')->with('users',$users)->with('projects',$projects)->with('projectteams', $projectteams)->with('emails',$emails);
-	/*} else {
+	} else {
 		//If the user has no project preferences then they must be redirected to the firstogin page
 		if(count(Auth::user()->projectPreferences())){
 			$project = array(); //TODO: replace this with a query to database to get project name and all associted student names and emails
@@ -53,7 +53,7 @@ Route::get('home', function() {
 		} else {
 			return Redirect::to('home/firstlogin');
 		}
-	}*/
+	}
 });
 
 Route::get('home/firstlogin', function(){
@@ -183,4 +183,4 @@ View::composer('team_managment.firsttimelogin', function($view){
 	// }
 	$view->with('partneroptions',$partneroptions)->with('projoptions',$projectoptions);
 });
-//});
+});

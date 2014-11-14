@@ -9,10 +9,7 @@ class DatabaseSeeder extends Seeder {
 	 */
 	public function run()
 	{
-		Eloquent::unguard();
-
-		$this->call('UserSeeder');
-		$this->call('ProjectSeeder');
+		//TODO seed from csv file
 	}
 
 }
