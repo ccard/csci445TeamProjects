@@ -12,4 +12,4 @@ Term Project csci445
  - If you wish to use a different '.csv' file than what the database has already been seeded with then please insure that the formates are updated to the following for students.csv replace the header `First,Last,CWID,Email`&rarr;`firstname,lastname,password,username`, for the projects.csv file replace the header `Client,Project`&rarr;`company,title,min,max`
  - If you followed the previous step or simply want to reset the database using the csv files that we provided. Run the command `php artisan migrate:refresh --seed`
  - This uses the sqlite database not mysql
- - Once this is done run `php artisan serv` and go to http://localhost:8000 and you should be redirected to the appropriate page
+ - Once this is done run `php artisan serv` and go to [http://localhost:8000](http://localhost:8000) and you should be redirected to the appropriate page
