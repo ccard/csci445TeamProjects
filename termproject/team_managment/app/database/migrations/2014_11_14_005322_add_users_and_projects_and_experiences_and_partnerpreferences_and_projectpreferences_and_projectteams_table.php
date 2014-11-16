@@ -7,7 +7,8 @@ class AddUsersAndProjectsAndExperiencesAndPartnerpreferencesAndProjectpreference
 
 	/**
 	 * Run the migrations.
-	 *
+	 * If this file is changed, run:
+	 * php artisan migrate:refresh --seed
 	 * @return void
 	 */
 	public function up()
@@ -18,18 +19,22 @@ class AddUsersAndProjectsAndExperiencesAndPartnerpreferencesAndProjectpreference
 			$table->string('username')->unique();
 			$table->string('firstname');
 			$table->string('lastname');
+			$table->dateTime('created_at');  //added by mike
+			$table->dateTime('updated_at');  //added by mike 
 			$table->string('majortext')->nullable();
 			$table->string('minortext')->nullable();
 			$table->integer('experience_id')->nullable();
 			$table->integer('projectpreference_id')->nullable();
-			$table->integer('pref_part_or_proj');
+			$table->integer('pref_part_or_proj')->nullable(); //changed by mike
 			$table->integer('project_id')->nullable();
 		});
 
 		Schema::create('projects', function($table){
 			$table->increments('id');
 			$table->string('title')->unique();
-			$table->string('company');	
+			$table->string('company');
+			$table->integer('min');  // added by mike
+			$table->integer('max');	 //added by mike
 		});
 
 		Schema::create('experiences', function($table){

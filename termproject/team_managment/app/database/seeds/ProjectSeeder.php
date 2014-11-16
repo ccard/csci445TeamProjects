@@ -1,15 +1,31 @@
 <?php
 
-class DatabaseSeeder extends Seeder {
+use Flynsarmy\CsvSeeder\CsvSeeder;
+
+class ProjectSeeder extends CsvSeeder {
 
 	/**
 	 * Run the database seeds.
 	 *
 	 * @return void
 	 */
+
+	public function __construct()
+	{
+        //hashable(string password); // added by Mike, but probably not needed
+		$this->table = 'projects';
+		$this->filename = app_path().'/database/seeds/csvs/projects.csv';
+	}
+
 	public function run()
 	{
+
+		// Uncomment the below to wipe the table clean before populating
+		DB::table($this->table)->truncate();
+
 		//TODO seed from csv file
+		parent::run();
+
 	}
 
 }
