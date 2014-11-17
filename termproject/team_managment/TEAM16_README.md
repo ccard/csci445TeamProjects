@@ -11,7 +11,9 @@ Term Project csci445
 ------
 # Running the project #
 &nbsp;&nbsp;This section will discribe how to run our program and the necessary commands and file requirements.
- - If you wish to use a different '.csv' file than what the database has already been seeded with then please insure that the formates are updated to the following for students.csv replace the header `First,Last,CWID,Email`&rarr;`firstname,lastname,password,username`, for the projects.csv file replace the header `Client,Project`&rarr;`company,title,min,max`
- - If you followed the previous step or simply want to reset the database using the csv files that we provided. Run the command `php artisan migrate:refresh --seed`
+ - The first command you should run is `composer update` to ensure that all dependencies are meet or installed
+ - All you should have to do is run `php artisan serve` and navigate to [http://localhost:8000](http://localhost:8000): to login as the admin username is _admin@admin.com_, pass is _admin_
+ - If you  want to reset the database using the csv files that we provided or have trouble logging in. Run the command `php artisan migrate:refresh --seed`
  - This uses the sqlite database not mysql
  - Once this is done run `php artisan serv` and go to [http://localhost:8000](http://localhost:8000) and you should be redirected to the appropriate page
+ - __note:__ to login as a non admin user look at the students.csv file in /app/database/seeds/csvs/students.csv file and the username is in there and the password is the cwid.

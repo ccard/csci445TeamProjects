@@ -4,7 +4,7 @@ Welcome!
 @stop
 @section('formcontent')
 	<div class="alert alert-success">
-		You are already logged in please go to your <a href="{{url('/')}}" class="btn btn-link">home</a> page!
+		You are already logged in please go to your <a href="{{url('/')}}" class="btn-link">home</a> page!
 	</div>
 @stop
 @section('nonauthformcontent')
