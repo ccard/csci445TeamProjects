@@ -41,6 +41,7 @@ class AddUsersAndProjectsAndExperiencesAndPartnerpreferencesAndProjectpreference
 
 		Schema::create('experiences', function($table){
 			$table->increments('id');
+			$table->integer('user_id');
 			$table->string('experience');
 		});
 

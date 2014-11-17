@@ -7,6 +7,9 @@
 	{
 		protected $fillable = array('title','company');
 		public $timestamps=false;
+
+		protected $table="projects";
+
 		public function projectPreferences(){
 			return $this->hasMany('ProjectPreferences');
 		}

@@ -29,7 +29,7 @@ Route::get('login', function(){
 
 Route::post('login',function(){
 	//dd(Input::only('username','password'));
-	if(Auth::attempt(Input::only('username','password'),true)){
+	if(Auth::attempt(Input::only('username','password'))){
 		return Redirect::intended('/');
 	} else {
 		return Redirect::back()->withInput()->with('error',"Invalid credentials!");
@@ -47,7 +47,7 @@ Route::get('home', function() {
 		return View::make('team_managment.adminhome')->with('users',$users)->with('projects',$projects)->with('projectteams', $projectteams)->with('emails',$emails);
 	} else {
 		//If the user has no project preferences then they must be redirected to the firstogin page
-		if(count(Auth::user()->projectPreferences())){
+		if(count(Auth::user()->projectpreference)){
 			$project = array(); //TODO: replace this with a query to database to get project name and all associted student names and emails
 			//in the form of array('projname'=>"name", 'members'=>array('email'=>"name"))
 			return View::make('team_managment.userhome')->with('user',Auth::user())->with('project',$project);

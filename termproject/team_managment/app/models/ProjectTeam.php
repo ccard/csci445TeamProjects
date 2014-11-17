@@ -7,6 +7,7 @@
 	{
 		protected $fillable = array('user_id','project_id');
 		public $timestamps=false;
+		protected $table="projectteams";
 		public function user(){
 			return $this->hasMany('User');
 		}

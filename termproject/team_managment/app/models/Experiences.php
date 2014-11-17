@@ -8,6 +8,6 @@
 		protected $fillable = array('experience');
 		public $timestamps=false;
 		
-
+		protected $table="experiences";
 	}
 ?>
