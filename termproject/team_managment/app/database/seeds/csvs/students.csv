@@ -1,40 +1,40 @@
-firstname,lastname,password,username,created_at,updated_at
-Darth,Vader,223344,dvader@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Mickey,Mouse,123978,mmouse@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Donald,Duck,444321,dduck@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Jane,Jetson,999777,jjetson@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Frodo,Baggins,555123,fbaggins@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Bilbo,Baggins,988777,bbaggins@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Winnie,Poohbear,478234,pbear@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Daffy,Duck,120978,daduck@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Wile,Coyote,409123,wcoyote@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Road,Runner,128745,rrunner@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Marge,Simpson,765120,msimpson@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Charlie,Brown,876123,cbrown@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Lucy,VanPelt,333221,lvanpelt@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Bugs,Bunny,752412,bbunny@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Betty,Boop,532109,bboop@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Lois,Griffin,223311,lgriffin@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Wilma,Flintstone,443322,wflintstone@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Fred ,Flintstone,443311,fflintstone@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Peppa,Pig,784512,ppig@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Turanga,Leela,834215,leela@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Sylvester,Cat,920451,scat@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Felix,Cat,375621,fcat@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Top,Cat,781234,tc@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Scooby,Doo,392875,scooby@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Porky,Pig,123654,porky@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Garfield,Cat,387612,garfield@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Peter,Pan,982765,pan@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Foghorn,Leghorn,762341,fleghorn@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Manning,Peyton,772233,pmanning@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Welker,Wes,123456,wwelker@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Thomas,Julias,123457,jthomas@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Sanders,Emmanuel,123458,esanders@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Tamme,Jason,123569,jtamme@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Knighton,Terrance,123450,tk@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Colquitt,Britton,098765,bcol@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Roby,Bradley,098764,broby@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Ward,T.J.,098763,tjward@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Ware,DeMarcus,098762,dware@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
-Webster,Kayvon,098761,kw@mines.edu,2014-11-17 15:50:07,2014-11-17 15:50:07
+firstname,lastname,password,username
+Darth,Vader,223344,dvader@mines.edu
+Mickey,Mouse,123978,mmouse@mines.edu
+Donald,Duck,444321,dduck@mines.edu
+Jane,Jetson,999777,jjetson@mines.edu
+Frodo,Baggins,555123,fbaggins@mines.edu
+Bilbo,Baggins,988777,bbaggins@mines.edu
+Winnie,Poohbear,478234,pbear@mines.edu
+Daffy,Duck,120978,daduck@mines.edu
+Wile,Coyote,409123,wcoyote@mines.edu
+Road,Runner,128745,rrunner@mines.edu
+Marge,Simpson,765120,msimpson@mines.edu
+Charlie,Brown,876123,cbrown@mines.edu
+Lucy,VanPelt,333221,lvanpelt@mines.edu
+Bugs,Bunny,752412,bbunny@mines.edu
+Betty,Boop,532109,bboop@mines.edu
+Lois,Griffin,223311,lgriffin@mines.edu
+Wilma,Flintstone,443322,wflintstone@mines.edu
+Fred ,Flintstone,443311,fflintstone@mines.edu
+Peppa,Pig,784512,ppig@mines.edu
+Turanga,Leela,834215,leela@mines.edu
+Sylvester,Cat,920451,scat@mines.edu
+Felix,Cat,375621,fcat@mines.edu
+Top,Cat,781234,tc@mines.edu
+Scooby,Doo,392875,scooby@mines.edu
+Porky,Pig,123654,porky@mines.edu
+Garfield,Cat,387612,garfield@mines.edu
+Peter,Pan,982765,pan@mines.edu
+Foghorn,Leghorn,762341,fleghorn@mines.edu
+Manning,Peyton,772233,pmanning@mines.edu
+Welker,Wes,123456,wwelker@mines.edu
+Thomas,Julias,123457,jthomas@mines.edu
+Sanders,Emmanuel,123458,esanders@mines.edu
+Tamme,Jason,123569,jtamme@mines.edu
+Knighton,Terrance,123450,tk@mines.edu
+Colquitt,Britton,098765,bcol@mines.edu
+Roby,Bradley,098764,broby@mines.edu
+Ward,T.J.,098763,tjward@mines.edu
+Ware,DeMarcus,098762,dware@mines.edu
+Webster,Kayvon,098761,kw@mines.edu

@@ -19,9 +19,9 @@ class AddUsersAndProjectsAndExperiencesAndPartnerpreferencesAndProjectpreference
 			$table->string('username')->unique();
 			$table->string('firstname');
 			$table->string('lastname');
-			$table->integer('is_admin')->nullable();
-			$table->dateTime('created_at');  //added by mike
-			$table->dateTime('updated_at');  //added by mike 
+			$table->integer('is_admin')->default(0);
+			$table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));  //added by mike
+			$table->dateTime('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));  //added by mike 
 			$table->string('majortext')->nullable();
 			$table->string('minortext')->nullable();
 			$table->integer('experience_id')->nullable();
