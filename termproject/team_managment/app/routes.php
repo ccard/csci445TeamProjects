@@ -175,7 +175,7 @@ Route::delete('home/editteam/{projid}', function($projid){
 //TODO: Replace this with the appropriate queries to get projects
 View::composer('team_managment.firsttimelogin', function($view){
 	//TODO: Replace with appropriate quires to the databse
-	$projectoptions = array_combine([1,2], ['test1','test2']);
+	$projectoptions = array_combine([1,2], ['test1','test2']);//formate (project_id list,title list)
 	$partneroptions = array_combine([1,2], ['test1','test2']);
 	// if(count($genres) > 0){
 	// 	$genre_options = array_combine($genres->lists('id'), $genres->lists('name'));
