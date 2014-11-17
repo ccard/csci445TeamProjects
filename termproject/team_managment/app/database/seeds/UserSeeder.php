@@ -26,7 +26,7 @@ class UserSeeder extends CsvSeeder {
 		$date = new \DateTime;
 		//DB::table('users')->insert(array(array('username'=>'admin@admin.com', 'password'=>'admin','firstname'=>'Cynthia','lastname'=>'Rader','created_at'=>$date,'updated_at'=>$date)));
 		DB::table('users')->insert(array(
-			array('username'=>'admin@admin.com', 'password'=>'admin','firstname'=>'Cynthia','lastname'=>'Rader','created_at'=>$date,'updated_at'=>$date),
+			array('username'=>'admin@admin.com', 'password'=>'admin','firstname'=>'Cynthia','lastname'=>'Rader','created_at'=>$date,'updated_at'=>$date,'is_admin'=>1),
 		));
 
 

@@ -19,6 +19,7 @@ class AddUsersAndProjectsAndExperiencesAndPartnerpreferencesAndProjectpreference
 			$table->string('username')->unique();
 			$table->string('firstname');
 			$table->string('lastname');
+			$table->integer('is_admin')->nullable();
 			$table->dateTime('created_at');  //added by mike
 			$table->dateTime('updated_at');  //added by mike 
 			$table->string('majortext')->nullable();
