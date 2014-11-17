@@ -28,7 +28,8 @@ Route::get('login', function(){
 });
 
 Route::post('login',function(){
-	if(Auth::attempt(Input::only('username','password'))){
+	//dd(Input::only('username','password'));
+	if(Auth::attempt(Input::only('username','password'),true)){
 		return Redirect::intended('/');
 	} else {
 		return Redirect::back()->withInput()->with('error',"Invalid credentials!");

@@ -12,14 +12,14 @@ Welcome!
 	<div class="form-horizontal">
 		<div class="col-lg-2"></div>
 		<div class="form-group">
-			{{Form::label('User name:',null,array("class"=>"col-sm-2 control-label"))}} 
+			{{Form::label('username','User name:',array("class"=>"col-sm-2 control-label"))}} 
 			<div class="col-sm-5">
 				{{ Form::text('username', Input::old('username'), array('placeholder'=>'jdoe@mymail.mines.edu',"class"=>"form-control", 0=>'required')) }}
 			</div>
 		</div>
 		<div class="col-lg-2"></div>
 		<div class="form-group">
-			{{ Form::label('Password:',null,array("class"=>"col-sm-2 control-label")) }} 
+			{{ Form::label('password','Password:',array("class"=>"col-sm-2 control-label")) }} 
 			<div class="col-sm-5">
 				{{ Form::password('password', array('placeholder' => 'placetext',"class"=>"form-control", 0=>'required')) }}
 			</div>

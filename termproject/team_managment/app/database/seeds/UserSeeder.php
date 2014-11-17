@@ -26,14 +26,18 @@ class UserSeeder extends CsvSeeder {
 		$date = new \DateTime;
 		//DB::table('users')->insert(array(array('username'=>'admin@admin.com', 'password'=>'admin','firstname'=>'Cynthia','lastname'=>'Rader','created_at'=>$date,'updated_at'=>$date)));
 		DB::table('users')->insert(array(
-			array('username'=>'admin@admin.com', 'password'=>'admin','firstname'=>'Cynthia','lastname'=>'Rader','is_admin'=>1),
+			array('username'=>'admin@admin.com','cwid'=>'admin','firstname'=>'Cynthia','lastname'=>'Rader','is_admin'=>true),
 		));
 
 
 		//TODO seed from the csv file
 		parent::run();
 
-
+		foreach (DB::table("users")->get() as $user) {
+			DB::table("users")
+				->where('id',$user->id)
+				->update(array("password"=>Hash::make($user->cwid)));
+		}
 
 	}
 

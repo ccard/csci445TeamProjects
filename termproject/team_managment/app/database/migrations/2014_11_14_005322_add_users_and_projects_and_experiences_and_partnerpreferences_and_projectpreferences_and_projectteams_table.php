@@ -15,11 +15,12 @@ class AddUsersAndProjectsAndExperiencesAndPartnerpreferencesAndProjectpreference
 	{
 		Schema::create('users', function($table){
 			$table->increments('id');
-			$table->string('password');
+			$table->string('password',60)->nullable();
+			$table->string('cwid');
 			$table->string('username')->unique();
 			$table->string('firstname');
 			$table->string('lastname');
-			$table->integer('is_admin')->default(0);
+			$table->boolean('is_admin')->default(false);
 			$table->dateTime('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));  //added by mike
 			$table->dateTime('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));  //added by mike 
 			$table->string('majortext')->nullable();
