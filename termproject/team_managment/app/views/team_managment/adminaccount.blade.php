@@ -8,7 +8,7 @@
 	<a class="btn btn-link" href="{{ url('home') }}">&larr;Home</a>
 @stop
 
-@section('formcontnet')
+@section('formcontent')
 	@if(empty($user))
 		<div class="alert alert-warning">
 			No user information :(
