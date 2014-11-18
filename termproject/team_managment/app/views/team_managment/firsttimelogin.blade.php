@@ -35,19 +35,19 @@ Please fill out your information
 		</div>
 		<div class="content form-horizontal">
 			<div class="form-group">
-				{{ Form::label('1<sup>st</sup> choice',null,array("class"=>"col-sm-2 control-label")) }}
+				{{ Form::label('1st choice',null,array("class"=>"col-sm-2 control-label")) }}
 				<div class="col-sm-10">
 					{{ Form::select('first_project_id', $projoptions,null,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required')) }}
 				</div>
 			</div>
 			<div class="form-group">
-				{{ Form::label('2<sup>nd</sup> choice',null,array("class"=>"col-sm-2 control-label")) }}
+				{{ Form::label('2nd choice',null,array("class"=>"col-sm-2 control-label")) }}
 				<div class="col-sm-10">
 					{{ Form::select('second_project_id', $projoptions,null,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required')) }}
 				</div>
 			</div>
 			<div class="form-group">
-				{{ Form::label('3<sup>rd</sup> choice',null,array("class"=>"col-sm-2 control-label")) }}
+				{{ Form::label('3rd choice',null,array("class"=>"col-sm-2 control-label")) }}
 				<div class="col-sm-10">
 					{{ Form::select('third_project_id', $projoptions,null,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required')) }}
 				</div>
