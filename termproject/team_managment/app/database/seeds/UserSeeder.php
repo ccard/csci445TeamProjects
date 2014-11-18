@@ -12,8 +12,7 @@ class UserSeeder extends CsvSeeder {
 
 	public function __construct()
 	{
-        //hashable(string password); // added by Mike, but probably not needed
-		$this->table = 'users';
+ 		$this->table = 'users';
 		$this->filename = app_path().'/database/seeds/csvs/students.csv';
 	}
 
@@ -24,7 +23,7 @@ class UserSeeder extends CsvSeeder {
 		DB::table($this->table)->truncate();
 
 		$date = new \DateTime;
-		//DB::table('users')->insert(array(array('username'=>'admin@admin.com', 'password'=>'admin','firstname'=>'Cynthia','lastname'=>'Rader','created_at'=>$date,'updated_at'=>$date)));
+
 		DB::table('users')->insert(array(
 			array('username'=>'admin@admin.com','cwid'=>'admin','firstname'=>'Cynthia','lastname'=>'Rader','is_admin'=>true),
 		));

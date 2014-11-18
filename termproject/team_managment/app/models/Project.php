@@ -5,10 +5,12 @@
 	*/
 	class Project extends Eloquent
 	{
-		protected $fillable = array('title','company');
-		public $timestamps=false;
-
+		
 		protected $table="projects";
+
+		protected $fillable = array('title','company','min','max');
+		
+		public $timestamps=false;
 
 		public function projectPreferences(){
 			return $this->hasMany('ProjectPreferences');

@@ -12,7 +12,7 @@ class ProjectSeeder extends CsvSeeder {
 
 	public function __construct()
 	{
-        //hashable(string password); // added by Mike, but probably not needed
+
 		$this->table = 'projects';
 		$this->filename = app_path().'/database/seeds/csvs/projects.csv';
 	}
@@ -25,6 +25,8 @@ class ProjectSeeder extends CsvSeeder {
 
 		//TODO seed from csv file
 		parent::run();
+
+
 
 	}
 
