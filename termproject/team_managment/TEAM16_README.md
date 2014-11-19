@@ -17,8 +17,10 @@ Term Project csci445
  - If you  want to reset the database using the csv files that we provided or have trouble logging in. Run the command `php artisan migrate:refresh --seed`
  - This uses the sqlite database not mysql
  - __note:__ to login as a non admin user look at the students.csv file in /app/database/seeds/csvs/students.csv file and the username is in there and the password is the cwid.  and the first time you login you should be redirected to the home/firstlogin page, you should be able to fill out the fields and save the form.
------
+
+------
 ##if running from luna ##
+&nbsp;&nbsp;This section will discribe how to run our program and the necessary commands and file requirements.
  - go to [luna.mines.edu/team16/team_managment/public](luna.mines.edu/team16/team_managment/public)
  - to login as admin username:admin@admin.com pass:admin
  - to login as user username:dvader@mines.edu pass:223344 or any one from students.csv where the email is the username and the password is the cwid
