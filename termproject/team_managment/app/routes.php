@@ -162,7 +162,7 @@ Route::post('home/firstlogin/{id}', function($id){
 	$project_preferences->second_project_id = Input::get("second_project_id");
 	$project_preferences->third_project_id = Input::get("third_project_id");
 	//$project_preferences->save();
-	$user->projectPreferences()->attach($project_preferences)->save();
+	$user->projectPreferences()->save($project_preferences);
 	
 	$experiences = new Experiences;
 
