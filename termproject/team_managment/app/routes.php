@@ -1,5 +1,5 @@
 <?php
-
+	 use Illuminate\Support\MessageBag;
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -46,9 +46,9 @@ Route::group(array('before'=>'auth'), function(){
 Route::get('home', function() {
 	if (Auth::user()->isAdmin()){
 		//TODO query database to retrive these items
-		$users = count(array()); //the number of users in the system
+		$users = User::count(); //the number of users in the system
 		$emails = 'test@aol.com,test2@aol.com';//populate with list of emails
-		$projects = count(array()); //the number of projects in the system
+		$projects = Project::count(); //the number of projects in the system
 		$projectteams = array(); //Project teams is in the following format array('projectid'=>array('projname'=>'projname', 'members'=>array('email'=>'name')))
 		return View::make('team_managment.adminhome')->with('users',$users)->with('projects',$projects)->with('projectteams', $projectteams)->with('emails',$emails);
 	} else {
@@ -67,9 +67,13 @@ Route::get('home', function() {
 Route::get('home/firstlogin', function(){
 	//Pass in user information to the form must be TODO make sure this works
 	if(Session::has('error')) {
-		return View::make('team_managment.firsttimelogin')->with('user',Auth::user())->with('method','post')->with('error', Session::get('error'));
+		if(Session::has('errors')){
+			return View::make('team_managment.firsttimelogin')->with('user',Auth::user())->with('method','post')->with('error', Session::get('error'))->with('errors',Session::get('errors'));
+		} else {
+			return View::make('team_managment.firsttimelogin')->with('user',Auth::user())->with('method','post')->with('error', Session::get('error'))->with('errors',new MessageBag);
+		}
 	} else {
-		return View::make('team_managment.firsttimelogin')->with('user',Auth::user())->with('method','post');
+		return View::make('team_managment.firsttimelogin')->with('user',Auth::user())->with('method','post')->with('errors',new MessageBag);
 	}	
 });
 
@@ -153,62 +157,83 @@ Route::get('users/{id}/info', function($id){
 Route::post('home/firstlogin/{id}', function($id){
 	//TODO perform inserts into appropriate tables etc and perform input sanitation and validation
 
+	//rules
+	$rules = array(
+		'majortext'=>'Required|Min:3|Alpha',
+		'minortext'=>'Required|Min:3|Alpha',
+		'first_project_id'=>'different:second_project_id',
+		'first_project_id'=>'different:third_project_id',
+		'second_project_id'=>'different:first_project_id',
+		'second_project_id'=>'different:third_project_id',
+		'third_project_id'=>'different:second_project_id',
+		'third_project_id'=>'different:first_project_id'
+		);
+	$messages = array(
+		'first_project_id.different'=>'The first project choice must be different from the second and third choice',
+		'second_project_id.different'=>'The first project choice must be different from the first and third choice',
+		'third_project_id.different'=>'The first project choice must be different from the second and first choice'
+		);
+	$validator= Validator::make(Input::all(),$rules,$messages);
+	if ($validator->passes()) {
 	// query = update users set (majortext, minortext, experienceid, projprefid, pref_partor_proj, )
-	$user = Auth::user();
-	//$user->firstname = Input::
-	$project_preferences = new ProjectPreferences;
-	$project_preferences->user_id = $user->id;
-	$project_preferences->first_project_id = Input::get("first_project_id");
-	$project_preferences->second_project_id = Input::get("second_project_id");
-	$project_preferences->third_project_id = Input::get("third_project_id");
-	//$project_preferences->save();
-	$user->projectPreferences()->save($project_preferences);
+		$user = Auth::user();
+		//$user->firstname = Input::
+		$project_preferences = new ProjectPreferences;
+		$project_preferences->user_id = $user->id;
+		$project_preferences->first_project_id = Input::get("first_project_id");
+		$project_preferences->second_project_id = Input::get("second_project_id");
+		$project_preferences->third_project_id = Input::get("third_project_id");
+		$project_preferences->save();
+		$user->projectPreferences()->associate($project_preferences);
+		//dd($user->projectPreferences()->first_project());
+		$experiences = new Experiences;
 	
-	$experiences = new Experiences;
-
-	//dd(Input::get('expirencetext'));
-
-
-	//dd($user->experiences()->save($experiences));
-
-	$user->majortext = Input::get('majortext');
-	$user->minortext = Input::get('minortext');
-	$user->experience = Input::get('expirencetext');
-	$user->pref_part_or_proj = Input::get('pref_part_or_proj');
-	$pref_partners = Input::get('pref_partner');
-	$pref_partners_array = array();
-	foreach($pref_partners as $pref_partner) {
-		$partner_preferences = new PartnerPreferences;
-		$partner_preferences->user_id = $user->id;
-		$partner_preferences->partner_id = $pref_partner;
-		$partner_preferences->avoid = false;
-		$partner_preferences->save();
-		//$user->partnerPreferences()->attach($partner_preferences);
-		//array_push($pref_partners_array, $partner_preferences);
-		//$user->partnerPreferences()->attach($partner_preferences, ["user_id"=>$user->id]);
-
-	}
-	//dd($user->partnerPreferences());
-	// $user->partnerPreferences()->sync($pref_partners_array);
-	//$user
-
-	$nopref_partners = Input::get('no_pref_partner');
-	$nopref_partners_array = array();
-	foreach($nopref_partners as $nopref_partner) {
-		$nopartner_preferences = new PartnerPreferences;
-		$nopartner_preferences->user_id = $user->id;
-		$nopartner_preferences->partner_id = $nopref_partner;
-		$nopartner_preferences->avoid = true;
-		$nopartner_preferences->save();
-		//array_push($nopref_partners_array, $nopartner_preferences);
-	}
-	//$user->partnerPreferences()->saveMany($nopref_partners_array);
-
-	//$partner_prefernces->partner_id
-	if($user->save()) { 
-		return Redirect::to('home')->with('message', 'Your info has been saved.');
-	} else {
-		return Redirect::to('home/firstlogin')->with('error', 'Your info has not been saved.');
+		//dd(Input::get('expirencetext'));
+	
+	
+		//dd($user->experiences()->save($experiences));
+	
+		$user->majortext = Input::get('majortext');
+		$user->minortext = Input::get('minortext');
+		$user->experience = Input::get('expirencetext');
+		$user->pref_part_or_proj = Input::get('pref_part_or_proj');
+		$pref_partners = Input::get('pref_partner');
+		$pref_partners_array = array();
+		foreach($pref_partners as $pref_partner) {
+			$partner_preferences = new PartnerPreferences;
+			$partner_preferences->user_id = $user->id;
+			$partner_preferences->partner_id = $pref_partner;
+			$partner_preferences->avoid = false;
+			$partner_preferences->save();
+			//$user->partnerPreferences()->attach($partner_preferences);
+			//array_push($pref_partners_array, $partner_preferences);
+			//$user->partnerPreferences()->attach($partner_preferences, ["user_id"=>$user->id]);
+	
+		}
+		//dd($user->partnerPreferences());
+		// $user->partnerPreferences()->sync($pref_partners_array);
+		//$user
+	
+		$nopref_partners = Input::get('no_pref_partner');
+		$nopref_partners_array = array();
+		foreach($nopref_partners as $nopref_partner) {
+			$nopartner_preferences = new PartnerPreferences;
+			$nopartner_preferences->user_id = $user->id;
+			$nopartner_preferences->partner_id = $nopref_partner;
+			$nopartner_preferences->avoid = true;
+			$nopartner_preferences->save();
+			//array_push($nopref_partners_array, $nopartner_preferences);
+		}
+		//$user->partnerPreferences()->saveMany($nopref_partners_array);
+	
+		//$partner_prefernces->partner_id
+		if($user->save()) { 
+			return Redirect::to('home')->with('message', 'Your info has been saved.');
+		} else {
+			return Redirect::back()->withInput()->with('error', 'Your info has not been saved.');
+		}
+	}else{
+		return Redirect::back()->withInput()->with('error', 'Some fields arent filled out')->with('errors',$validator->messages());
 	}
 	//$user->experiencetext = Input::get('experiencetext');
 

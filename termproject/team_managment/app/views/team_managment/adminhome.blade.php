@@ -10,19 +10,19 @@
 
 @section('content')
 	<div class="content" style="margin-left: 20px">
-	@if (count($users) == 0)
+	@if ($users == 0)
 		<div class="alert alert-warning">
 			Please seed the database with users <!--TODO create ability to upload new users -->
 		</div>
 	@else
-		@if (count($projects) == 0)
+		@if ($projects == 0)
 		<div class="alert alert-warning">
 			Please seed the database with projects <!--TODO create ability to upload new users -->
 		</div>
 		@elseif (count($projectteams) == 0)
 			<div class="alert alert-warning">
 				{{ Form::open(array('action'=>'GenerateTeams@generateTeams')) }}
-				Please generate tables by clicking {{ Form::submit('here',array("class"=>"btn btn-link")) }}
+				Please generate tables by clicking {{ Form::submit('here',array("class"=>"btn-link")) }}
 				{{ Form::close() }}
 			</div>
 		@else
