@@ -15,5 +15,4 @@ Term Project csci445
  - All you should have to do is run `php artisan serve` and navigate to [http://localhost:8000](http://localhost:8000): to login as the admin username is _admin@admin.com_, pass is _admin_
  - If you  want to reset the database using the csv files that we provided or have trouble logging in. Run the command `php artisan migrate:refresh --seed`
  - This uses the sqlite database not mysql
- - Once this is done run `php artisan serv` and go to [http://localhost:8000](http://localhost:8000) and you should be redirected to the appropriate page
- - __note:__ to login as a non admin user look at the students.csv file in /app/database/seeds/csvs/students.csv file and the username is in there and the password is the cwid.
+ - __note:__ to login as a non admin user look at the students.csv file in /app/database/seeds/csvs/students.csv file and the username is in there and the password is the cwid.  and the first time you login you should be redirected to the home/firstlogin page, you should be able to fill out the fields and save the form.
