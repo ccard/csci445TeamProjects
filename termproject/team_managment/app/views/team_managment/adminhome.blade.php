@@ -10,12 +10,12 @@
 
 @section('content')
 	<div class="content" style="margin-left: 20px">
-	@if ($users <= 0)
+	@if (count($users) == 0)
 		<div class="alert alert-warning">
 			Please seed the database with users <!--TODO create ability to upload new users -->
 		</div>
 	@else
-		@if ($projects == 0)
+		@if (count($projects) == 0)
 		<div class="alert alert-warning">
 			Please seed the database with projects <!--TODO create ability to upload new users -->
 		</div>

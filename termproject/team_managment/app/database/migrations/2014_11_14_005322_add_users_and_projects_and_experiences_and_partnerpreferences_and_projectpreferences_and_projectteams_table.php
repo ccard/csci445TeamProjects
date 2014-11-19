@@ -25,10 +25,11 @@ class AddUsersAndProjectsAndExperiencesAndPartnerpreferencesAndProjectpreference
 			$table->dateTime('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));  //added by mike 
 			$table->string('majortext')->nullable();
 			$table->string('minortext')->nullable();
-			$table->integer('experience_id')->nullable();
-			$table->integer('projectpreference_id')->nullable();
+			$table->string('experience')->nullable();
+			$table->integer('project_preferences_id')->nullable();
 			$table->integer('pref_part_or_proj')->nullable(); //changed by mike
 			$table->integer('project_id')->nullable();
+			$table->string('remember_token')->nullable();
 		});
 
 		Schema::create('projects', function($table){

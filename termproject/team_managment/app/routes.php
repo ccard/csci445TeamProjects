@@ -27,9 +27,15 @@ Route::get('login', function(){
 	return View::make('team_managment.login');
 });
 
+Route::get('logout', function() {
+	Auth::logout();
+	return Redirect::to('/')
+		->with('message', 'You are now logged out.');
+});
+
 Route::post('login',function(){
 	//dd(Input::only('username','password'));
-	if(Auth::attempt(Input::only('username','password'))){
+	if(Auth::attempt(Input::only('username','password'), true)){
 		return Redirect::intended('/');
 	} else {
 		return Redirect::back()->withInput()->with('error',"Invalid credentials!");
@@ -46,8 +52,9 @@ Route::get('home', function() {
 		$projectteams = array(); //Project teams is in the following format array('projectid'=>array('projname'=>'projname', 'members'=>array('email'=>'name')))
 		return View::make('team_managment.adminhome')->with('users',$users)->with('projects',$projects)->with('projectteams', $projectteams)->with('emails',$emails);
 	} else {
+		//dd(Auth::user()->project_preferences_id);
 		//If the user has no project preferences then they must be redirected to the firstogin page
-		if(count(Auth::user()->projectpreference)){
+		if(!empty(Auth::user()->project_preferences_id)){
 			$project = array(); //TODO: replace this with a query to database to get project name and all associted student names and emails
 			//in the form of array('projname'=>"name", 'members'=>array('email'=>"name"))
 			return View::make('team_managment.userhome')->with('user',Auth::user())->with('project',$project);
@@ -59,7 +66,11 @@ Route::get('home', function() {
 
 Route::get('home/firstlogin', function(){
 	//Pass in user information to the form must be TODO make sure this works
-	return View::make('team_managment.firsttimelogin')->with('user',Auth::user())->with('method','put');
+	if(Session::has('error')) {
+		return View::make('team_managment.firsttimelogin')->with('user',Auth::user())->with('method','post')->with('error', Session::get('error'));
+	} else {
+		return View::make('team_managment.firsttimelogin')->with('user',Auth::user())->with('method','post');
+	}	
 });
 
 Route::get('home/accountinfo', function(){
@@ -139,11 +150,77 @@ Route::get('users/{id}/info', function($id){
 /*------------------------------------------------------------------------
  Post routes
  */
-
-
-Route::put('home/firstlogin/{id}',function($id){
+Route::post('home/firstlogin/{id}', function($id){
 	//TODO perform inserts into appropriate tables etc and perform input sanitation and validation
-	return Redirect::to('home')->with('message','Your info has been saved');
+
+	// query = update users set (majortext, minortext, experienceid, projprefid, pref_partor_proj, )
+	$user = Auth::user();
+	//$user->firstname = Input::
+	$project_preferences = new ProjectPreferences;
+	$project_preferences->user_id = $user->id;
+	$project_preferences->first_project_id = Input::get("first_project_id");
+	$project_preferences->second_project_id = Input::get("second_project_id");
+	$project_preferences->third_project_id = Input::get("third_project_id");
+	//$project_preferences->save();
+	$user->projectPreferences()->attach($project_preferences)->save();
+	
+	$experiences = new Experiences;
+
+	//dd(Input::get('expirencetext'));
+
+
+	//dd($user->experiences()->save($experiences));
+
+	$user->majortext = Input::get('majortext');
+	$user->minortext = Input::get('minortext');
+	$user->experience = Input::get('expirencetext');
+	$user->pref_part_or_proj = Input::get('pref_part_or_proj');
+	$pref_partners = Input::get('pref_partner');
+	$pref_partners_array = array();
+	foreach($pref_partners as $pref_partner) {
+		$partner_preferences = new PartnerPreferences;
+		$partner_preferences->user_id = $user->id;
+		$partner_preferences->partner_id = $pref_partner;
+		$partner_preferences->avoid = false;
+		$partner_preferences->save();
+		//$user->partnerPreferences()->attach($partner_preferences);
+		//array_push($pref_partners_array, $partner_preferences);
+		//$user->partnerPreferences()->attach($partner_preferences, ["user_id"=>$user->id]);
+
+	}
+	//dd($user->partnerPreferences());
+	// $user->partnerPreferences()->sync($pref_partners_array);
+	//$user
+
+	$nopref_partners = Input::get('no_pref_partner');
+	$nopref_partners_array = array();
+	foreach($nopref_partners as $nopref_partner) {
+		$nopartner_preferences = new PartnerPreferences;
+		$nopartner_preferences->user_id = $user->id;
+		$nopartner_preferences->partner_id = $nopref_partner;
+		$nopartner_preferences->avoid = true;
+		$nopartner_preferences->save();
+		//array_push($nopref_partners_array, $nopartner_preferences);
+	}
+	//$user->partnerPreferences()->saveMany($nopref_partners_array);
+
+	//$partner_prefernces->partner_id
+	if($user->save()) { 
+		return Redirect::to('home')->with('message', 'Your info has been saved.');
+	} else {
+		return Redirect::to('home/firstlogin')->with('error', 'Your info has not been saved.');
+	}
+	//$user->experiencetext = Input::get('experiencetext');
+
+	/*$project_prefrences = ProjectPreferences::create(Input::all());
+	$project_preferences->user_id = Auth::user()->id;
+	
+	if($project_preferences->save()) {
+		return Redirect::to('home')->with('message','Your info has been saved');
+	} else {
+		return Redirect::back()->with('error', 'Could not save info');
+	}*/
+	//return Redirect::to('home');
 });
 
 Route::put('home/generateteams','GenerateTeams@generateTeams'); //This will call the controller method generateTemas in GenerateTeams controller
@@ -175,13 +252,21 @@ Route::delete('home/editteam/{projid}', function($projid){
 //TODO: Replace this with the appropriate queries to get projects
 View::composer('team_managment.firsttimelogin', function($view){
 	//TODO: Replace with appropriate quires to the databse
-	$projectoptions = array_combine([1,2], ['test1','test2']);//formate (project_id list,title list)
-	$partneroptions = array_combine([1,2], ['test1','test2']);
+	//$projectoptions = 
+	$projects = Project::all();
+	$project_options = array_combine($projects->lists('id'), $projects->lists('title'));
+	//$projectoptions = array_combine([1,2], ['test1','test2']);//formate (project_id list,title list)
+	$users = User::where('id', '<>', Auth::user()->id)->where('is_admin', '<>', 1)->get();
+	$firstnames = $users->lists('firstname');
+	$lastnames = $users->lists('lastname');
+	$arr = array_map(function($str1, $str2){ return $str1." ".$str2;}, $firstnames, $lastnames);
+	$partner_options = array_combine($users->lists('id'), $arr);
+	//$partneroptions = array_combine([1,2], ['test1','test2']);
 	// if(count($genres) > 0){
 	// 	$genre_options = array_combine($genres->lists('id'), $genres->lists('name'));
 	// } else {
 	// 	$genre_options = array_combine(null,'Unspecified');
 	// }
-	$view->with('partneroptions',$partneroptions)->with('projoptions',$projectoptions);
+	$view->with('partneroptions',$partner_options)->with('projoptions',$project_options);
 });
 });

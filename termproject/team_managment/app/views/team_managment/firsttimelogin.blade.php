@@ -3,7 +3,7 @@
 Please fill out your information
 @stop
 @section('formcontent')
-	{{ Form::model($user, array('method'=>$method, 'url'=>'firstlogin/'.(Auth::check() ? $user->id : -1))) }}
+	{{ Form::model($user, array('method'=>$method, 'url'=>'home/firstlogin/'.(Auth::check() ? $user->id : -1))) }}
 	<div class="content" style="margin-left: 10px">
 		<div class="page-header">
 			<h2>General Info</h2>
