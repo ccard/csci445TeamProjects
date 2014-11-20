@@ -5,12 +5,8 @@
 
 @stop
 
-@section('optionGroup')
-	<a class="btn btn-link" href="{{url('home/accountinfo')}}">Back to Administration pane</a>
-@stop
-
 @section('backButton')
-	<a class="btn btn-link" href="{{ url('home') }}">&larr;Home</a>
+	<a class="btn btn-link" href="{{url('home/accountinfo')}}">Back to Administration pane</a>
 @stop
 
 @section('content')
