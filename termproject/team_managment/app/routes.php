@@ -248,7 +248,26 @@ Route::post('home/firstlogin/{id}', function($id){
 	//return Redirect::to('home');
 });
 
-Route::put('home/generateteams','GenerateTeams@generateTeams'); //This will call the controller method generateTemas in GenerateTeams controller
+ Route::get('home/accountinfo/managestudents', function() {
+ 	$userInfo = User::all();
+ 	return View::make('team_managment.managestudents')
+ 	->with('userInfo', $userInfo)
+ 	->with('message', 'manage Students button pushed.');
+ 
+ });
+
+ Route::get('home/accountinfo/manageprojects', function() {
+ 	$projectInfo = Project::all();
+ 	return View::make('team_managment.manageprojects')
+ 	->with('projectInfo', $projectInfo)
+ 	->with('message', 'manage Students button pushed.');
+ 
+ });
+
+
+//Route::put('home/generateteams','GenerateTeams@generateTeams'); //This will call the controller method generateTemas in GenerateTeams controller
+Route::post('home/generateteams','GenerateTeams@generateTeams'); //This will call the controller method generateTemas in GenerateTeams controller
+
 
 Route::put('home/accountinfo/passchange','GenerateTeams@changePassword'); //This will call the controller method changePassword in GenerateTeams controller
 
