@@ -33,7 +33,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="control-label">Password - <a id="editpass" class="btn-link" data-toggle="modal" data-target="#modalpasschange">Change</a> </label>
+					<label class="control-label col-sm-2">Password - </label> <a id="editpass" class="btn-link form-control" data-toggle="modal" data-target="#modalpasschange">Change</a>
 				</div>
 			</div>
 			<div id="namechange">

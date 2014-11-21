@@ -7,7 +7,11 @@
 	@endif
 @stop
 @section('backButton')
-	<a class="btn btn-link" href="{{ url('home') }}">&larr;Home</a>
+	@if(!empty($method))
+		<a class="btn btn-link" href="{{ URL::previous() }}">&larr;Back</a>
+	@else
+		<a class="btn btn-link" href="{{ url('home') }}">&larr;Home</a>
+	@endif
 @stop
 @section('formcontent')
 	@if(empty($user))
@@ -50,10 +54,6 @@
 						{{ Form::textarea('experiencetext',$user->experience,array("class"=>"form-control",'readonly'=>"readonly",'cols'=>"100",'rows'=>"2",0=>'disabled')) }}
 					</div>
 				</div>
-				<div class="form-group" style="margin-left: 10px">
-					<label class="control-label col-sm-2">Password -
-					<a id="editpass" class="btn-link" data-toggle="modal" data-target="#modalpasschange">Change</a></label>
-				</div>
 			</div>
 		</div>
 		<div class="content" style="margin-left: 10px">
@@ -64,19 +64,37 @@
 				<div class="form-group">
 					<label type="label" class="control-label col-sm-2">1<sup>st</sup> prefence</label>  
 					<div class="col-sm-10">
+						@if(is_null($user->projectPreferences))
+							<div class="alert alert-warning">
+								No project prefences selected
+							</div>
+						@else
 							{{ Form::select('first_project_id', $projoptions,$user->projectPreferences->first_project_id,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required','autocomplete'=>"off",1=>'disabled')) }}
+						@endif
 					</div>
 				</div>
 				<div class="form-group">
 					<label type="label" class="control-label col-sm-2">2<sup>nd</sup> prefence</label>  
 						<div class="col-sm-10">
-							{{ Form::select('second_project_id', $projoptions,$user->projectPreferences->second_project_id,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required','autocomplete'=>"off",1=>'disabled')) }}
+							@if(is_null($user->projectPreferences))
+								<div class="alert alert-warning">
+									No project prefences selected
+								</div>
+							@else
+								{{ Form::select('second_project_id', $projoptions,$user->projectPreferences->second_project_id,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required','autocomplete'=>"off",1=>'disabled')) }}
+							@endif
 						</div>
 				</div>
 				<div class="form-group">
 					<label type="label" class="control-label col-sm-2"> 3<sup>rd</sup> preference </label>
 					<div class="col-sm-10">
-						{{ Form::select('third_project_id', $projoptions,$user->projectPreferences->third_project_id,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required','autocomplete'=>"off",1=>'disabled')) }}
+						@if(is_null($user->projectPreferences))
+							<div class="alert alert-warning">
+								No project prefences selected
+							</div>
+						@else
+							{{ Form::select('third_project_id', $projoptions,$user->projectPreferences->third_project_id,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required','autocomplete'=>"off",1=>'disabled')) }}
+						@endif
 					</div>
 				</div>
 			</div>

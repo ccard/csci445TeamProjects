@@ -20,6 +20,11 @@ class GenerateTeams extends BaseController {
 		return Redirect::back()->with('message','password changed');
 	}
 
+	public function deleteUser(){
+		$userid = Input::get('userid');
+		return Redirect::back()->with('message','User deleted');
+	}
+
 	public function changeName(User $usr){
 		return Redirect::to('home/accountinfo')->with('message','Success');
 	}

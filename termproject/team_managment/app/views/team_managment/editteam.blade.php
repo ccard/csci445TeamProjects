@@ -17,11 +17,11 @@
 		<div class='content' style="margin-left: 10px">
 			@foreach($projectteam['users'] as $key => $value)
 				<div class="content">
-					<span><a class=" btn-link" href="{{ url('users/'.$key.'/info') }}">{{ $value['name'] }}</a> - {{ $value['email']}}
+					<span><a class=" btn-link" href="{{ url('users/'.$key.'/info') }}" style="color: #000">{{ $value['name'] }}</a> - {{ $value['email']}}
 						<div class="pull-right">
 							{{ Form::open(array('method'=>'delete', 'url'=>'home/editteam/'.$projectteam['projid']))}}
 							{{ Form::hidden('userid',$key) }}
-							{{Form::submit('Remove',array("class"=>"pull-right btn-link","style"=>"color: #FF0000","onclick"=>"if(!confirm('Are you shure you want to remove this user?')){return false;};")) }} 
+							{{Form::submit('Remove',array("class"=>"pull-right btn-link","style"=>"color: #FF0000","onclick"=>"if(!confirm('Are you sure you want to remove this user?')){return false;};")) }} 
 							{{ Form::close() }}
 						</div>
 						</span>

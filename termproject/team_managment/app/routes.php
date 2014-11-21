@@ -147,13 +147,23 @@ Route::get('home/editteam/{projid}', function($projid) {
 Route::get('users/{id}/info', function($id){
 	if(Auth::user()->isAdmin()){
 		$method = 'get'; // to just view the information
-		$user = Auth::user();//replace with a query for the user id
-		$projectoptions = array_combine([1,2],['test1','test2']);//TODO replace with db query
-		$partneroptions = array_combine([1,2],['test1','test2']);//TODO replace with db query
+		$user = User::where('id','=',$id)->first();//replace with a query for the user id
+		
+		//populates options
+		$projects = Project::all();
+		$projectoptions = array_combine($projects->lists('id'), $projects->lists('title'));
+
+		$users = User::where('id', '<>', $user->id)->where('is_admin', '<>', 1)->get();
+		$firstnames = $users->lists('firstname');
+		$lastnames = $users->lists('lastname');
+		$arr = array_map(function($str1, $str2){ return $str1." ".$str2;}, $firstnames, $lastnames);
+		$partneroptions = array_combine($users->lists('id'), $arr);
+
 		$perferedchoice = array(1); //TODO replace with query from db
 		$avoidchoice = array(2); //TODO replace with query from db
 		return View::make('team_managment.useraccount')->with('method',$method)
 		->with('user',$user)
+		->with('projoptions',$projectoptions)
 		->with('partneroptions',$partneroptions)
 		->with('perferedchoice',$perferedchoice)
 		->with('avoidchoice',$avoidchoice);
@@ -216,14 +226,7 @@ Route::post('home/firstlogin/{id}', function($id){
 			$partner_preferences->partner_id = $pref_partner;
 			$partner_preferences->avoid = false;
 			$partner_preferences->save();
-			//$user->partnerPreferences()->attach($partner_preferences);
-			//array_push($pref_partners_array, $partner_preferences);
-			//$user->partnerPreferences()->attach($partner_preferences, ["user_id"=>$user->id]);
-	
 		}
-		//dd($user->partnerPreferences());
-		// $user->partnerPreferences()->sync($pref_partners_array);
-		//$user
 	
 		$nopref_partners = Input::get('no_pref_partner');
 		$nopref_partners_array = array();
@@ -233,26 +236,32 @@ Route::post('home/firstlogin/{id}', function($id){
 			$nopartner_preferences->partner_id = $nopref_partner;
 			$nopartner_preferences->avoid = true;
 			$nopartner_preferences->save();
-			//array_push($nopref_partners_array, $nopartner_preferences);
 		}
-		//$user->partnerPreferences()->saveMany($nopref_partners_array);
 	
-		//$partner_prefernces->partner_id
 		if($user->save()) { 
 			return Redirect::to('home')->with('message', 'Your info has been saved.');
 		} else {
 			return Redirect::back()->withInput()->with('error', 'Your info has not been saved.');
 		}
 	}else{
-		return Redirect::back()->withInput()->with('error', 'Some fields arent filled out')->with('errors',$validator->messages());
+		return Redirect::back()->withInput()->with('error', 'Some fields are filled incorrectly')->with('errors',$validator->messages());
 	}
 });
 
  Route::get('home/accountinfo/managestudents', function() {
- 	$userInfo = User::all();
- 	return View::make('team_managment.managestudents')
- 	->with('userInfo', $userInfo)
- 	->with('message', 'manage Students button pushed.');
+ 	if(Auth::user()->isAdmin()){
+ 		$userInfo = User::where('id','<>',Auth::user()->id)->orderBy('lastname')->get();
+ 		if(Session::has('message')){
+ 			return View::make('team_managment.managestudents')
+ 			->with('userInfo', $userInfo)
+ 			->with('message',Session::get('message'));
+ 		} else {
+ 			return View::make('team_managment.managestudents')
+ 			->with('userInfo', $userInfo);
+ 		}
+ 	}else{
+ 		return Redirect::back();
+ 	}
  
  });
 
@@ -282,6 +291,11 @@ Route::put('home/accountinfo/projprefchange','GenerateTeams@changeProjPref'); //
 Route::put('home/accountinfo/partprefchange','GenerateTeams@changePartPref'); //This will call the controller method changePartPref in GenerateTeams controller
 
 Route::put('home/accountinfo/adminaddteam','GenerateTeams@adminAddMember'); //This will call the controller method adminAddMember in GenerateTeams controller
+
+Route::put('home/accountinfo/managestudents/resetpass','GenerateTeams@resetPassword'); //This will call the controller method resetPassword in GenerateTeams controller
+
+Route::delete('home/accountinfo/managestudents/deleteuser','GenerateTeams@deleteUser'); //This will call the controller method deleteUser in GenerateTeams controller
+
 
 Route::delete('home/editteam/{projid}', function($projid){
 	if(Auth::user()->isAdmin()){
