@@ -15,16 +15,25 @@
 		</div>
 	@else
 		<div class="content" style="margin-left: 10px">
-			<div class="content">
+			<div class="form-horizontal">
 				<div class="page-header">
 					<h2>Personal info</h2>
 				</div>
-				<div class="content" style="margin-left: 10px">
-					<span>Name:  {{ $user->firstname }} - {{ $user->lastname }}  -<a id="editname" class="btn-link" data-toggle="modal" data-target="#modalnamechange">Edit Name</a> </span>
-					<span class="text-right" style="margin-left: 30px"> Email - {{ $user->username}}</span>
+				<div class="form-group">
+					{{ Form::label('Name',null,array("class"=>"control-label col-sm-2")) }}
+					<div class="col-sm-10">
+					  {{ Form::text('name',$user->firstname.' - '.$user->lastname,array("class"=>"form-control",'readonly'=>"readonly",0=>'disabled')) }}
+					    <a id="editname" class="btn-link pull-right" data-toggle="modal" data-target="#modalnamechange">Edit Name</a>
+					 </div>
 				</div>
-				<div class="content" style="margin-left: 10px">
-					<span>Password -<a id="editpass" class="btn-link" data-toggle="modal" data-target="#modalpasschange">Change</a> </span>
+				<div class="form-group">
+					{{ Form::label('Email',null,array("class"=>"control-label col-sm-2")) }}
+					<div class="col-sm-10">
+					 	{{ Form::text('username',$user->username,array("class"=>"form-control",'readonly'=>"readonly",0=>'disabled'))}}
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label">Password - <a id="editpass" class="btn-link" data-toggle="modal" data-target="#modalpasschange">Change</a> </label>
 				</div>
 			</div>
 			<div id="namechange">

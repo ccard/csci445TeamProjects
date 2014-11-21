@@ -15,6 +15,11 @@ class GenerateTeams extends BaseController {
 		return Redirect::to('home/accountinfo')->with('message','Success');
 	}
 
+	public function resetPassword(){
+		$userid = Input::get('userid');
+		return Redirect::back()->with('message','password changed');
+	}
+
 	public function changeName(User $usr){
 		return Redirect::to('home/accountinfo')->with('message','Success');
 	}
