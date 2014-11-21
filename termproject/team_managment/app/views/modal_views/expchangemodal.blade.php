@@ -20,7 +20,7 @@
 					<div class="form-group">
 						{{ Form::label('Related Expirence/Goals',null,array("class"=>"control-label col-sm-3")) }}
 						<div class="col-sm-7">
-							{{ Form::textarea('expirencetext', $user->experience()->experience ,array("class"=>"form-control","rows"=>"3")) }}
+							{{ Form::textarea('expirencetext', $user->experience ,array("class"=>"form-control","rows"=>"3")) }}
 						</div>
 					</div>
 				</div>

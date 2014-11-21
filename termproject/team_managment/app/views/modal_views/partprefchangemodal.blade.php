@@ -21,22 +21,22 @@
 						<div class="form-group col-lg-6">
 							{{ Form::label('Prefered Partners',null,array("class"=>"col-lg-2 control-label")) }}
 							<div class="col-lg-10">
-								{{ Form::select('pref_partner[]', $partneroptions,$perferedchoice,array('multiple'=>'multiple',"class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'Hold ctrl to select more than one person')) }}
+								{{ Form::select('pref_partner[]', $partneroptions,$perferedchoice,array('multiple'=>'multiple',"class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'Hold ctrl to select more than one person','autocomplete'=>"off")) }}
 							</div>
 						</div>
 						<div class="form-group col-lg-6">
 							{{ Form::label('Dont want to work with',null,array("class"=>"col-lg-2 control-label")) }}
 							<div class="col-lg-10">
-								{{ Form::select('no_pref_partner[]', $partneroptions,$avoidchoice,array('multiple'=>'multiple',"class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'Hold ctrl to select more than one person')) }}
+								{{ Form::select('no_pref_partner[]', $partneroptions,$avoidchoice,array('multiple'=>'multiple',"class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'Hold ctrl to select more than one person','autocomplete'=>"off")) }}
 							</div>
 						</div>
 						<div class="text-center row">
 							<div class="form-group checkbox-inline">
-								{{ Form::radio('pref_part_or_proj','true',($user->pref_part_or_proj == 1 ? true : null))}}
+								{{ Form::radio('pref_part_or_proj','1',($user->pref_part_or_proj == 1 ? true : null),array('autocomplete'=>"off")) }}
 								{{ Form::label('partner','Prefer Partners',array("class"=>"control-label", "style"=>"margin-right: 15px")) }}
 							</div>
 							<div class="form-group checkbox-inline">
-								{{ Form::radio('pref_part_or_proj', 'false', ($user->pref_part_or_proj == 0 ? true : null))}}
+								{{ Form::radio('pref_part_or_proj', '0', ($user->pref_part_or_proj == 0 ? true : null),array('autocomplete'=>"off")) }}
 								{{ Form::label('project','Prefer Project',array("class"=>"control-label")) }}
 							</div>
 						</div>

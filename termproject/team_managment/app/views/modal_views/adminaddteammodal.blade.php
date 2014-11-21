@@ -21,7 +21,7 @@
 					<div class="form-group">
 						{{ Form::label('User',null,array("class"=>"col-sm-2 control-label")) }}
 						<div class="col-sm-10">
-							{{ Form::select('user_id', $nonassignusers,null,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required')) }}
+							{{ Form::select('user_id', $nonassignusers,null,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required','autocomplete'=>"off")) }}
 						</div>
 					</div>
 				</div>

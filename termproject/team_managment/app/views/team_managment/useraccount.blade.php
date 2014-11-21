@@ -16,35 +16,68 @@
 	</div>
 	@elseif(!empty($method))
 		<div class="content" style="margin-left: 10px">
-			<div class="content">
+			<div class="form-horizontal">
 				<div class="page-header">
 					<h2>Personal info</h2>
 				</div>
-				<div class="content" style="margin-left: 10px">
-					<span>Name:  {{ $user->firstname }} - {{ $user->lastname }} </span>
-					<span class="text-right" style="margin-left: 30px"> Email - {{ $user->username}}</span>
+				<div class="form-group">
+					{{ Form::label('Name',null,array("class"=>"control-label col-sm-2"))}}
+					<div class="col-sm-10">
+						{{ Form::text('name',$user->firstname.' - '.$user->lastname,array("class"=>"form-control",'readonly'=>"readonly",0=>'disabled')) }}
+					</div>
 				</div>
-				<div class="content" style="margin-left: 10px">
-					<span> Major: {{ $user->majortext }} <br> Minor/ASI: {{ $user->minortext }}</span>
+				<div class="form-group">
+					{{Form::label('Email',null,array("class"=>"control-label col-sm-2")) }}
+					<div class="col-sm-10">
+						{{ Form::text('username',$user->username,array("class"=>"form-control",'readonly'=>"readonly",0=>'disabled')) }}
+					</div>
 				</div>
-				<div class="content" style="margin-left: 10px; margin-top: 20px;">
-					<span> Experience- <textarea rows="2" cols="100" readonly="readonly" disabled> {{ $user->experience()->experience }} </textarea></span>
+				<div class="form-group">
+					{{ Form::label('Major',null,array("class"=>"control-label col-sm-2")) }}
+					<div class="col-sm-10">
+						 	{{ Form::text('majortext',$user->majortext,array("class"=>"form-control",'readonly'=>"readonly",0=>'disabled')) }}
+						</div>
+				</div>
+				<div class="form-group">
+					 	{{ Form::label('Minor/ASI',null,array("class"=>"control-label col-sm-2")) }}
+						<div class="col-sm-10">
+						 	{{ Form::text('minortext',$user->minortext,array("class"=>"form-control",'readonly'=>"readonly",0=>'disabled')) }}
+						</div>
+				</div>
+				<div class="form-group">
+					{{ Form::label('Experience-',null,array("class"=>"control-label col-sm-2"))}}
+					<div class="col-sm-10">
+						{{ Form::textarea('experiencetext',$user->experience,array("class"=>"form-control",'readonly'=>"readonly",'cols'=>"100",'rows'=>"2",0=>'disabled')) }}
+					</div>
+				</div>
+				<div class="form-group" style="margin-left: 10px">
+					<label class="control-label col-sm-2">Password -
+					<a id="editpass" class="btn-link" data-toggle="modal" data-target="#modalpasschange">Change</a></label>
 				</div>
 			</div>
 		</div>
 		<div class="content" style="margin-left: 10px">
-			<div class="content">
+			<div class="content form-horizontal">
 				<div class="page-header">
 					<h2>Project Preferences</h2>
 				</div>
-				<div class="content" style="margin-left: 10px">
-					<span>1<sup>st</sup> prefence:  {{ $user->projectpreference()->first_project()->title }} </span>
+				<div class="form-group">
+					<label type="label" class="control-label col-sm-2">1<sup>st</sup> prefence</label>  
+					<div class="col-sm-10">
+							{{ Form::select('first_project_id', $projoptions,$user->projectPreferences->first_project_id,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required','autocomplete'=>"off",1=>'disabled')) }}
+					</div>
 				</div>
-				<div class="content" style="margin-left: 10px">
-					<span> 2<sup>nd</sup> preference: {{ $user->projectpreference()->second_project()->title }}</span>
+				<div class="form-group">
+					<label type="label" class="control-label col-sm-2">2<sup>nd</sup> prefence</label>  
+						<div class="col-sm-10">
+							{{ Form::select('second_project_id', $projoptions,$user->projectPreferences->second_project_id,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required','autocomplete'=>"off",1=>'disabled')) }}
+						</div>
 				</div>
-				<div class="content" style="margin-left: 10px">
-					<span> 3<sup>rd</sup> preference: {{ $user->projectpreference()->third_project()->title }}</span>
+				<div class="form-group">
+					<label type="label" class="control-label col-sm-2"> 3<sup>rd</sup> preference </label>
+					<div class="col-sm-10">
+						{{ Form::select('third_project_id', $projoptions,$user->projectPreferences->third_project_id,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required','autocomplete'=>"off",1=>'disabled')) }}
+					</div>
 				</div>
 			</div>
 		</div>
@@ -83,38 +116,71 @@
 		</div>
 	@else
 		<div class="content" style="margin-left: 10px">
-			<div class="content">
+			<div class="form-horizontal">
 				<div class="page-header">
 					<h2>Personal info</h2>
 				</div>
-				<div class="content" style="margin-left: 10px">
-					<span>Name:  {{ $user->firstname }} - {{ $user->lastname }}  -<a id="editname" class="btn-link" data-toggle="modal" data-target="#modalnamechange">Edit Name</a> </span>
-					<span class="text-right" style="margin-left: 30px"> Email - {{ $user->username}}</span>
+				<div class="form-group">
+					{{ Form::label('Name',null,array("class"=>"control-label col-sm-2"))}}
+					<div class="col-sm-10">
+						{{ Form::text('name',$user->firstname.' - '.$user->lastname,array("class"=>"form-control",'readonly'=>"readonly",0=>'disabled')) }}  
+						<a id="editname" class="btn-link pull-right" data-toggle="modal" data-target="#modalnamechange">Edit Name</a>
+					</div>
 				</div>
-				<div class="content" style="margin-left: 10px">
-					<span> Major: {{ $user->majortext }} <br> Minor/ASI: {{ $user->minortext }} - <a id="editdeg" class="btn-link" data-toggle="modal" data-target="#modaldegchange">Edit Major/Minor</a></span>
+				<div class="form-group">
+					{{Form::label('Email',null,array("class"=>"control-label col-sm-2")) }}
+					<div class="col-sm-10">
+						{{ Form::text('username',$user->username,array("class"=>"form-control",'readonly'=>"readonly",0=>'disabled')) }}
+					</div>
 				</div>
-				<div class="content" style="margin-left: 10px; margin-top: 20px;">
-					<span> Experience- <textarea rows="2" cols="100" readonly="readonly" disabled> {{ $user->experience()->experience }} </textarea> - <a id="editexperience" class="btn-link" data-toggle="modal" data-target="#modalexpchange">Edit Expirence</a></span>
+				<div class="form-group">
+					{{ Form::label('Major',null,array("class"=>"control-label col-sm-2")) }}
+					<div class="col-sm-10">
+						 	{{ Form::text('majortext',$user->majortext,array("class"=>"form-control",'readonly'=>"readonly",0=>'disabled')) }}
+						</div>
 				</div>
-				<div class="content" style="margin-left: 10px">
-					<span>Password -<a id="editpass" class="btn-link" data-toggle="modal" data-target="#modalpasschange">Change</a> </span>
+				<div class="form-group">
+					 	{{ Form::label('Minor/ASI',null,array("class"=>"control-label col-sm-2")) }}
+						<div class="col-sm-10">
+						 	{{ Form::text('minortext',$user->minortext,array("class"=>"form-control",'readonly'=>"readonly",0=>'disabled')) }}
+						 	<a id="editdeg" class="btn-link pull-right" data-toggle="modal" data-target="#modaldegchange">Edit Major/Minor</a>
+						</div>
+				</div>
+				<div class="form-group">
+					{{ Form::label('Experience-',null,array("class"=>"control-label col-sm-2"))}}
+					<div class="col-sm-10">
+						{{ Form::textarea('experiencetext',$user->experience,array("class"=>"form-control",'readonly'=>"readonly",'cols'=>"100",'rows'=>"2",0=>'disabled')) }}
+						 <a id="editexperience" class="btn-link pull-right" data-toggle="modal" data-target="#modalexpchange">Edit Expirence</a>
+					</div>
+				</div>
+				<div class="form-group" style="margin-left: 10px">
+					<label class="control-label col-sm-2">Password -
+					<a id="editpass" class="btn-link" data-toggle="modal" data-target="#modalpasschange">Change</a></label>
 				</div>
 			</div>
 		</div>
 		<div class="content" style="margin-left: 10px">
-			<div class="content">
+			<div class="content form-horizontal">
 				<div class="page-header">
 					<h2>Project Preferences <a id="editexperience" class="btn btn-link pull-right" data-toggle="modal" data-target="#modalprojchange">Edit Project Prefereces</a></h2>
 				</div>
-				<div class="content" style="margin-left: 10px">
-					<span>1<sup>st</sup> prefence:  {{ $user->projectpreference()->first_project()->title }} </span>
+				<div class="form-group">
+					<label type="label" class="control-label col-sm-2">1<sup>st</sup> prefence</label>  
+					<div class="col-sm-10">
+							{{ Form::select('first_project_id', $projoptions,$user->projectPreferences->first_project_id,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required','autocomplete'=>"off",1=>'disabled')) }}
+					</div>
 				</div>
-				<div class="content" style="margin-left: 10px">
-					<span> 2<sup>nd</sup> preference: {{ $user->projectpreference()->second_project()->title }}</span>
+				<div class="form-group">
+					<label type="label" class="control-label col-sm-2">2<sup>nd</sup> prefence</label>  
+						<div class="col-sm-10">
+							{{ Form::select('second_project_id', $projoptions,$user->projectPreferences->second_project_id,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required','autocomplete'=>"off",1=>'disabled')) }}
+						</div>
 				</div>
-				<div class="content" style="margin-left: 10px">
-					<span> 3<sup>rd</sup> preference: {{ $user->projectpreference()->third_project()->title }}</span>
+				<div class="form-group">
+					<label type="label" class="control-label col-sm-2"> 3<sup>rd</sup> preference </label>
+					<div class="col-sm-10">
+						{{ Form::select('third_project_id', $projoptions,$user->projectPreferences->third_project_id,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required','autocomplete'=>"off",1=>'disabled')) }}
+					</div>
 				</div>
 			</div>
 		</div>

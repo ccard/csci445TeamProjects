@@ -86,8 +86,17 @@ Route::get('home/accountinfo', function(){
 	} else {
 		//TODO pass all relevent information to the user and admin account pages
 		$user = Auth::user();
-		$projectoptions = array_combine([1,2],['test1','test2']);//TODO replace with db query
-		$partneroptions = array_combine([1,2],['test1','test2']);//TODO replace with db query
+		
+		//populates options
+		$projects = Project::all();
+		$projectoptions = array_combine($projects->lists('id'), $projects->lists('title'));
+
+		$users = User::where('id', '<>', $user->id)->where('is_admin', '<>', 1)->get();
+		$firstnames = $users->lists('firstname');
+		$lastnames = $users->lists('lastname');
+		$arr = array_map(function($str1, $str2){ return $str1." ".$str2;}, $firstnames, $lastnames);
+		$partneroptions = array_combine($users->lists('id'), $arr);
+
 		$perferedchoice = array(1); //TODO replace with query from db
 		$avoidchoice = array(2); //TODO replace with query from db
 		if(Session::has('message')){
@@ -95,6 +104,7 @@ Route::get('home/accountinfo', function(){
 				->with('partneroptions',$partneroptions)
 				->with('perferedchoice',$perferedchoice)
 				->with('avoidchoice',$avoidchoice)
+				->with('projoptions',$projectoptions)
 				->with('message',Session::get('message'))
 				->nest('passchange','modal_views.passmodal',array('user'=>$user))
 				->nest('namechange','modal_views.namechangmodal',array('user'=>$user))
@@ -105,6 +115,7 @@ Route::get('home/accountinfo', function(){
 		} else {
 			return View::make('team_managment.useraccount')->with('user',$user)
 				->with('partneroptions',$partneroptions)
+				->with('projoptions',$projectoptions)
 				->with('perferedchoice',$perferedchoice)
 				->with('avoidchoice',$avoidchoice)
 				->nest('passchange','modal_views.passmodal',array('user'=>$user))
@@ -159,8 +170,8 @@ Route::post('home/firstlogin/{id}', function($id){
 
 	//rules
 	$rules = array(
-		'majortext'=>'Required|Min:3|Alpha',
-		'minortext'=>'Required|Min:3|Alpha',
+		'majortext'=>'Required|Min:3',
+		'minortext'=>'Required|Min:3',
 		'first_project_id'=>'different:second_project_id',
 		'first_project_id'=>'different:third_project_id',
 		'second_project_id'=>'different:first_project_id',
@@ -170,8 +181,8 @@ Route::post('home/firstlogin/{id}', function($id){
 		);
 	$messages = array(
 		'first_project_id.different'=>'The first project choice must be different from the second and third choice',
-		'second_project_id.different'=>'The first project choice must be different from the first and third choice',
-		'third_project_id.different'=>'The first project choice must be different from the second and first choice'
+		'second_project_id.different'=>'The second project choice must be different from the first and third choice',
+		'third_project_id.different'=>'The third project choice must be different from the second and first choice'
 		);
 	$validator= Validator::make(Input::all(),$rules,$messages);
 	if ($validator->passes()) {
@@ -235,17 +246,6 @@ Route::post('home/firstlogin/{id}', function($id){
 	}else{
 		return Redirect::back()->withInput()->with('error', 'Some fields arent filled out')->with('errors',$validator->messages());
 	}
-	//$user->experiencetext = Input::get('experiencetext');
-
-	/*$project_prefrences = ProjectPreferences::create(Input::all());
-	$project_preferences->user_id = Auth::user()->id;
-	
-	if($project_preferences->save()) {
-		return Redirect::to('home')->with('message','Your info has been saved');
-	} else {
-		return Redirect::back()->with('error', 'Could not save info');
-	}*/
-	//return Redirect::to('home');
 });
 
  Route::get('home/accountinfo/managestudents', function() {
@@ -293,7 +293,7 @@ Route::delete('home/editteam/{projid}', function($projid){
 	}
 });
 
-//TODO: Replace this with the appropriate queries to get projects
+
 View::composer('team_managment.firsttimelogin', function($view){
 	//TODO: Replace with appropriate quires to the databse
 	//$projectoptions = 
@@ -305,12 +305,7 @@ View::composer('team_managment.firsttimelogin', function($view){
 	$lastnames = $users->lists('lastname');
 	$arr = array_map(function($str1, $str2){ return $str1." ".$str2;}, $firstnames, $lastnames);
 	$partner_options = array_combine($users->lists('id'), $arr);
-	//$partneroptions = array_combine([1,2], ['test1','test2']);
-	// if(count($genres) > 0){
-	// 	$genre_options = array_combine($genres->lists('id'), $genres->lists('name'));
-	// } else {
-	// 	$genre_options = array_combine(null,'Unspecified');
-	// }
+
 	$view->with('partneroptions',$partner_options)->with('projoptions',$project_options);
 });
 });
