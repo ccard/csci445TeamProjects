@@ -16,7 +16,8 @@
 			@else
 			<div class="modal-body" style="max-height: 75%">
 				<div class="content form-horizontal">
-					{{ Form::model($user,array('method'=>'put', 'action'=>array('GenerateTeams@changeExp',$user)))}}
+					{{ Form::model($user,array('method'=>'put', 'action'=>array('GenerateTeams@changeExp')))}}
+					{{ Form::hidden('userid',$user->id) }}
 					<div class="form-group">
 						{{ Form::label('Related Expirence/Goals',null,array("class"=>"control-label col-sm-3")) }}
 						<div class="col-sm-7">

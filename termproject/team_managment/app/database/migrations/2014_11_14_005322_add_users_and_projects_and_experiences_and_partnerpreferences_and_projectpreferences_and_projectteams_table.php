@@ -56,9 +56,9 @@ class AddUsersAndProjectsAndExperiencesAndPartnerpreferencesAndProjectpreference
 		Schema::create('projectpreferences', function($table){
 			$table->increments('id');
 			$table->integer('user_id');
-			$table->integer('first_project_id');
-			$table->integer('second_project_id');
-			$table->integer('third_project_id');
+			$table->integer('first_project_id')->nullable();
+			$table->integer('second_project_id')->nullable();
+			$table->integer('third_project_id')->nullable();
 		});
 
 		Schema::create('projectteams', function($table){

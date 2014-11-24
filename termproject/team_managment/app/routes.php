@@ -131,6 +131,8 @@ Route::get('home/accountinfo', function(){
 Route::get('home/editteam/{projid}', function($projid) {
 	if(Auth::user()->isAdmin()){
 		$projectteam = array('projid'=>'1','projname'=>'test', 'users'=>array('12'=>array('name'=>'chris','email'=>'test@aol.com'))); //of the form ('projid'=>id, 'projname'=>'projname', 'users'=>array('userid'=>array('name'=>'name', 'email'=>'email')...))
+		
+		//TODO: find all non assigned users
 		$nonassignusers = array_combine([1],['user']); //combined list of users where the first part is the user id and the second part is the user name
 		if(Session::has('message')){
 			return View::make('team_managment.editteam')->with('projectteam',$projectteam)->with('message',Session::get('message'))
@@ -254,10 +256,12 @@ Route::post('home/firstlogin/{id}', function($id){
  		if(Session::has('message')){
  			return View::make('team_managment.managestudents')
  			->with('userInfo', $userInfo)
- 			->with('message',Session::get('message'));
+ 			->with('message',Session::get('message'))
+ 			->nest('addstudent','modal_views.addstudentmodal');
  		} else {
  			return View::make('team_managment.managestudents')
- 			->with('userInfo', $userInfo);
+ 			->with('userInfo', $userInfo)
+ 			->nest('addstudent','modal_views.addstudentmodal');
  		}
  	}else{
  		return Redirect::back();
@@ -266,10 +270,21 @@ Route::post('home/firstlogin/{id}', function($id){
  });
 
  Route::get('home/accountinfo/manageprojects', function() {
- 	$projectInfo = Project::all();
- 	return View::make('team_managment.manageprojects')
- 	->with('projectInfo', $projectInfo)
- 	->with('message', 'manage Students button pushed.');
+ 	if(Auth::user()->isAdmin()){
+ 		$projectInfo = Project::orderBy('title')->get();
+ 		if(Session::has('message')){
+ 			return View::make('team_managment.manageprojects')
+ 			->with('projectInfo', $projectInfo)
+ 			->with('message', Session::get('message'))
+ 			->nest('addproject','modal_views.newprojmodal');
+ 		} else {
+ 			return View::make('team_managment.manageprojects')
+ 			->with('projectInfo', $projectInfo)
+ 			->nest('addproject','modal_views.newprojmodal');
+ 		}
+ 	} else {
+ 		Redirect::back();
+ 	}
  
  });
 
@@ -294,7 +309,58 @@ Route::put('home/accountinfo/adminaddteam','GenerateTeams@adminAddMember'); //Th
 
 Route::put('home/accountinfo/managestudents/resetpass','GenerateTeams@resetPassword'); //This will call the controller method resetPassword in GenerateTeams controller
 
+Route::post('home/accountinfo/managestudents/newstudent', function(){
+	if(Auth::user()->isAdmin()){
+			$firstname = Input::get('firstname');
+			$lastname = Input::get('lastname');
+			$username = Input::get('username');
+			$cwid = Input::get('cwid');
+
+			$user = new User();
+
+			$user->firstname = $firstname;
+			$user->lastname = $lastname;
+			$user->username = $username;
+			$user->cwid = $cwid;
+			$user->password = Hash::make($cwid);
+
+			if($user->save()){
+				return Redirect::back()->with('message', 'New student saved');
+			} else {
+				return Redirect::back()->with('message', 'Failed to save new student');
+			}
+		} else {
+			return Redirect::back();
+		}
+}); //This will call the controller method newStudent in GenerateTeams controller
+
 Route::delete('home/accountinfo/managestudents/deleteuser','GenerateTeams@deleteUser'); //This will call the controller method deleteUser in GenerateTeams controller
+
+Route::post('home/accountinfo/manageprojects/newproject', function(){
+	if(Auth::user()->isAdmin()) {
+			$title = Input::get('title');
+			$company = Input::get('company');
+			$min = Input::get('min');
+			$max = Input::get('max');
+
+			$project = new Project();
+
+			$project->title = $title;
+			$project->company = $company;
+			$project->min = $min;
+			$project->max = $max;
+			
+			if($project->save()){
+				return Redirect::back()->with('message','The new project was added');
+			} else {
+				return Redirect::back()->with('message','Failed to save project');
+			}
+		} else {
+			return Redirect::back();
+		}
+}); //This will call the controller method addProject in GenerateTeams controller
+
+Route::delete('home/accountinfo/manageprojects/deleteproj','GenerateTeams@deleteProject'); //This will call the controller method deleteProject in GenerateTeams controller
 
 
 Route::delete('home/editteam/{projid}', function($projid){

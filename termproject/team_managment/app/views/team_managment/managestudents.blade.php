@@ -10,6 +10,9 @@
 
 @section('content')
 	<div class="content" style="margin-left: 10px">
+		<div class="content">
+			<a id="addstudent" class="btn-link form-control" data-toggle="modal" data-target="#modaladdstudent">+Add Student</a>
+		</div>
 		@foreach($userInfo as $user)
 			<div class="page-header">
 				<h2>
@@ -24,7 +27,7 @@
 						<div class="pull-right">
 							{{ Form::open(array('method'=>'delete','action'=>array('GenerateTeams@deleteUser'))) }}
 							{{ Form::hidden('userid',$user->id) }}
-							{{ Form::submit('Remove',array("class"=>"btn btn-link","style"=>"color: #FF0000","onclick"=>"if(!confirm('Are you sure you want to delete this user?')){return false;};")) }}
+							{{ Form::submit('-Remove',array("class"=>"btn btn-link","style"=>"color: #FF0000","onclick"=>"if(!confirm('Are you sure you want to delete this user?')){return false;};")) }}
 							{{ Form::close() }}
 						</div>
 					</div>
@@ -43,9 +46,12 @@
 			</div>
 		@endforeach
 	</div>
+	<div class="addstudent">
+		{{ $addstudent }}
+	</div>
 @stop
 
-@section('nonauthformcontent')
+@section('nonauthcontent')
 	<div class="alert alert-warning">
 		You are not logged in! Please <a href="{{url('/')}}" class="btn-link">login</a>
 	</div>

@@ -16,7 +16,8 @@
 			@else
 			<div class="modal-body" style="max-height: 75%">
 				<div class="content form-horizontal" >
-					{{ Form::model($user,array('method'=>'put', 'action'=>array('GenerateTeams@changePassword',$user))) }}
+					{{ Form::model($user,array('method'=>'put', 'action'=>array('GenerateTeams@changePassword'))) }}
+					{{ Form::hidden('userid',$user->id) }}
 					
 					<div class="form-group">
 						{{ Form::label('Old password',null,array("class"=>"control-label col-sm-3"))}}
