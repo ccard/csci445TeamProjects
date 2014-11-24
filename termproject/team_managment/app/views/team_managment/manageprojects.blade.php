@@ -19,7 +19,7 @@
 				<h2>
 					{{ $project->title }}
 					<div class="pull-right">
-							{{ Form::open(array('method'=>'delete','action'=>array('GenerateTeams@deleteProject'))) }}
+							{{ Form::open(array('method'=>'delete','url'=>'home/accountinfo/manageprojects/deleteproj')) }}
 							{{ Form::hidden('projid',$project->id) }}
 							{{ Form::submit('-Remove',array("class"=>"btn btn-link","style"=>"color: #FF0000","onclick"=>"if(!confirm('Are you sure you want to delete this project?')){return false;};")) }}
 							{{ Form::close() }}

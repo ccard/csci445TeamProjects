@@ -16,7 +16,7 @@
 			@else
 			<div class="modal-body" style="max-height: 75%">
 				<div class="content form-horizontal">
-					{{ Form::open(array('method'=>'put', 'action'=>array('GenerateTeams@adminAddMember')))}}
+					{{ Form::open(array('method'=>'put', 'url=>'home/accountinfo/adminaddteam'))}}
 					{{ Form::hidden('projid',$projid) }}
 					<div class="form-group">
 						{{ Form::label('User',null,array("class"=>"col-sm-2 control-label")) }}

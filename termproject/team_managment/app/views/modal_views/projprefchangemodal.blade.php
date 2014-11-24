@@ -16,7 +16,7 @@
 			@else
 			<div class="modal-body" style="max-height: 75%">
 				<div class="content form-horizontal">
-					{{ Form::model($user,array('method'=>'put', 'action'=>array('GenerateTeams@changeProjPref')))}}
+					{{ Form::model($user,array('method'=>'put', 'url'=>'home/accountinfo/projprefchange'))}}
 					{{ Form::hidden('userid',$user->id) }}
 					<div class="form-group">
 						{{ Form::label('1st choice',null,array("class"=>"col-sm-2 control-label")) }}

@@ -19,13 +19,13 @@
 					<a class="tip" data-toggle="tooltip" data-placement="bottom" title="Get more detailed user info" style="color: inherit" href="{{ url('users/'.$user->id.'/info') }}"> {{ $user->lastname.', '.$user->firstname }} </a>
 					<div class="pull-right">
 						<div class="pull-left">
-							{{ Form::open(array('method'=>'put','action'=>array('GenerateTeams@resetPassword'))) }}
+							{{ Form::open(array('method'=>'put','url'=>'home/accountinfo/managestudents/resetpass')) }}
 							{{ Form::hidden('userid',$user->id) }}
 							{{ Form::submit('Reset Password',array("class"=>"btn btn-link","style"=>"color: #FF0000","onclick"=>"if(!confirm('Are you sure you want to reset the password?')){return false;};")) }}
 							{{ Form::close() }}
 						</div>
 						<div class="pull-right">
-							{{ Form::open(array('method'=>'delete','action'=>array('GenerateTeams@deleteUser'))) }}
+							{{ Form::open(array('method'=>'delete','url'=>'home/accountinfo/managestudents/deleteuser')) }}
 							{{ Form::hidden('userid',$user->id) }}
 							{{ Form::submit('-Remove',array("class"=>"btn btn-link","style"=>"color: #FF0000","onclick"=>"if(!confirm('Are you sure you want to delete this user?')){return false;};")) }}
 							{{ Form::close() }}
