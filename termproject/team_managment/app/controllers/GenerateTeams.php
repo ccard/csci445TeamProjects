@@ -5,13 +5,13 @@ class GenerateTeams extends BaseController {
 	public function generateTeams()
 	{
 		//TODO Place table generation code calls here
-		// things I can access from models\User.php and projects.php:
-		$uCount = User::count();  
+		$uCount = User::count(); 
+		$unassigned = Project::count();  //project number for students that need Instructor assignment
 		$outcome = 'Success';      
 		$projID = 1;
 		$userID = 1;
 		$prefs;
-		// need a array to keep track of students assigned to each project - or just use table
+
 		
 /* =======================================================================
 The psuedo algorithm, first thoughts:
@@ -43,35 +43,77 @@ while there are projects that have been chosen but are under min:
 Handle the situation were students can't be assigned due to min, max restrictions.
 Wrapup: confirm all students are assigned to a team. Confirm mins and maxes.
 */
+
+
 	$userID = 1;
-	if(ProjectTeam::count() > 0)
+	if(ProjectTeam::count() > 0)  //do a hard reset
 	{
 		DB::table('projectteams')->delete(); 
 	}
+	
 	do
 	{   //phase 1
-		$prefs = DB::table('ProjectPreferences')->where('user_id', $userID)->first();
+		$prefs = DB::table('projectpreferences')->where('user_id', $userID)->first();
 		$first = $prefs->first_project_id;
 		$second = $prefs->second_project_id;
 		$third = $prefs->second_project_id;
+		$assignedTo = 0;
+		$keepLooking = true;  
 
-		//TODO: see if the first choice is full, then second, then third.
+//See if the first choice is full, then second, then third. 
+		$max1 = DB::table('projects')->where('id',$first)->first()->max;
+		$max2 = DB::table('projects')->where('id',$second)->first()->max;
+		$max3 = DB::table('projects')->where('id',$third)->first()->max;
+				
+		//get current number of members in the three selected projects...
+		$members1 = count(DB::table('projectteams')->where('project_id',$first)->first());
+		$members2 = count(DB::table('projectteams')->where('project_id',$second)->first());
+		$members3 = count(DB::table('projectteams')->where('project_id',$third)->first());
 
-		//TODO: Make sure we are not over max on the chosen project  
+		//try to assign if the project is not full
+		if(($members1 < $max1))  // && $keepLookinga switch would be nice...
+		{
+			$assignedTo = $first;
+			$keepLooking = false;	  //break and assign to first choice
+		}
+		
+		if(($members2 < $max2))  
+		{
+			//dd('checking second choice');
+			$assignedTo = $second;
+			$keepLooking = false;	
+		}
+		
+		if(($members3 < $max3))  
+		{
+			$assignedTo = $third;
+			$keepLooking = false;	
+		}
+		
+	// if nothing is found... umm... add to unassigned team.			
 
-		//test, see if we can write anything
+		if($keepLooking)  
+		{
+			$assignedTo = $unassigned;
+			$keepLooking = false;	
+		}
+		
+
 		DB::table('projectteams')->insert(array(
-			array('user_id'=>$userID,'project_id'=>$first),
+			array('user_id'=>$userID,'project_id'=>$assignedTo),
 		));   //insertions work
 
 		$userID = $userID + 1;
 	} while ($userID <= $uCount);
 
+
 	//dd($prefs->first_project_id); //should be 21 if using PrefTestSeeder
-	//dd(ProjectTeam::count());
+	//dd(ProjectTeam::count());     //should be 40
 	//DB::table('projectteams')->delete(); 
-	//dd(ProjectTeam::count());
+	//dd(ProjectTeam::count());      //should be 0 after a delete
 	
+	//project 21 test...
+	//dd(count(DB::table('projectteams')->where('project_id', 21)));
 				
 
 
@@ -126,6 +168,13 @@ Wrapup: confirm all students are assigned to a team. Confirm mins and maxes.
 
 	public function deleteProject(){
 		
+	}
+
+	private function checkFreeSpot(){
+		// for Mike - move repeating teamgen code here
+		$hey = 5;
+		dd($hey);
+		return $hey;
 	}
 
 }
