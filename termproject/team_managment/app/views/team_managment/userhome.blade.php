@@ -11,7 +11,7 @@
 	@if (count($project) > 0)
 		<div class="content" style="margin-left: 20px">
 			<div class="page-header">
-				<h2>{{$project['name']}}</h2>
+				<h2>{{$project['projname']}}</h2>
 			</div>
 			<div class="content" style="margin-left: 10px">
 				@foreach ($project['members'] as $key => $value)

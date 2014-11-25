@@ -26,6 +26,9 @@
 				{{ Form::close() }}
 			</div>
 		@else
+			@if($unassignedusers > 1)
+				<a class="btn btn-link" href="{{ url('home/accountinfo/manageunassignedstudents') }}">Show unassigned students</a>
+			@endif 
 			<a class="btn btn-link" href="mailto:{{ $emails }}?Subject=CSCI%20307" target="_top">Email all users</a>
 			<!-- Project teams is in the following format array('projectid'=>array('projname'=>'projname', 'members'=>array('email'=>'username')))-->
 			@foreach ($projectteams as $key => $value)

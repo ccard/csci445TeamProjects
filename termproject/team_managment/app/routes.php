@@ -304,6 +304,23 @@ Route::post('home/firstlogin/{id}', function($id){
  
  });
 
+ Route::get('home/accountinfo/manageunassignedstudents', function() {
+ 	if(Auth::user()->isAdmin()){
+ 		$userInfo = User::whereNull('project_team_id')->where('id','<>',Auth::user()->id)->orderBy('lastname')->get();
+ 		if(Session::has('message')){
+ 			return View::make('team_managment.manageunassignedusers')
+ 			->with('userInfo', $userInfo)
+ 			->with('message',Session::get('message'));
+ 		} else {
+ 			return View::make('team_managment.manageunassignedusers')
+ 			->with('userInfo', $userInfo);
+ 		}
+ 	}else{
+ 		return Redirect::back();
+ 	}
+ 
+ });
+
  Route::get('home/accountinfo/manageprojects', function() {
  	if(Auth::user()->isAdmin()){
  		$projectInfo = Project::orderBy('title')->get();

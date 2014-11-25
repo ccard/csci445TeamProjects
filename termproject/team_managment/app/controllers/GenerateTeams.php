@@ -45,47 +45,121 @@ Handle the situation were students can't be assigned due to min, max restriction
 Wrapup: confirm all students are assigned to a team. Confirm mins and maxes.
 */
 
+	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	//This is how you do it with out eloquent
+	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// 	$userID = 1;
+// 	if(ProjectTeam::count() > 0)  //do a hard reset
+// 	{
+// 		DB::table('projectteams')->delete(); 
+// 	}
+	
+// 	do
+// 	{   //phase 1
+// 		$prefs = DB::table('projectpreferences')->where('user_id', $userID)->first();
+// 		$first = $prefs->first_project_id;
+// 		$second = $prefs->second_project_id;
+// 		$third = $prefs->second_project_id;
+// 		$assignedTo = 0;
+// 		$keepLooking = true;  
 
-	$userID = 1;
+// //See if the first choice is full, then second, then third. 
+// 		$max1 = DB::table('projects')->where('id',$first)->first()->max;
+// 		$max2 = DB::table('projects')->where('id',$second)->first()->max;
+// 		$max3 = DB::table('projects')->where('id',$third)->first()->max;
+				
+// 		//get current number of members in the three selected projects...
+// 		$members1 = count(DB::table('projectteams')->where('project_id',$first)->first());
+// 		$members2 = count(DB::table('projectteams')->where('project_id',$second)->first());
+// 		$members3 = count(DB::table('projectteams')->where('project_id',$third)->first());
+
+// 		//try to assign if the project is not full
+// 		if(($members1 < $max1))  // && $keepLookinga switch would be nice...
+// 		{
+// 			$assignedTo = $first;
+// 			$keepLooking = false;	  //break and assign to first choice
+// 		}
+		
+// 		if(($members2 < $max2))  
+// 		{
+// 			//dd('checking second choice');
+// 			$assignedTo = $second;
+// 			$keepLooking = false;	
+// 		}
+		
+// 		if(($members3 < $max3))  
+// 		{
+// 			$assignedTo = $third;
+// 			$keepLooking = false;	
+// 		}
+		
+// 	// if nothing is found... umm... add to unassigned team.			
+
+// 		if($keepLooking)  
+// 		{
+// 			$assignedTo = $unassigned;
+// 			$keepLooking = false;	
+// 		}
+		
+
+// 		DB::table('projectteams')->insert(array(
+// 			array('user_id'=>$userID,'project_id'=>$assignedTo),
+// 		));   //insertions work
+
+// 		$userID = $userID + 1;
+// 	} while ($userID <= $uCount);
+
+	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	// This is how you do the same thing with elloquent
+	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	if(ProjectTeam::count() > 0)  //do a hard reset
 	{
 		//add a yes / no box: "Are you sure?"
 		DB::table('projectteams')->delete(); 
 	}
 	
-	do
-	{   
-		$prefs = DB::table('projectpreferences')->where('user_id', $userID)->first();
+	$users = User::where('is_admin','<>','1')->get();
+	foreach($users as $user)
+	{   //phase 1
+		$prefs = $user->projectPreferences;
 		$first = $prefs->first_project_id;
 		$second = $prefs->second_project_id;
 		$third = $prefs->second_project_id;
 		$assignedTo = 0;
-		$keepLooking = true;  
 
-		//Get maximums of the three choices.... 
-		$max1 = DB::table('projects')->where('id',$first)->first()->max;
-		$max2 = DB::table('projects')->where('id',$second)->first()->max;
-		$max3 = DB::table('projects')->where('id',$third)->first()->max;
-		
-		//Get the list of members already assigned to each project...
-		$mem1 = DB::table('projectteams')->where('project_id',$first)->get();
-		$mem2 = DB::table('projectteams')->where('project_id',$second)->get();
-		$mem3 = DB::table('projectteams')->where('project_id',$third)->get();
+		$keepLooking = true;
+//See if the first choice is full, then second, then third. 
+		$max1 = $prefs->first_project()->first()->max;
+		$max2 = $prefs->second_project()->first()->max;
+		$max3 = $prefs->third_project()->first()->max;
+				
+		//get current number of members in the three selected projects...
+		$members1 = count(ProjectTeam::where('project_id',$first)->get());
+		$members2 = count(ProjectTeam::where('project_id',$second)->get());
+		$members3 = count(ProjectTeam::where('project_id',$third)->get());
+
+		if($user->pref_part_or_proj){
+			$partPref = PartenerPreferences::where('user_id',$user->id)->where('aboid','<>',1)->get();
+
+			foreach($partPref as $pref){
+				//TODO find first team they perfer
+			}
+		}
 
 		//try to assign if the project is not full
-		if((count($mem1) < $max1)&& $keepLooking)  // a switch would be nice...
+		if(($members1 < $max1)&& $keepLooking)  // a switch would be nice...
 		{
 			$assignedTo = $first;
 			$keepLooking = false;	  //break and assign to first choice
 		}
 		
-		if((count($mem2) < $max2)&& $keepLooking)  
+		if(($members2 < $max2)&& $keepLooking)  
 		{
 			$assignedTo = $second;
 			$keepLooking = false;	
 		}
 		
-		if((count($mem3) < $max3)&& $keepLooking)  
+		if(($members3 < $max3)&& $keepLooking)  
 		{
 			$assignedTo = $third;
 			$keepLooking = false;	
@@ -97,14 +171,14 @@ Wrapup: confirm all students are assigned to a team. Confirm mins and maxes.
 			$assignedTo = $unassigned;
 			$keepLooking = false;	
 		}
-		
-		//write assignment
-		DB::table('projectteams')->insert(array(
-			array('user_id'=>$userID,'project_id'=>$assignedTo),
-		));   //insertions work
 
-		$userID = $userID + 1;
-	} while ($userID <= $uCount);
+		$projectteam = new ProjectTeam;
+		$projectteam->user_id = $user->id;
+		$projectteam->project()->associate(Project::find($assignedTo));
+		$projectteam->save();
+		$user->projectTeam()->associate($projectteam);
+		$user->save();
+	}
 
 	//see how many students are in the unassigned group
 	$free = DB::table('projectteams')->where('project_id',$unassigned)->get();
