@@ -28,6 +28,7 @@ Count how many times this choice is in projectteams->project_id
 if < max, ok to assign, else, look at choice 2, choice 3
 
 -- Phase 2
+
 After first pass through the student list, check projectteams and see if any are under min.
 while there are projects that have been chosen but are under min:
   loop thru projects. for each project, get min and max:
@@ -113,6 +114,7 @@ Wrapup: confirm all students are assigned to a team. Confirm mins and maxes.
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	if(ProjectTeam::count() > 0)  //do a hard reset
 	{
+		//add a yes / no box: "Are you sure?"
 		DB::table('projectteams')->delete(); 
 	}
 	
@@ -124,6 +126,7 @@ Wrapup: confirm all students are assigned to a team. Confirm mins and maxes.
 		$second = $prefs->second_project_id;
 		$third = $prefs->second_project_id;
 		$assignedTo = 0;
+
 		$keepLooking = true;
 //See if the first choice is full, then second, then third. 
 		$max1 = $prefs->first_project()->first()->max;
@@ -136,33 +139,30 @@ Wrapup: confirm all students are assigned to a team. Confirm mins and maxes.
 		$members3 = count(ProjectTeam::where('project_id',$third)->get());
 
 		//try to assign if the project is not full
-		if(($members1 < $max1))  // && $keepLookinga switch would be nice...
+		if((count($mem1) < $max1)&& $keepLooking)  // a switch would be nice...
 		{
 			$assignedTo = $first;
 			$keepLooking = false;	  //break and assign to first choice
 		}
 		
-		if(($members2 < $max2))  
+		if((count($mem2) < $max2)&& $keepLooking)  
 		{
-			//dd('checking second choice');
 			$assignedTo = $second;
 			$keepLooking = false;	
 		}
 		
-		if(($members3 < $max3))  
+		if((count($mem3) < $max3)&& $keepLooking)  
 		{
 			$assignedTo = $third;
 			$keepLooking = false;	
 		}
 		
-	// if nothing is found... umm... add to unassigned team.			
-
+	// if nothing is found... umm... add to unassigned group.			
 		if($keepLooking)  
 		{
 			$assignedTo = $unassigned;
 			$keepLooking = false;	
 		}
-		
 
 		$projectteam = new ProjectTeam;
 		$projectteam->user_id = $user->id;
@@ -172,20 +172,15 @@ Wrapup: confirm all students are assigned to a team. Confirm mins and maxes.
 		$user->save();
 	}
 
-	//dd($prefs->first_project_id); //should be 21 if using PrefTestSeeder
-	//dd(ProjectTeam::count());     //should be 40
-	//DB::table('projectteams')->delete(); 
-	//dd(ProjectTeam::count());      //should be 0 after a delete
+	//see how many students are in the unassigned group
+	$free = DB::table('projectteams')->where('project_id',$unassigned)->get();
+
 	
-	//project 21 test...
-	//dd(count(DB::table('projectteams')->where('project_id', 21)));
-				
-
-
-
 
 	//Then redirect to home
-	return Redirect::to('home')->with('message', $outcome .' , processed '. $uCount . ' students.');
+	return Redirect::to('home')->with('message', $outcome .' , processed '. $uCount . ' students. '
+	 . ($uCount - count($free)) . ' are assigned teams. ' . count($free) . ' student(s) need assistance.');
+
 	}
 
 	public function changePassword(){
@@ -235,11 +230,6 @@ Wrapup: confirm all students are assigned to a team. Confirm mins and maxes.
 		
 	}
 
-	private function checkFreeSpot(){
-		// for Mike - move repeating teamgen code here
-		$hey = 5;
-		dd($hey);
-		return $hey;
-	}
+	
 
 }
