@@ -27,7 +27,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	//protected $fillable = array('username','firstname','lastname','majortext','minortext','experience_id','projectpreference_id','pref_part_or_proj','project_id');
 	//next line modified by mike	
-	protected $fillable = array('username','cwid','firstname','lastname','created_at','updated_at','majortext','minortext','experience','project_preferences_id','pref_part_or_proj','project_id');
+	protected $fillable = array('username','cwid','firstname','lastname','created_at','updated_at','majortext','minortext','experience','project_preferences_id','pref_part_or_proj','project_team_id');
 
 	public function getAuthIdentifier() {
 		return $this->getKey();
@@ -49,7 +49,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		return $this->belongsTo('ProjectPreferences');
 	}
 
-	public function project(){
+	public function projectTeam(){
 		return $this->belongsTo('ProjectTeam');
 	}
 

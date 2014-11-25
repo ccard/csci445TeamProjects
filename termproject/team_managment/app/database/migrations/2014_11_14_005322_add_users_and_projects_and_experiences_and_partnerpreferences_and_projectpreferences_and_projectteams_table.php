@@ -28,7 +28,7 @@ class AddUsersAndProjectsAndExperiencesAndPartnerpreferencesAndProjectpreference
 			$table->string('experience')->nullable();
 			$table->integer('project_preferences_id')->nullable();
 			$table->integer('pref_part_or_proj')->nullable(); //changed by mike
-			$table->integer('project_id')->nullable();
+			$table->integer('project_team_id')->nullable();
 			$table->string('remember_token')->nullable();
 		});
 

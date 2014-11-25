@@ -47,7 +47,7 @@ Route::get('home', function() {
 	if (Auth::user()->isAdmin()){
 		//TODO query database to retrive these items
 		$users = User::count(); //the number of users in the system
-		$emails = 'test@aol.com,test2@aol.com';//populate with list of emails
+		$emails = '';//populate with list of emails
 		$projects = Project::count(); //the number of projects in the system
 		$projectteams = array(); //Project teams is in the following format array('projectid'=>array('projname'=>'projname', 'members'=>array('email'=>'name')))
 		return View::make('team_managment.adminhome')->with('users',$users)->with('projects',$projects)->with('projectteams', $projectteams)->with('emails',$emails);
