@@ -138,20 +138,28 @@ Wrapup: confirm all students are assigned to a team. Confirm mins and maxes.
 		$members2 = count(ProjectTeam::where('project_id',$second)->get());
 		$members3 = count(ProjectTeam::where('project_id',$third)->get());
 
+		if($user->pref_part_or_proj){
+			$partPref = PartenerPreferences::where('user_id',$user->id)->where('aboid','<>',1)->get();
+
+			foreach($partPref as $pref){
+				//TODO find first team they perfer
+			}
+		}
+
 		//try to assign if the project is not full
-		if((count($mem1) < $max1)&& $keepLooking)  // a switch would be nice...
+		if(($members1 < $max1)&& $keepLooking)  // a switch would be nice...
 		{
 			$assignedTo = $first;
 			$keepLooking = false;	  //break and assign to first choice
 		}
 		
-		if((count($mem2) < $max2)&& $keepLooking)  
+		if(($members2 < $max2)&& $keepLooking)  
 		{
 			$assignedTo = $second;
 			$keepLooking = false;	
 		}
 		
-		if((count($mem3) < $max3)&& $keepLooking)  
+		if(($members3 < $max3)&& $keepLooking)  
 		{
 			$assignedTo = $third;
 			$keepLooking = false;	
