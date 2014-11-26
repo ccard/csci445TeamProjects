@@ -57,16 +57,16 @@ Route::get('home', function() {
 			$emails.=$email.',';
 		}
 
-		$projects = ProjectTeam::all();
-		foreach($projects as $project) {
-			$user = $project->user()->first();
+		$project_teams = ProjectTeam::all();
+		foreach($project_teams as $project) {
+			$user = User::where('id', $project->user_id)->first();
 			if(empty($user)) {
 				continue;
-			} else if(array_key_exists($project->id, $projectteams)) {
-				$projectteams[$project->id]['members'][$user->username] = $user->lastname.'-'.$user->firstname;
+			} else if(array_key_exists($project->project_id, $projectteams)) {
+				$projectteams[$project->project_id]['members'][$user->username] = $user->lastname.'-'.$user->firstname;
 				$emails.=$user->username.',';
 			} else {
-				$projectteams[$project->id] = [$project->id => ['projame' => $project->project->title, 'members' => [$user->username => $user->lastname.'-'.$user->firstname]]];
+				$projectteams[$project->project_id] = ['projname' => $project->project->title, 'members' => [$user->username => $user->lastname.'-'.$user->firstname]];
 				$emails.=$user->username.',';
 			}
 		}
@@ -129,7 +129,7 @@ Route::get('home/accountinfo', function(){
 		$arr = array_map(function($str1, $str2){ return $str1." ".$str2;}, $firstnames, $lastnames);
 		$partneroptions = array_combine($users->lists('id'), $arr);
 
-		$perferedchoice = PatnerPreferences::where('user_id', '=', $user->id)->where('avoid', '<>', 1)->get()->lists('partner_id');
+		$perferedchoice = PartnerPreferences::where('user_id', '=', $user->id)->where('avoid', '<>', 1)->get()->lists('partner_id');
 		$avoidchoice = PartnerPreferences::where('user_id', '=', $user->id)->where('avoid', '=', 1)->get()->lists('partner_id');
 		if(Session::has('message')){
 			return View::make('team_managment.useraccount')->with('user',$user)
@@ -162,17 +162,34 @@ Route::get('home/accountinfo', function(){
 
 Route::get('home/editteam/{projid}', function($projid) {
 	if(Auth::user()->isAdmin()){
-		$projectteam = array('projid'=>'1','projname'=>'test', 'users'=>array('12'=>array('name'=>'chris','email'=>'test@aol.com'))); //of the form ('projid'=>id, 'projname'=>'projname', 'users'=>array('userid'=>array('name'=>'name', 'email'=>'email')...))
-		
-		//TODO: find all non assigned users
-		//$nonassignedusers = User::where()
-		$nonassignusers = array_combine([1],['user']); //combined list of users where the first part is the user id and the second part is the user name
+
+	//	$projectteam = array('projid'=>'1','projname'=>'test', 'users'=>array('12'=>array('name'=>'chris','email'=>'test@aol.com'))); //of the form ('projid'=>id, 'projname'=>'projname', 'users'=>array('userid'=>array('name'=>'name', 'email'=>'email')...))
+		$rawteam = ProjectTeam::where('project_id', $projid)->get();
+		$projectteam = [
+			'projid' => $projid,
+			'projname' => $rawteam->first()->project->title,
+			'users' => array()
+		];
+		foreach($rawteam as $teammember) {
+			$user = $teammember->user()->first();
+			$projectteam['users'][$user->id] = [
+				'name' => $user->lastname.'-'.$user->firstname,
+				'email' => $user->username
+			];
+		}
+
+		$nonassignedusers = User::whereNull('project_team_id')->get();
+		$firstnames = $nonassignedusers->lists('firstname');
+		$lastnames = $nonassignedusers->lists('lastname');
+		$arr = array_map(function($str1, $str2){ return $str1." ".$str2;}, $firstnames, $lastnames);
+		$nonassignedusers = array_combine($nonassignedusers->lists('id'), $arr);
+		//$nonassignusers = array_combine([1],['user']); //combined list of users where the first part is the user id and the second part is the user name
 		if(Session::has('message')){
 			return View::make('team_managment.editteam')->with('projectteam',$projectteam)->with('message',Session::get('message'))
-			->nest('adminaddteam','modal_views.adminaddteammodal',array('projid'=>$projid,'nonassignusers'=>$nonassignusers));
+			->nest('adminaddteam','modal_views.adminaddteammodal',array('projid'=>$projid,'nonassignusers'=>$nonassignedusers));
 		} else {
 			return View::make('team_managment.editteam')->with('projectteam',$projectteam)
-			->nest('adminaddteam','modal_views.adminaddteammodal',array('projid'=>$projid,'nonassignusers'=>$nonassignusers));
+			->nest('adminaddteam','modal_views.adminaddteammodal',array('projid'=>$projid,'nonassignusers'=>$nonassignedusers));
 		}
 	} else {
 		return Redirect::back();
@@ -194,7 +211,7 @@ Route::get('users/{id}/info', function($id){
 		$arr = array_map(function($str1, $str2){ return $str1." ".$str2;}, $firstnames, $lastnames);
 		$partneroptions = array_combine($users->lists('id'), $arr);
 
-		$perferedchoice = PatnerPreferences::where('user_id', '=', $user->id)->where('avoid', '<>', 1)->get()->lists('partner_id');
+		$perferedchoice = PartnerPreferences::where('user_id', '=', $user->id)->where('avoid', '<>', 1)->get()->lists('partner_id');
 		$avoidchoice = PartnerPreferences::where('user_id', '=', $user->id)->where('avoid', '=', 1)->get()->lists('partner_id');
 		//$perferedchoice = array(1); //TODO replace with query from db
 		//perfer$avoidchoice = array(2); //TODO replace with query from db
