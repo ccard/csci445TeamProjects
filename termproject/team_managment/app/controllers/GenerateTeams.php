@@ -128,6 +128,8 @@ Wrapup: confirm all students are assigned to a team. Confirm mins and maxes.
 		$assignedTo = 0;
 
 		$keepLooking = true;
+		$likeThisTeam = false;
+
 //See if the first choice is full, then second, then third. 
 		$max1 = $prefs->first_project()->first()->max;
 		$max2 = $prefs->second_project()->first()->max;
@@ -138,31 +140,53 @@ Wrapup: confirm all students are assigned to a team. Confirm mins and maxes.
 		$members2 = count(ProjectTeam::where('project_id',$second)->get());
 		$members3 = count(ProjectTeam::where('project_id',$third)->get());
 
-		if($user->pref_part_or_proj){
-			$partPref = PartenerPreferences::where('user_id',$user->id)->where('aboid','<>',1)->get();
+		// if there anyone I want to work with on that team?
+		// 1= true = don't want the person, so find people that I like
+		if($user->pref_part_or_proj)
+		{
+			$partPref = PartenerPreferences::where('user_id',$user->id)->where('avoid','<>',1)->get();
 
-			foreach($partPref as $pref){
-				//TODO find first team they perfer
-			}
+			if(!empty($partPref)) //if(!$partPref->isEmpty())
+			{
+				foreach($partPref as $pref) {
+					//TODO find first people they perfer
+					$I_like_list = ProjectTeam::where('user_id', $pref->partner_id)->get();
+					// if $aprtPref is in I_prefer, I want to work on that project
+					foreach($I_like_list as $member)
+					{
+						if(count(ProjectTeam::where('project_id', $member->projecct_id)->get()) <= $member->project->max)
+						{
+							// iThere is someone I like on this team
+							$likeThisTeam = true;
+							$assignedTo = $member->project_id;
+							$keepLooking = false;
+						}
+					}
+					
+				}
+
+			}	
 		}
 
+		if(!$likeThisTeam){
 		//try to assign if the project is not full
-		if(($members1 < $max1)&& $keepLooking)  // a switch would be nice...
-		{
-			$assignedTo = $first;
-			$keepLooking = false;	  //break and assign to first choice
-		}
+			if(($members1 < $max1)&& $keepLooking)  // a switch would be nice...
+			{
+				$assignedTo = $first;
+				$keepLooking = false;	  //break and assign to first choice
+			}
 		
-		if(($members2 < $max2)&& $keepLooking)  
-		{
-			$assignedTo = $second;
-			$keepLooking = false;	
-		}
+			if(($members2 < $max2)&& $keepLooking)  
+			{
+				$assignedTo = $second;
+				$keepLooking = false;	
+			}
 		
-		if(($members3 < $max3)&& $keepLooking)  
-		{
-			$assignedTo = $third;
-			$keepLooking = false;	
+			if(($members3 < $max3)&& $keepLooking)  
+			{
+				$assignedTo = $third;
+				$keepLooking = false;	
+			}
 		}
 		
 	// if nothing is found... umm... add to unassigned group.			
