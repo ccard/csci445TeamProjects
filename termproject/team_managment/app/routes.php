@@ -45,7 +45,7 @@ Route::post('login',function(){
 Route::group(array('before'=>'auth'), function(){
 Route::get('home', function() {
 	if (Auth::user()->isAdmin()){
-		//TODO query database to retrive these items
+
 		$users = User::count(); //the number of users in the system
 		$emails = '';//populate with list of emails
 		$projects = Project::count(); //the number of projects in the system
@@ -77,8 +77,8 @@ Route::get('home', function() {
 		//If the user has no project preferences then they must be redirected to the firstogin page
 		if(!empty(Auth::user()->project_preferences_id)){
 			//$project = array(); //TODO: replace this with a query to database to get project name and all associted student names and emails
-			$project_team_id = Auth::user()->project_team_id;
-			$project_members = User::where('project_team_id', '=', $project_team_id)->get();
+			$project_team_id = Auth::user()->projectTeam->project_id;
+			$project_members = ProjectTeam::where('project_id', $project_team_id)->get()->lists('user_id');
 			$project_name = Auth::user()->projectTeam->project->title;
 			//in the form of array('projname'=>"name", 'members'=>array('email'=>"name"))
 			$project = [
@@ -86,7 +86,8 @@ Route::get('home', function() {
 				'members' => array(),
 			];
 			foreach($project_members as $member) {
-				$project['members'][$member->username] = $member->lastname.'-'.$member->firstname;
+				$user = User::where('id',$member)->first();
+				$project['members'][$user->username] = $user->lastname.'-'.$user->firstname;
 			}
 
 			return View::make('team_managment.userhome')->with('user',Auth::user())->with('project',$project);
@@ -213,8 +214,7 @@ Route::get('users/{id}/info', function($id){
 
 		$perferedchoice = PartnerPreferences::where('user_id', '=', $user->id)->where('avoid', '<>', 1)->get()->lists('partner_id');
 		$avoidchoice = PartnerPreferences::where('user_id', '=', $user->id)->where('avoid', '=', 1)->get()->lists('partner_id');
-		//$perferedchoice = array(1); //TODO replace with query from db
-		//perfer$avoidchoice = array(2); //TODO replace with query from db
+
 		return View::make('team_managment.useraccount')->with('method',$method)
 		->with('user',$user)
 		->with('projoptions',$projectoptions)
@@ -230,7 +230,7 @@ Route::get('users/{id}/info', function($id){
  Post routes
  */
 Route::post('home/firstlogin/{id}', function($id){
-	//TODO perform inserts into appropriate tables etc and perform input sanitation and validation
+
 
 	//rules
 	$rules = array(
@@ -363,9 +363,10 @@ Route::post('home/generateteams','GenerateTeams@generateTeams'); //This will cal
 
 
 Route::put('home/accountinfo/passchange',function(){
-	$userid = Input::get('userid');
-		$user = NULL; //TODO: find the user based off of the userid
-
+		$userid = Input::get('userid');
+		$user = User::where('id', intval($userid))->first();
+		//dd(intval($userid));
+		//dd($user);
 		//TODO: Check the old password against the stored password using hash check
 		// Verify that the new password and the confirmation of the new password match
 		// if the correct old password is passed in is correct then change the password
@@ -375,11 +376,21 @@ Route::put('home/accountinfo/passchange',function(){
 		$new_pass = Input::get('newpassword');
 		$confirm_pass = Input::get('confirmpassword');
 
+		if(Hash::check($old_pass, $user->password)) {
+			if($new_pass != $confirm_pass) {
+				return Redirect::to('home/accountinfo')->with('error', "Couldn't change password, new and confirm are not the same.");
+			}
+			$user->password = Hash::make($new_pass);
+			$user->save();
+			return Redirect::to('home/accountinfo')->with('message', 'Success');
+		} else {
+			return Redirect::to('home/accountinfo')->with('error', "Incorrect password");
+		}
 		// check that the old password is corrrect using Hash::check($old_pass,$user->password)
 		// if thats the case then check if the new_pass and confirm_pass are the same
 		// if the new and confirm password are correct hash the new password and save it to the user 
 
-		return Redirect::to('home/accountinfo')->with('message','Success');
+		//return Redirect::to('home/accountinfo')->with('message','Success');
 }); //This will call the controller method changePassword in GenerateTeams controller
 
 Route::put('home/accountinfo/namechange',function(){
@@ -455,11 +466,14 @@ Route::put('home/accountinfo/adminaddteam',function(){
 }); //This will call the controller method adminAddMember in GenerateTeams controller
 
 Route::put('home/accountinfo/managestudents/resetpass',function(){
-	$userid = Input::get('userid');
-		$user = NULL;
-
 		if(Auth::user()->isAdmin()){
-		//reset the the password to the hash of the users cwid
+			$userid = Input::get('userid');
+
+			$user = Users::find($userid);
+					//reset the the password to the hash of the users cwid
+			$user->password = Hash::make($user->cwid);
+			$user->save();
+
 			return Redirect::back()->with('message','Password reset');
 		} else {
 			return Redirect::back()->with('error','Your not authorized');
@@ -549,7 +563,7 @@ Route::delete('home/editteam/{projid}', function($projid){
 
 
 View::composer('team_managment.firsttimelogin', function($view){
-	//TODO: Replace with appropriate quires to the databse
+
 	//$projectoptions = 
 	$projects = Project::all();
 	$project_options = array_combine($projects->lists('id'), $projects->lists('title'));
