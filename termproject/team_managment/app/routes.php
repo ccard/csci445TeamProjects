@@ -469,7 +469,7 @@ Route::put('home/accountinfo/managestudents/resetpass',function(){
 		if(Auth::user()->isAdmin()){
 			$userid = Input::get('userid');
 
-			$user = Users::find($userid);
+			$user = User::where('id', intval($userid))->first();
 					//reset the the password to the hash of the users cwid
 			$user->password = Hash::make($user->cwid);
 			$user->save();
