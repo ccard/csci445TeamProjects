@@ -395,54 +395,63 @@ Route::put('home/accountinfo/passchange',function(){
 
 Route::put('home/accountinfo/namechange',function(){
 	$userid = Input::get('userid');
-		$user = NULL;
+	$user = User::where('id', $userid)->first();
 
-		$firstname = Input::get('firstname');
-		$lastname = Input::get('lastname');
 
-		//change the users first and last name
-
-		return Redirect::to('home/accountinfo')->with('message','Success');
+	$firstname = Input::get('firstname');
+	$lastname = Input::get('lastname');
+	$user->firstname = $firstname;
+	$user->lastname = $lastname;
+	$user->save();
+	//change the users first and last name
+	return Redirect::to('home/accountinfo')->with('message','Success');
 }); //This will call the controller method changeName in GenerateTeams controller
 
 Route::put('home/accountinfo/degchange',function(){
 	$userid = Input::get('userid');
-		$user = NULL;
+	$user = User::where('id', $userid)->first();
 
-		$majortext = Input::get('majortext');
-		$minortext = Input::get('minortext');
+	$majortext = Input::get('majortext');
+	$minortext = Input::get('minortext');
 
-		//Change the users major and minor
+	$user->majortext = $majortext;
+	$user->minortext = $minortext;
 
-		return Redirect::to('home/accountinfo')->with('message','Success');
+	$user->save();
+
+	//Change the users major and minor
+	return Redirect::to('home/accountinfo')->with('message','Success');
 }); //This will call the controller method changeMajor in GenerateTeams controller
 
 Route::put('home/accountinfo/expchange',function(){
 	$userid = Input::get('userid');
-		$user = NULL;
+	$user = User::where('id', $userid)->first();
 
-		$experience = Input::get('expirencetext');
 
-		//Change the user experience text field
+	$experience = Input::get('expirencetext');
+	//Change the user experience text field
 
-		return Redirect::to('home/accountinfo')->with('message','Success');
+	$user->experience = $experience;
+	$user->save();
+
+	return Redirect::to('home/accountinfo')->with('message','Success');
 }); //This will call the controller method changeExp in GenerateTeams controller
 
 Route::put('home/accountinfo/projprefchange',function(){
 	$userid = Input::get('userid');
-		$user = NULL;
+	$user = NULL;
 
-		$first_project_id = Input::get('first_project_id');
-		$second_project_id = Input::get('second_project_id');
-		$third_project_id = Input::get('first_project_id');
+	$first_project_id = Input::get('first_project_id');
+	$second_project_id = Input::get('second_project_id');
+	$third_project_id = Input::get('first_project_id');
 
-		//Change the users first second and third project preferences
+	//Change the users first second and third project preferences
 
-		return Redirect::to('home/accountinfo')->with('message','Success');
+	return Redirect::to('home/accountinfo')->with('message','Success');
 }); //This will call the controller method changeProjPref in GenerateTeams controller
 
 Route::put('home/accountinfo/partprefchange',function(){
-	$userid = Input::get('userid');
+		$userid = Input::get('userid');
 		$user = NULL;
 
 		$pref_partners = Input::get('pref_partner');
@@ -458,11 +467,16 @@ Route::put('home/accountinfo/partprefchange',function(){
 Route::put('home/accountinfo/adminaddteam',function(){
 	$projid = Input::get('projid');
 
-		$userid = Input::get('user_id');
+	$userid = Input::get('user_id');
 
-		//add the new user to the projid in the projectteams
 
-		return Redirect::to('home/editteam/'.$projid)->with('message','Success '.$projid);
+	//add the new user to the projid in the projectteams
+	$projteam = new ProjectTeam;
+	$projteam->user_id = $userid;
+	$projteam->project_id = $projid;
+	$projteam->save();
+
+	return Redirect::to('home/editteam/'.$projid)->with('message','Success '.$projid);
 }); //This will call the controller method adminAddMember in GenerateTeams controller
 
 Route::put('home/accountinfo/managestudents/resetpass',function(){
@@ -506,13 +520,23 @@ Route::post('home/accountinfo/managestudents/newstudent', function(){
 }); //This will call the controller method newStudent in GenerateTeams controller
 
 Route::delete('home/accountinfo/managestudents/deleteuser',function(){
-	$userid = Input::get('userid');
-		$user = NULL; // query db for user
+	if(Auth::user()->isAdmin()) {
+		$userid = intval(Input::get('userid'));
+		$user = User::where('id', ($userid))->first();
+		$user->delete();
 
+		//now remove projectteams references
+		ProjectTeam::where("user_id", $userid)->delete();
+
+		//and also the partner preferences
+		PartnerPreferences::where('user_id', $userid)->delete();
+		PartnerPreferences::where('partner_id', $userid)->delete();
 		//if Auth::user() is the admin then delete &user from the database tables
 		//ProjectTeams ParnterPreferences ProjectPreferences Users etc..
-
 		return Redirect::back()->with('message','User deleted');
+	} else {
+		return Redirect::back()->with('error', 'Not admin');
+	}
 }); //This will call the controller method deleteUser in GenerateTeams controller
 
 Route::post('home/accountinfo/manageprojects/newproject', function(){
@@ -535,7 +559,7 @@ Route::post('home/accountinfo/manageprojects/newproject', function(){
 				return Redirect::back()->with('message','Failed to save project');
 			}
 		} else {
-			return Redirect::back();
+			return Redirect::back()->with('error', 'Not admin');
 		}
 }); //This will call the controller method addProject in GenerateTeams controller
 
@@ -544,9 +568,18 @@ Route::delete('home/accountinfo/manageprojects/deleteproj', function(){
 			$projid = Input::get('projid');
 			//delete the project from the database
 
+			Project::find(intval($projid))->delete();
+			//User::where('project_preferences_id', )
+			ProjectTeam::where('project_id', intval($projid))->delete();
+
+			ProjectPreferences::where('first_project_id', intval($projid))->update(array('first_project_id' => NULL));
+			ProjectPreferences::where('second_project_id', intval($projid))->update(array('second_project_id' => NULL));
+			ProjectPreferences::where('third_project_id', intval($projid))->update(array('third_project_id' => NULL));
+
+
 			return Redirect::back()->with('message','The project was deleted');
 		} else {
-			return Redirect::back();
+			return Redirect::back()->with('error', 'Not admin');
 		}
 }); //This will call the controller method deleteProject in GenerateTeams controller
 
@@ -554,10 +587,11 @@ Route::delete('home/accountinfo/manageprojects/deleteproj', function(){
 Route::delete('home/editteam/{projid}', function($projid){
 	if(Auth::user()->isAdmin()){
 		$userid = Input::get('userid'); //retrives the user id to dis associate with projid
-		//TODO remove the users association with the project
-		return Redirect::to('home/editteam/'.$projid)->with('message','Remove has no be removed from team! '.$userid);
+		//get the user id, and the project id, and find the project team.
+		$projteam = ProjectTeam::where('user_id', intval($userid))->where('project_id', $projid)->delete();
+		return Redirect::to('home/editteam/'.$projid)->with('message','Remove has no be removed from team! '.$userid); 
 	} else {
-		return Redirect::back();
+		return Redirect::back()->with('error', 'Not admin');
 	}
 });
 
