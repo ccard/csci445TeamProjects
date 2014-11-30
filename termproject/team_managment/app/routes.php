@@ -75,7 +75,7 @@ Route::get('home', function() {
 	} else {
 		//dd(Auth::user()->project_preferences_id);
 		//If the user has no project preferences then they must be redirected to the firstogin page
-		if(!empty(Auth::user()->project_preferences_id)){
+		if(!empty(Auth::user()->project_preferences_id) && !empty(Auth::user()->projectTeam)){
 			//$project = array(); //TODO: replace this with a query to database to get project name and all associted student names and emails
 			$project_team_id = Auth::user()->projectTeam->project_id;
 			$project_members = ProjectTeam::where('project_id', $project_team_id)->get()->lists('user_id');
