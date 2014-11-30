@@ -66,7 +66,9 @@ Route::get('home', function() {
 				$projectteams[$project->project_id]['members'][$user->username] = $user->lastname.'-'.$user->firstname;
 				$emails.=$user->username.',';
 			} else {
-				$projectteams[$project->project_id] = ['projname' => $project->project->title, 'members' => [$user->username => $user->lastname.'-'.$user->firstname]];
+				
+				$projectteams[$project->project_id] = ['projname' => $project->project->title, 'members' => [$user->username => $user->lastname.'-'.$user->firstname], 'projmin'=> $project->project->min, 'projmax'=>$project->project->max];
+
 				$emails.=$user->username.',';
 			}
 		}

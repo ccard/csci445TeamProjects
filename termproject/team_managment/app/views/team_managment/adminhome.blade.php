@@ -39,6 +39,10 @@
 						</h2>
 					</div>
 					<div class="content" style="margin-left: 10px">
+						<strong>{{ 'minimum students: ' . $value['projmin'] . ', maximum: ' . $value['projmax'] }} </strong>			
+					</div>		
+
+					<div class="content" style="margin-left: 10px">
 						@foreach($value['members'] as $key => $value)
 							<div class="teammembers">
 								{{ $value }} - <a class="btn btn-link" href="mailto:{{$key}}?Subject=Csci%20307"> {{ $key }} </a>
