@@ -129,8 +129,8 @@ Wrapup: confirm all students are assigned to a team.
 	
 
 	//Then redirect to home
-	return Redirect::to('home')->with('message', $outcome .' , processed '. $uCount . ' students. '
-	 . ($uCount - count($free)) . ' are assigned teams. ' . count($free) . ' student(s) need assistance.');
+	return Redirect::to('home')->with('message', $outcome .' , processed '. ($uCount - 1) . ' students. '
+	 . (($uCount - count($free))-1) . ' are assigned teams. ' . count($free) . ' student(s) need assistance.');
 
 	}
 

@@ -22,7 +22,9 @@
 		@elseif (count($projectteams) == 0)
 			<div class="alert alert-warning">
 				{{ Form::open(array('action'=>'GenerateTeams@generateTeams')) }}
-				Please generate tables by clicking {{ Form::submit('here',array("class"=>"btn-link")) }}
+				Number of students: {{(User::count())-1}}<br>
+				Number of students that have submitted preferences: {{(projectpreferences::count())-1}}<br>
+				If enough students have have posted preferences, please generate tables by clicking {{ Form::submit('here',array("class"=>"btn-link")) }}
 				{{ Form::close() }}
 			</div>
 		@else
