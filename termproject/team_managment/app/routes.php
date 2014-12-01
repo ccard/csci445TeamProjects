@@ -19,11 +19,17 @@ Route::get('/', function()
 	if(Auth::check()){
 		return Redirect::to('home');
 	} else {
+		if(Session::has('message')){
+			return Redirect::to('login')->with('message',Session::get('message'));	
+		}
 		return Redirect::to('login');
 	}
 });
 
 Route::get('login', function(){
+	if(Session::has('message')){
+		return View::make('team_managment.login')->with('message');	
+	}
 	return View::make('team_managment.login');
 });
 
@@ -116,7 +122,7 @@ Route::get('home/firstlogin', function(){
 });
 
 Route::get('home/accountinfo', function(){
-	 if (Auth::user()->isAdmin()) {
+	if (Auth::user()->isAdmin()) {
 		$user = Auth::user();
 		if(Session::has('message')){
 			return View::make('team_managment.adminaccount')->with('user',$user)
@@ -267,8 +273,7 @@ Route::get('users/{id}/info', function($id){
  */
 Route::post('home/firstlogin/{id}', function($id){
 
-
-	//rules
+	//Validation rules
 	$rules = array(
 		'majortext'=>'Required|Min:3',
 		'minortext'=>'Required|Min:3',
@@ -279,13 +284,18 @@ Route::post('home/firstlogin/{id}', function($id){
 		'third_project_id'=>'different:second_project_id',
 		'third_project_id'=>'different:first_project_id'
 		);
+	//Validation error messages
 	$messages = array(
 		'first_project_id.different'=>'The first project choice must be different from the second and third choice',
 		'second_project_id.different'=>'The second project choice must be different from the first and third choice',
 		'third_project_id.different'=>'The third project choice must be different from the second and first choice'
 		);
+	//Creates new validator
 	$validator= Validator::make(Input::all(),$rules,$messages);
+
+	//Checks to see if input is valid
 	if ($validator->passes()) {
+
 		$pref_partners = Input::get('pref_partner');
 		$nopref_partners = Input::get('no_pref_partner');
 		$is_valid = true;
@@ -295,10 +305,12 @@ Route::post('home/firstlogin/{id}', function($id){
 				break;
 			}
 		}
+
+		//Checks to see if the user selected users from both perfered list and avoid list
 		if($is_valid){
-			// query = update users set (majortext, minortext, experienceid, projprefid, pref_partor_proj, )
 			$user = Auth::user();
-			//$user->firstname = Input::
+
+			//Assigning project preferences
 			$project_preferences = new ProjectPreferences;
 			$project_preferences->user_id = $user->id;
 			$project_preferences->first_project_id = Input::get("first_project_id");
@@ -306,19 +318,14 @@ Route::post('home/firstlogin/{id}', function($id){
 			$project_preferences->third_project_id = Input::get("third_project_id");
 			$project_preferences->save();
 			$user->projectPreferences()->associate($project_preferences);
-			//dd($user->projectPreferences()->first_project());
-			$experiences = new Experiences;
-	
-			//dd(Input::get('expirencetext'));
-	
-	
-			//dd($user->experiences()->save($experiences));
-	
+			
+			//setting user fields
 			$user->majortext = Input::get('majortext');
 			$user->minortext = Input::get('minortext');
 			$user->experience = Input::get('expirencetext');
 			$user->pref_part_or_proj = Input::get('pref_part_or_proj');
 		
+			//Saving perefered partners
 			$pref_partners_array = array();
 			foreach($pref_partners as $pref_partner) {
 				$partner_preferences = new PartnerPreferences;
@@ -328,6 +335,7 @@ Route::post('home/firstlogin/{id}', function($id){
 				$partner_preferences->save();
 			}
 	
+			//Saving partners to avoid
 			$nopref_partners_array = array();
 			foreach($nopref_partners as $nopref_partner) {
 				$nopartner_preferences = new PartnerPreferences;
@@ -343,7 +351,7 @@ Route::post('home/firstlogin/{id}', function($id){
 				return Redirect::back()->withInput()->with('error', 'Your info has not been saved.');
 			}
 		} else {
-			return Redirect::back()->withInput()->with('error', 'You cannont perfer and avoid a person.');	
+			return Redirect::back()->withInput()->with('error', 'You cannont perfer and avoid the same person.');	
 		}
 	}else{
 		return Redirect::back()->withInput()->with('error', 'Some fields are filled incorrectly')->with('errors',$validator->messages());
@@ -377,17 +385,29 @@ Route::get('home/accountinfo/managestudents', function() {
 Route::get('home/accountinfo/manageunassignedstudents', function() {
  	if(Auth::user()->isAdmin()){
  		$userInfo = User::whereNull('project_team_id')->where('id','<>',Auth::user()->id)->orderBy('lastname')->get();
+ 		
+ 		$firstnames = $userInfo->lists('firstname');
+		$lastnames = $userInfo->lists('lastname');
+		$arr = array_map(function($str1, $str2){ return $str1." ".$str2;}, $firstnames, $lastnames);
+		$memberoptions = array_combine($userInfo->lists('id'), $arr);
+ 		$no_members = DB::select(DB::raw('select t1.id, t1.title,t1.company from projects t1 left join projectteams t2 on t2.project_id=t1.id where t2.project_id is null'));
  		if(Session::has('message')){
  			return View::make('team_managment.manageunassignedusers')
  			->with('userInfo', $userInfo)
+ 			->with('no_members',$no_members)
+ 			->with('memberoptions',$memberoptions)
  			->with('message',Session::get('message'));
  		} elseif(Session::has('error')){
  			return View::make('team_managment.manageunassignedusers')
  			->with('userInfo', $userInfo)
+ 			->with('no_members',$no_members)
+ 			->with('memberoptions',$memberoptions)
  			->with('error',Session::get('error'));
  		} else {
  			return View::make('team_managment.manageunassignedusers')
- 			->with('userInfo', $userInfo);
+ 			->with('userInfo', $userInfo)
+ 			->with('memberoptions',$memberoptions)
+ 			->with('no_members',$no_members);
  		}
  	}else{
  		return Redirect::back();
@@ -427,18 +447,14 @@ Route::post('home/generateteams','GenerateTeams@generateTeams'); //This will cal
 Route::put('home/accountinfo/passchange',function(){
 		$userid = Input::get('userid');
 		$user = User::where('id', intval($userid))->first();
-		//dd(intval($userid));
-		//dd($user);
-		//TODO: Check the old password against the stored password using hash check
-		// Verify that the new password and the confirmation of the new password match
-		// if the correct old password is passed in is correct then change the password
-		//  remember to hash the new password
 
 		$old_pass = Input::get('password');
 		$new_pass = Input::get('newpassword');
 		$confirm_pass = Input::get('confirmpassword');
 
+		//Validates old password
 		if(Hash::check($old_pass, $user->password)) {
+			//Checks the new password with the confirm password if not abort and send the error
 			if($new_pass != $confirm_pass) {
 				return Redirect::to('home/accountinfo')->with('error', "Couldn't change password, new and confirm are not the same.");
 			}
@@ -448,26 +464,20 @@ Route::put('home/accountinfo/passchange',function(){
 		} else {
 			return Redirect::to('home/accountinfo')->with('error', "Incorrect password");
 		}
-		// check that the old password is corrrect using Hash::check($old_pass,$user->password)
-		// if thats the case then check if the new_pass and confirm_pass are the same
-		// if the new and confirm password are correct hash the new password and save it to the user 
-
-		//return Redirect::to('home/accountinfo')->with('message','Success');
-}); //This will call the controller method changePassword in GenerateTeams controller
+});
 
 Route::put('home/accountinfo/namechange',function(){
 	$userid = Input::get('userid');
 	$user = User::where('id', $userid)->first();
 
-
+	//Updates the users name
 	$firstname = Input::get('firstname');
 	$lastname = Input::get('lastname');
 	$user->firstname = $firstname;
 	$user->lastname = $lastname;
 	$user->save();
-	//change the users first and last name
 	return Redirect::to('home/accountinfo')->with('message','Success');
-}); //This will call the controller method changeName in GenerateTeams controller
+});
 
 Route::put('home/accountinfo/degchange',function(){
 	$userid = Input::get('userid');
@@ -476,14 +486,14 @@ Route::put('home/accountinfo/degchange',function(){
 	$majortext = Input::get('majortext');
 	$minortext = Input::get('minortext');
 
+	//Updates major an minor
 	$user->majortext = $majortext;
 	$user->minortext = $minortext;
 
 	$user->save();
 
-	//Change the users major and minor
 	return Redirect::to('home/accountinfo')->with('message','Success');
-}); //This will call the controller method changeMajor in GenerateTeams controller
+});
 
 Route::put('home/accountinfo/expchange',function(){
 	$userid = Input::get('userid');
@@ -491,13 +501,13 @@ Route::put('home/accountinfo/expchange',function(){
 
 
 	$experience = Input::get('expirencetext');
-	//Change the user experience text field
 
+	//Updates the users experience
 	$user->experience = $experience;
 	$user->save();
 
 	return Redirect::to('home/accountinfo')->with('message','Success');
-}); //This will call the controller method changeExp in GenerateTeams controller
+});
 
 Route::put('home/accountinfo/projprefchange',function(){
 	$userid = Input::get('userid');
@@ -506,32 +516,33 @@ Route::put('home/accountinfo/projprefchange',function(){
 	$first_project_id = Input::get('first_project_id');
 	$second_project_id = Input::get('second_project_id');
 	$third_project_id = Input::get('first_project_id');
-	//get the project preferences object.
+	
+	//Updates the users perefered projects
 	$project_preferences = ProjectPreferences::where('user_id', intval($userid))->first();
 	$project_preferences->first_project_id = $first_project_id;
 	$project_preferences->second_project_id = $second_project_id;
 	$project_preferences->third_project_id = $third_project_id;
 	$project_preferences->save();
-	//Change the users first second and third project preferences
 
 	return Redirect::to('home/accountinfo')->with('message','Success');
-}); //This will call the controller method changeProjPref in GenerateTeams controller
+});
 
 Route::put('home/accountinfo/partprefchange',function(){
-		$userid = Input::get('userid');
-		$user = User::where('id', intval($userid))->first();
+	$userid = Input::get('userid');
+	$user = User::where('id', intval($userid))->first();
 
-		$pref_partners = Input::get('pref_partner');
-		$nopref_partners = Input::get('no_pref_partner');
-		$is_valid = true;
-		foreach ($pref_partners as $pref_check) {
-			if(in_array($pref_check, $nopref_partners)){
-				$is_valid = false;
-				break;
-			}
+	$pref_partners = Input::get('pref_partner');
+	$nopref_partners = Input::get('no_pref_partner');
+	$is_valid = true;
+	foreach ($pref_partners as $pref_check) {
+		if(in_array($pref_check, $nopref_partners)){
+			$is_valid = false;
+			break;
 		}
+	}
 
-		if($is_valid){
+	//Checks to see if the user selected the same person as the avoid person
+	if($is_valid){
 		$pref_p_new = array();
 		$pref_p_delete = array();
 		$nopref_p_new = array();
@@ -539,6 +550,7 @@ Route::put('home/accountinfo/partprefchange',function(){
 		$pref_now_avoid = array();
 		$avoid_now_pref = array();
 
+		//Checks to see if it needs to add a new prefrence or update and old preference
 		foreach($pref_partners as $pref_id){
 			$prefs = PartnerPreferences::where('user_id',$user->id)->where('partner_id',$pref_id)->first();
 			if(is_null($prefs)){
@@ -557,20 +569,22 @@ Route::put('home/accountinfo/partprefchange',function(){
 			}
 		}		
 
+		//Checks to see if it needs to delete a preference
 		$prefered = PartnerPreferences::where('user_id',$user->id)->where('avoid','0')->get();
 		$pref_p_delete = $prefered->filter(function($pref){
 			$pref_partners = Input::get('pref_partner');
-		$nopref_partners = Input::get('no_pref_partner');
+			$nopref_partners = Input::get('no_pref_partner');
 			return (!in_array($pref->partner_id, $pref_partners) && !in_array($pref->partner_id, $nopref_partners));
 		});
 
 		$noprefered = PartnerPreferences::where('user_id',$user->id)->where('avoid','1')->get();
 		$nopref_p_delete = $noprefered->filter(function($pref){
 			$pref_partners = Input::get('pref_partner');
-		$nopref_partners = Input::get('no_pref_partner');
+			$nopref_partners = Input::get('no_pref_partner');
 			return (!in_array($pref->partner_id, $pref_partners) && !in_array($pref->partner_id, $nopref_partners));
 		});
 
+		//Adds new preferences
 		foreach($pref_p_new as $new_pref){
 			$partpref = new PartnerPreferences;
 			$partpref->user_id = $user->id;
@@ -587,6 +601,7 @@ Route::put('home/accountinfo/partprefchange',function(){
 			$nopartpref->save();
 		}
 
+		//updates preferences
 		foreach ($pref_now_avoid as $nopref_id) {
 			$now_avoid = PartnerPreferences::where('id',$nopref_id)->first();
 			$now_avoid->avoid = true;
@@ -599,6 +614,7 @@ Route::put('home/accountinfo/partprefchange',function(){
 			$now_pref->save();
 		}
 
+		//deletes preferences
 		foreach ($pref_p_delete as $todelete) {
 			$todelete->delete();
 		}
@@ -607,8 +623,7 @@ Route::put('home/accountinfo/partprefchange',function(){
 			$todelete->delete();
 		}
 
-		//Save the new project preferences and delete the old if they removed any
-
+		//updates the users prefer project or partner preference
 		$user->pref_part_or_proj = Input::get('pref_part_or_proj');
 		$user->save();
 
@@ -616,7 +631,7 @@ Route::put('home/accountinfo/partprefchange',function(){
 	} else {
 		return Redirect::to('home/accountinfo')->with('error','You cant avoid and perfer a person');
 	}
-}); //This will call the controller method changePartPref in GenerateTeams controller
+});
 
 Route::put('home/accountinfo/adminaddteam',function(){
 	if(Auth::user()->isAdmin()) {
@@ -624,35 +639,34 @@ Route::put('home/accountinfo/adminaddteam',function(){
 
 		$userid = Input::get('user_id');
 
-		//add the new user to the projid in the projectteams
+		//adds new projectteam record
 		$projteam = new ProjectTeam;
 		$projteam->user_id = $userid;
 		$projteam->project_id = $projid;
 		$projteam->save();
 
 		$user = User::where('id', intval($userid))->first();
-
-		$user->project_team_id = $projteam->id;
+		//associates the project team with the user
+		$user->projectTeam()->associate($projteam);
 		$user->save();
 		return Redirect::to('home/editteam/'.$projid)->with('message','Success');
 	} else {
 		return Redirect::to('home/editteam/'.$projid)->with('error', 'Not admin');
 	}
-
-}); //This will call the controller method adminAddMember in GenerateTeams controller
+});
 
 Route::put('home/accountinfo/managestudents/resetpass',function(){
 	if(Auth::user()->isAdmin()){
 		$userid = Input::get('userid');
 		$user = User::where('id', intval($userid))->first();
-				//reset the the password to the hash of the users cwid
+		//reset the the password to the hash of the users cwid
 		$user->password = Hash::make($user->cwid);
 		$user->save();
 		return Redirect::back()->with('message','Password reset');
 	} else {
 		return Redirect::back()->with('error','Your not authorized');
 	}
-}); //This will call the controller method resetPassword in GenerateTeams controller
+});
 
 Route::post('home/accountinfo/managestudents/newstudent', function(){
 	if(Auth::user()->isAdmin()){
@@ -661,6 +675,7 @@ Route::post('home/accountinfo/managestudents/newstudent', function(){
 		$username = Input::get('username');
 		$cwid = Input::get('cwid');
 
+		//Creates a new user
 		$user = new User();
 
 		$user->firstname = $firstname;
@@ -677,7 +692,7 @@ Route::post('home/accountinfo/managestudents/newstudent', function(){
 	} else {
 		return Redirect::back();
 	}
-}); //This will call the controller method newStudent in GenerateTeams controller
+});
 
 Route::delete('home/accountinfo/managestudents/deleteuser',function(){
 	if(Auth::user()->isAdmin()) {
@@ -691,71 +706,69 @@ Route::delete('home/accountinfo/managestudents/deleteuser',function(){
 		//and also the partner preferences
 		PartnerPreferences::where('user_id', $userid)->delete();
 		PartnerPreferences::where('partner_id', $userid)->delete();
-		//if Auth::user() is the admin then delete &user from the database tables
 		//ProjectTeams ParnterPreferences ProjectPreferences Users etc..
 		return Redirect::back()->with('message','User deleted');
 	} else {
 		return Redirect::back()->with('error', 'Not admin');
 	}
-}); //This will call the controller method deleteUser in GenerateTeams controller
+});
 
 Route::post('home/accountinfo/manageprojects/newproject', function(){
 	if(Auth::user()->isAdmin()) {
-			$title = Input::get('title');
-			$company = Input::get('company');
-			$min = Input::get('min');
-			$max = Input::get('max');
+		$title = Input::get('title');
+		$company = Input::get('company');
+		$min = Input::get('min');
+		$max = Input::get('max');
 
-			$project = new Project();
+		//Creates a new project
+		$project = new Project();
 
-			$project->title = $title;
-			$project->company = $company;
-			$project->min = $min;
-			$project->max = $max;
-			
-			if($project->save()){
-				return Redirect::back()->with('message','The new project was added');
-			} else {
-				return Redirect::back()->with('message','Failed to save project');
-			}
+		$project->title = $title;
+		$project->company = $company;
+		$project->min = $min;
+		$project->max = $max;
+		
+		if($project->save()){
+			return Redirect::back()->with('message','The new project was added');
 		} else {
-			return Redirect::back()->with('error', 'Not admin');
+			return Redirect::back()->with('message','Failed to save project');
 		}
-}); //This will call the controller method addProject in GenerateTeams controller
+	} else {
+		return Redirect::back()->with('error', 'Not admin');
+	}
+});
 
 Route::delete('home/accountinfo/manageprojects/deleteproj', function(){
 	if(Auth::user()->isAdmin()) {
-			$projid = Input::get('projid');
-			//delete the project from the database
+		$projid = Input::get('projid');
+		//delete the project from the database
 
-			Project::find(intval($projid))->delete();
-			//User::where('project_preferences_id', )
+		Project::find(intval($projid))->delete();
 
-
-			//when we delete teh project team, we don't null the user project_team_id.
-			//so, we loop through the users.
-			$team_ids = ProjectTeam::where('project_id', intval($projid))->lists('id');
-			foreach($team_ids as $team_id) {
-				User::where('project_team_id', $team_id)->update(['project_team_id' => NULL]);
-			}
-
-			ProjectTeam::where('project_id', intval($projid))->delete();
-
-			ProjectPreferences::where('first_project_id', intval($projid))->update(array('first_project_id' => NULL));
-			ProjectPreferences::where('second_project_id', intval($projid))->update(array('second_project_id' => NULL));
-			ProjectPreferences::where('third_project_id', intval($projid))->update(array('third_project_id' => NULL));
-
-
-			return Redirect::back()->with('message','The project was deleted');
-		} else {
-			return Redirect::back()->with('error', 'Not admin');
+		//when we delete teh project team, we don't null the user project_team_id.
+		//so, we loop through the users.
+		$team_ids = ProjectTeam::where('project_id', intval($projid))->lists('id');
+		
+		foreach($team_ids as $team_id) {
+			User::where('project_team_id', $team_id)->update(['project_team_id' => NULL]);
 		}
-}); //This will call the controller method deleteProject in GenerateTeams controller
+
+		ProjectTeam::where('project_id', intval($projid))->delete();
+
+		ProjectPreferences::where('first_project_id', intval($projid))->update(array('first_project_id' => NULL));
+		ProjectPreferences::where('second_project_id', intval($projid))->update(array('second_project_id' => NULL));
+		ProjectPreferences::where('third_project_id', intval($projid))->update(array('third_project_id' => NULL));
+
+		return Redirect::back()->with('message','The project was deleted');
+	} else {
+		return Redirect::back()->with('error', 'Not admin');
+	}
+});
 
 
 Route::delete('home/editteam/{projid}', function($projid){
 	if(Auth::user()->isAdmin()){
-		$userid = Input::get('userid'); //retrives the user id to dis associate with projid
+		$userid = Input::get('userid');
 		//get the user id, and the project id, and find the project team.
 		$team_ids = ProjectTeam::where('user_id', intval($userid))->where('project_id', $projid)->lists('id');
 		foreach($team_ids as $team_id) {
@@ -763,7 +776,7 @@ Route::delete('home/editteam/{projid}', function($projid){
 		}
 
 		ProjectTeam::where('user_id', intval($userid))->where('project_id', $projid)->delete();
-		return Redirect::to('home/editteam/'.$projid)->with('message','User has now be removed from the team! '); 
+		return Redirect::to('home/editteam/'.$projid)->with('message','User removed! '); 
 	} else {
 		return Redirect::back()->with('error', 'Not admin');
 	}
@@ -772,14 +785,15 @@ Route::delete('home/editteam/{projid}', function($projid){
 
 View::composer('team_managment.firsttimelogin', function($view){
 
-	//$projectoptions = 
 	$projects = Project::all();
 	$project_options = array_combine($projects->lists('id'), $projects->lists('title'));
 	//$projectoptions = array_combine([1,2], ['test1','test2']);//formate (project_id list,title list)
 	$users = User::where('id', '<>', Auth::user()->id)->where('is_admin', '<>', 1)->get();
+	
 	$firstnames = $users->lists('firstname');
 	$lastnames = $users->lists('lastname');
 	$arr = array_map(function($str1, $str2){ return $str1." ".$str2;}, $firstnames, $lastnames);
+	
 	$partner_options = array_combine($users->lists('id'), $arr);
 
 	$view->with('partneroptions',$partner_options)->with('projoptions',$project_options);

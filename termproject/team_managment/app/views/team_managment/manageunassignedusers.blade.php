@@ -49,6 +49,43 @@
 			@endforeach
 		@endif
 	</div>
+	<div class="content" style="margin-left: 10px">
+		@if(count($no_members) == 0)
+			<div class="alert alert-warning">
+				There are no teams with out members!
+			</div>
+		@else
+			<div class="page-header">
+				<h2> Projects with no users</h2>
+			</div>
+			@foreach($no_members as $project)
+				<div class="page-header">
+					<h3>
+						{{ $project->title }}
+					</h3>
+				</div>
+				<div class="content" style="margin-left: 10px">
+					<div class="content">
+						Company&nbsp;-&nbsp;{{$project->company}}
+					</div>
+					@if(count($userInfo) != 0)
+						<div class="form-horizontal">
+						<div class="form-group">
+							{{ Form::open(array('method'=>'put','url'=>"home/accountinfo/adminaddteam")) }}
+							{{ Form::hidden('projid',$project->id) }}
+							{{ Form::label('Assign Member',null,array("class"=>"col-sm-3 control-label")) }}
+							<div class="col-sm-6">
+								{{ Form::select('user_id', $memberoptions,null,array("class"=>"form-control",'autocomplete'=>"off")) }}
+							</div>
+							{{ Form::submit('+Add', array("class"=>"btn btn-link"))}}
+							{{ Form::close() }}
+						</div>
+					</div>
+					@endif
+				</div>
+			@endforeach
+		@endif
+	</div>
 @stop
 
 @section('nonauthcontent')

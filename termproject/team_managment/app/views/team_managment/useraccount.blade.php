@@ -3,7 +3,7 @@
 	@if(empty($method))
 	Your account
 	@else
-	User info
+	User information
 	@endif
 @stop
 @section('backButton')
@@ -22,7 +22,7 @@
 		<div class="content" style="margin-left: 10px">
 			<div class="form-horizontal">
 				<div class="page-header">
-					<h2>Personal info</h2>
+					<h2>Personal Inforamtion</h2>
 				</div>
 				<div class="form-group">
 					{{ Form::label('Name',null,array("class"=>"control-label col-sm-2"))}}
@@ -136,7 +136,7 @@
 		<div class="content" style="margin-left: 10px">
 			<div class="form-horizontal">
 				<div class="page-header">
-					<h2>Personal info</h2>
+					<h2>Personal Information</h2>
 				</div>
 				<div class="form-group">
 					{{ Form::label('Name',null,array("class"=>"control-label col-sm-2"))}}
