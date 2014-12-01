@@ -75,21 +75,24 @@ Route::get('home', function() {
 
 		return View::make('team_managment.adminhome')->with('users',$users)->with('projects',$projects)->with('projectteams', $projectteams)->with('emails',$emails)->with('unassignedusers', $unassigned_user_count);
 	} else {
-		//dd(Auth::user()->project_preferences_id);
+		//dd(is_null(Auth::user()->projectTeam));
 		//If the user has no project preferences then they must be redirected to the firstogin page
-		if(!empty(Auth::user()->project_preferences_id) && !empty(Auth::user()->projectTeam)){
+		if(!is_null(Auth::user()->project_preferences_id)){
 			//$project = array(); //TODO: replace this with a query to database to get project name and all associted student names and emails
-			$project_team_id = Auth::user()->projectTeam->project_id;
-			$project_members = ProjectTeam::where('project_id', $project_team_id)->get()->lists('user_id');
-			$project_name = Auth::user()->projectTeam->project->title;
-			//in the form of array('projname'=>"name", 'members'=>array('email'=>"name"))
-			$project = [
-				'projname' => $project_name,
-				'members' => array(),
-			];
-			foreach($project_members as $member) {
-				$user = User::where('id',$member)->first();
-				$project['members'][$user->username] = $user->lastname.'-'.$user->firstname;
+			$project = array();
+			if(!is_null(Auth::user()->projectTeam)){
+				$project_team_id = Auth::user()->projectTeam->project_id;
+				$project_members = ProjectTeam::where('project_id', $project_team_id)->get()->lists('user_id');
+				$project_name = Auth::user()->projectTeam->project->title;
+				//in the form of array('projname'=>"name", 'members'=>array('email'=>"name"))
+				$project = [
+					'projname' => $project_name,
+					'members' => array(),
+				];
+				foreach($project_members as $member) {
+					$user = User::where('id',$member)->first();
+					$project['members'][$user->username] = $user->lastname.'-'.$user->firstname;
+				}
 			}
 
 			return View::make('team_managment.userhome')->with('user',Auth::user())->with('project',$project);
@@ -175,13 +178,16 @@ Route::get('home/editteam/{projid}', function($projid) {
 		];
 		foreach($rawteam as $teammember) {
 			$user = $teammember->user()->first();
+			if(is_null($user)){
+				dd($projectteam);
+			}
 			$projectteam['users'][$user->id] = [
 				'name' => $user->lastname.'-'.$user->firstname,
 				'email' => $user->username
 			];
 		}
 
-		$nonassignedusers = User::whereNull('project_team_id')->get();
+		$nonassignedusers = User::whereNull('project_team_id')->where('is_admin','<>','1')->get();
 		$firstnames = $nonassignedusers->lists('firstname');
 		$lastnames = $nonassignedusers->lists('lastname');
 		$arr = array_map(function($str1, $str2){ return $str1." ".$str2;}, $firstnames, $lastnames);
@@ -476,14 +482,16 @@ Route::put('home/accountinfo/adminaddteam',function(){
 
 	$userid = Input::get('user_id');
 
-
+	$user = User::where('id',$userid)->first();
 	//add the new user to the projid in the projectteams
 	$projteam = new ProjectTeam;
 	$projteam->user_id = $userid;
 	$projteam->project_id = $projid;
 	$projteam->save();
+	$user->projectTeam()->associate($projteam);
+	$user->save();
 
-	return Redirect::to('home/editteam/'.$projid)->with('message','Success '.$projid);
+	return Redirect::to('home/editteam/'.$projid)->with('message','The new team member has been added');
 }); //This will call the controller method adminAddMember in GenerateTeams controller
 
 Route::put('home/accountinfo/managestudents/resetpass',function(){
@@ -608,7 +616,7 @@ Route::delete('home/editteam/{projid}', function($projid){
 		}
 
 		ProjectTeam::where('user_id', intval($userid))->where('project_id', $projid)->delete();
-		return Redirect::to('home/editteam/'.$projid)->with('message','Remove has no be removed from team! '.$userid); 
+		return Redirect::to('home/editteam/'.$projid)->with('message','User has now be removed from the team! '); 
 	} else {
 		return Redirect::back()->with('error', 'Not admin');
 	}
