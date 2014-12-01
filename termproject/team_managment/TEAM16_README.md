@@ -37,3 +37,15 @@ Term Project csci445
   - then login as the admin and on the home page click the here button for generate teams
   - it will generate the teams and then show them on home page
   - login to a students account and see if their assigned team shows up
+
+  ------
+#Week 4#
+##if running from luna ##
+&nbsp;&nbsp;This section will discribe how to run our program and the necessary commands and file requirements.
+ - go to [luna.mines.edu/team16/team_managment/public](luna.mines.edu/team16/team_managment/public)
+ - to login as admin username:admin@admin.com pass:admin
+ - to login as user username:dvader@mines.edu pass:223344 or any one from students.csv where the email is the username and the password is the cwid
+ - Generating teams
+  - then login as the admin and on the home page click the here button for generate teams
+  - it will generate the teams and then show them on home page
+  - login to a students account and see if their assigned team shows up
