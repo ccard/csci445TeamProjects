@@ -472,18 +472,26 @@ Route::put('home/accountinfo/partprefchange',function(){
 }); //This will call the controller method changePartPref in GenerateTeams controller
 
 Route::put('home/accountinfo/adminaddteam',function(){
-	$projid = Input::get('projid');
+	if(Auth::user()->isAdmin()) {
+		$projid = Input::get('projid');
 
-	$userid = Input::get('user_id');
+		$userid = Input::get('user_id');
 
 
-	//add the new user to the projid in the projectteams
-	$projteam = new ProjectTeam;
-	$projteam->user_id = $userid;
-	$projteam->project_id = $projid;
-	$projteam->save();
+		//add the new user to the projid in the projectteams
+		$projteam = new ProjectTeam;
+		$projteam->user_id = $userid;
+		$projteam->project_id = $projid;
+		$projteam->save();
 
-	return Redirect::to('home/editteam/'.$projid)->with('message','Success '.$projid);
+		$user = User::where('id', intval($userid))->first();
+
+		$user->project_team_id = $projteam->id;
+		$user->save();
+		return Redirect::to('home/editteam/'.$projid)->with('message','Success');
+	} else {
+		return Redirect::to('home/editteam/'.$projid)->with('error', 'Not admin');
+	}
 }); //This will call the controller method adminAddMember in GenerateTeams controller
 
 Route::put('home/accountinfo/managestudents/resetpass',function(){
