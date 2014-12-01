@@ -49,7 +49,7 @@
 						</div>
 				</div>
 				<div class="form-group">
-					{{ Form::label('Experience-',null,array("class"=>"control-label col-sm-2"))}}
+					{{ Form::label('Experience',null,array("class"=>"control-label col-sm-2"))}}
 					<div class="col-sm-10">
 						{{ Form::textarea('experiencetext',$user->experience,array("class"=>"form-control",'readonly'=>"readonly",'cols'=>"100",'rows'=>"2",0=>'disabled')) }}
 					</div>
@@ -165,15 +165,15 @@
 						</div>
 				</div>
 				<div class="form-group">
-					{{ Form::label('Experience-',null,array("class"=>"control-label col-sm-2"))}}
+					{{ Form::label('Experience',null,array("class"=>"control-label col-sm-2"))}}
 					<div class="col-sm-10">
 						{{ Form::textarea('experiencetext',$user->experience,array("class"=>"form-control",'readonly'=>"readonly",'cols'=>"100",'rows'=>"2",0=>'disabled')) }}
 						 <a id="editexperience" class="btn-link pull-right" data-toggle="modal" data-target="#modalexpchange">Edit Expirence</a>
 					</div>
 				</div>
 				<div class="form-group" style="margin-left: 10px">
-					<label class="control-label col-sm-2">Password -
-					<a id="editpass" class="btn-link" data-toggle="modal" data-target="#modalpasschange">Change</a></label>
+					<label class="control-label col-sm-2">Password </label>
+					<a id="editpass" class="btn-link form-control" data-toggle="modal" data-target="#modalpasschange">Change</a>
 				</div>
 			</div>
 		</div>
