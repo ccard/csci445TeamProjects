@@ -118,9 +118,21 @@ Route::get('home/firstlogin', function(){
 Route::get('home/accountinfo', function(){
 	 if (Auth::user()->isAdmin()) {
 		$user = Auth::user();
-	 	return View::make('team_managment.adminaccount')->with('user',$user)
-	 	->nest('passchange','modal_views.passmodal',array('user'=>$user))
-		->nest('namechange','modal_views.namechangmodal',array('user'=>$user));
+		if(Session::has('message')){
+			return View::make('team_managment.adminaccount')->with('user',$user)
+				->with('message',Session::get('message'))
+	 			->nest('passchange','modal_views.passmodal',array('user'=>$user))
+				->nest('namechange','modal_views.namechangmodal',array('user'=>$user));
+		} elseif(Session::has('error')){
+			return View::make('team_managment.adminaccount')->with('user',$user)
+				->with('error',Session::get('error'))
+	 			->nest('passchange','modal_views.passmodal',array('user'=>$user))
+				->nest('namechange','modal_views.namechangmodal',array('user'=>$user));
+		} else {
+	 		return View::make('team_managment.adminaccount')->with('user',$user)
+	 			->nest('passchange','modal_views.passmodal',array('user'=>$user))
+				->nest('namechange','modal_views.namechangmodal',array('user'=>$user));
+		}
 	} else {
 
 		$user = Auth::user();
@@ -150,8 +162,21 @@ Route::get('home/accountinfo', function(){
 				->nest('expchange','modal_views.expchangemodal',array('user'=>$user))
 				->nest('projprefchange','modal_views.projprefchangemodal',array('user'=>$user,'projoptions'=>$projectoptions))
 				->nest('partprefchange','modal_views.partprefchangemodal',array('user'=>$user,'partneroptions'=>$partneroptions, 'perferedchoice'=>$perferedchoice, 'avoidchoice'=>$avoidchoice));
-		} else {
+		} elseif(Session::has('error')){
 			return View::make('team_managment.useraccount')->with('user',$user)
+				->with('partneroptions',$partneroptions)
+				->with('perferedchoice',$perferedchoice)
+				->with('avoidchoice',$avoidchoice)
+				->with('projoptions',$projectoptions)
+				->with('error',Session::get('error'))
+				->nest('passchange','modal_views.passmodal',array('user'=>$user))
+				->nest('namechange','modal_views.namechangmodal',array('user'=>$user))
+				->nest('degchange','modal_views.degchangemodal',array('user'=>$user))
+				->nest('expchange','modal_views.expchangemodal',array('user'=>$user))
+				->nest('projprefchange','modal_views.projprefchangemodal',array('user'=>$user,'projoptions'=>$projectoptions))
+				->nest('partprefchange','modal_views.partprefchangemodal',array('user'=>$user,'partneroptions'=>$partneroptions, 'perferedchoice'=>$perferedchoice, 'avoidchoice'=>$avoidchoice));
+		} else {
+				return View::make('team_managment.useraccount')->with('user',$user)
 				->with('partneroptions',$partneroptions)
 				->with('projoptions',$projectoptions)
 				->with('perferedchoice',$perferedchoice)
@@ -195,6 +220,9 @@ Route::get('home/editteam/{projid}', function($projid) {
 		//$nonassignusers = array_combine([1],['user']); //combined list of users where the first part is the user id and the second part is the user name
 		if(Session::has('message')){
 			return View::make('team_managment.editteam')->with('projectteam',$projectteam)->with('message',Session::get('message'))
+			->nest('adminaddteam','modal_views.adminaddteammodal',array('projid'=>$projid,'nonassignusers'=>$nonassignedusers));
+		} elseif (Session::has('error')) {
+			return View::make('team_managment.editteam')->with('projectteam',$projectteam)->with('error',Session::get('error'))
 			->nest('adminaddteam','modal_views.adminaddteammodal',array('projid'=>$projid,'nonassignusers'=>$nonassignedusers));
 		} else {
 			return View::make('team_managment.editteam')->with('projectteam',$projectteam)
@@ -258,65 +286,82 @@ Route::post('home/firstlogin/{id}', function($id){
 		);
 	$validator= Validator::make(Input::all(),$rules,$messages);
 	if ($validator->passes()) {
-	// query = update users set (majortext, minortext, experienceid, projprefid, pref_partor_proj, )
-		$user = Auth::user();
-		//$user->firstname = Input::
-		$project_preferences = new ProjectPreferences;
-		$project_preferences->user_id = $user->id;
-		$project_preferences->first_project_id = Input::get("first_project_id");
-		$project_preferences->second_project_id = Input::get("second_project_id");
-		$project_preferences->third_project_id = Input::get("third_project_id");
-		$project_preferences->save();
-		$user->projectPreferences()->associate($project_preferences);
-		//dd($user->projectPreferences()->first_project());
-		$experiences = new Experiences;
-	
-		//dd(Input::get('expirencetext'));
-	
-	
-		//dd($user->experiences()->save($experiences));
-	
-		$user->majortext = Input::get('majortext');
-		$user->minortext = Input::get('minortext');
-		$user->experience = Input::get('expirencetext');
-		$user->pref_part_or_proj = Input::get('pref_part_or_proj');
 		$pref_partners = Input::get('pref_partner');
-		$pref_partners_array = array();
-		foreach($pref_partners as $pref_partner) {
-			$partner_preferences = new PartnerPreferences;
-			$partner_preferences->user_id = $user->id;
-			$partner_preferences->partner_id = $pref_partner;
-			$partner_preferences->avoid = false;
-			$partner_preferences->save();
-		}
-	
 		$nopref_partners = Input::get('no_pref_partner');
-		$nopref_partners_array = array();
-		foreach($nopref_partners as $nopref_partner) {
-			$nopartner_preferences = new PartnerPreferences;
-			$nopartner_preferences->user_id = $user->id;
-			$nopartner_preferences->partner_id = $nopref_partner;
-			$nopartner_preferences->avoid = true;
-			$nopartner_preferences->save();
+		$is_valid = true;
+		foreach ($pref_partners as $pref_check) {
+			if(in_array($pref_check, $nopref_partners)){
+				$is_valid = false;
+				break;
+			}
 		}
+		if($is_valid){
+			// query = update users set (majortext, minortext, experienceid, projprefid, pref_partor_proj, )
+			$user = Auth::user();
+			//$user->firstname = Input::
+			$project_preferences = new ProjectPreferences;
+			$project_preferences->user_id = $user->id;
+			$project_preferences->first_project_id = Input::get("first_project_id");
+			$project_preferences->second_project_id = Input::get("second_project_id");
+			$project_preferences->third_project_id = Input::get("third_project_id");
+			$project_preferences->save();
+			$user->projectPreferences()->associate($project_preferences);
+			//dd($user->projectPreferences()->first_project());
+			$experiences = new Experiences;
 	
-		if($user->save()) { 
-			return Redirect::to('home')->with('message', 'Your info has been saved.');
+			//dd(Input::get('expirencetext'));
+	
+	
+			//dd($user->experiences()->save($experiences));
+	
+			$user->majortext = Input::get('majortext');
+			$user->minortext = Input::get('minortext');
+			$user->experience = Input::get('expirencetext');
+			$user->pref_part_or_proj = Input::get('pref_part_or_proj');
+		
+			$pref_partners_array = array();
+			foreach($pref_partners as $pref_partner) {
+				$partner_preferences = new PartnerPreferences;
+				$partner_preferences->user_id = $user->id;
+				$partner_preferences->partner_id = $pref_partner;
+				$partner_preferences->avoid = false;
+				$partner_preferences->save();
+			}
+	
+			$nopref_partners_array = array();
+			foreach($nopref_partners as $nopref_partner) {
+				$nopartner_preferences = new PartnerPreferences;
+				$nopartner_preferences->user_id = $user->id;
+				$nopartner_preferences->partner_id = $nopref_partner;
+				$nopartner_preferences->avoid = true;
+				$nopartner_preferences->save();
+			}
+	
+			if($user->save()) { 
+				return Redirect::to('home')->with('message', 'Your info has been saved.');
+			} else {
+				return Redirect::back()->withInput()->with('error', 'Your info has not been saved.');
+			}
 		} else {
-			return Redirect::back()->withInput()->with('error', 'Your info has not been saved.');
+			return Redirect::back()->withInput()->with('error', 'You cannont perfer and avoid a person.');	
 		}
 	}else{
 		return Redirect::back()->withInput()->with('error', 'Some fields are filled incorrectly')->with('errors',$validator->messages());
 	}
 });
 
- Route::get('home/accountinfo/managestudents', function() {
+Route::get('home/accountinfo/managestudents', function() {
  	if(Auth::user()->isAdmin()){
  		$userInfo = User::where('id','<>',Auth::user()->id)->orderBy('lastname')->get();
  		if(Session::has('message')){
  			return View::make('team_managment.managestudents')
  			->with('userInfo', $userInfo)
  			->with('message',Session::get('message'))
+ 			->nest('addstudent','modal_views.addstudentmodal');
+ 		} elseif(Session::has('error')){
+ 			return View::make('team_managment.managestudents')
+ 			->with('userInfo', $userInfo)
+ 			->with('error',Session::get('error'))
  			->nest('addstudent','modal_views.addstudentmodal');
  		} else {
  			return View::make('team_managment.managestudents')
@@ -329,13 +374,17 @@ Route::post('home/firstlogin/{id}', function($id){
  
  });
 
- Route::get('home/accountinfo/manageunassignedstudents', function() {
+Route::get('home/accountinfo/manageunassignedstudents', function() {
  	if(Auth::user()->isAdmin()){
  		$userInfo = User::whereNull('project_team_id')->where('id','<>',Auth::user()->id)->orderBy('lastname')->get();
  		if(Session::has('message')){
  			return View::make('team_managment.manageunassignedusers')
  			->with('userInfo', $userInfo)
  			->with('message',Session::get('message'));
+ 		} elseif(Session::has('error')){
+ 			return View::make('team_managment.manageunassignedusers')
+ 			->with('userInfo', $userInfo)
+ 			->with('error',Session::get('error'));
  		} else {
  			return View::make('team_managment.manageunassignedusers')
  			->with('userInfo', $userInfo);
@@ -346,13 +395,18 @@ Route::post('home/firstlogin/{id}', function($id){
  
  });
 
- Route::get('home/accountinfo/manageprojects', function() {
+Route::get('home/accountinfo/manageprojects', function() {
  	if(Auth::user()->isAdmin()){
  		$projectInfo = Project::orderBy('title')->get();
  		if(Session::has('message')){
  			return View::make('team_managment.manageprojects')
  			->with('projectInfo', $projectInfo)
  			->with('message', Session::get('message'))
+ 			->nest('addproject','modal_views.newprojmodal');
+ 		} elseif(Session::has('error')){
+ 			return View::make('team_managment.manageprojects')
+ 			->with('projectInfo', $projectInfo)
+ 			->with('error', Session::get('error'))
  			->nest('addproject','modal_views.newprojmodal');
  		} else {
  			return View::make('team_managment.manageprojects')
@@ -469,12 +523,99 @@ Route::put('home/accountinfo/partprefchange',function(){
 
 		$pref_partners = Input::get('pref_partner');
 		$nopref_partners = Input::get('no_pref_partner');
+		$is_valid = true;
+		foreach ($pref_partners as $pref_check) {
+			if(in_array($pref_check, $nopref_partners)){
+				$is_valid = false;
+				break;
+			}
+		}
+
+		if($is_valid){
+		$pref_p_new = array();
+		$pref_p_delete = array();
+		$nopref_p_new = array();
+		$nopref_p_delete = array();
+		$pref_now_avoid = array();
+		$avoid_now_pref = array();
+
+		foreach($pref_partners as $pref_id){
+			$prefs = PartnerPreferences::where('user_id',$user->id)->where('partner_id',$pref_id)->first();
+			if(is_null($prefs)){
+				$pref_p_new[] = $pref_id;
+			} elseif ($prefs->avoid == 1) {
+				$avoid_now_pref[] = $prefs->id;
+			}
+		}
+
+		foreach($nopref_partners as $nopref_id){
+			$noprefs = PartnerPreferences::where('user_id',$user->id)->where('partner_id',$nopref_id)->first();
+			if(is_null($noprefs)){
+				$nopref_p_new[] = $nopref_id;
+			} elseif ($noprefs->avoid == 0) {
+				$pref_now_avoid[] = $noprefs->id;
+			}
+		}		
+
+		$prefered = PartnerPreferences::where('user_id',$user->id)->where('avoid','0')->get();
+		$pref_p_delete = $prefered->filter(function($pref){
+			$pref_partners = Input::get('pref_partner');
+		$nopref_partners = Input::get('no_pref_partner');
+			return (!in_array($pref->partner_id, $pref_partners) && !in_array($pref->partner_id, $nopref_partners));
+		});
+
+		$noprefered = PartnerPreferences::where('user_id',$user->id)->where('avoid','1')->get();
+		$nopref_p_delete = $noprefered->filter(function($pref){
+			$pref_partners = Input::get('pref_partner');
+		$nopref_partners = Input::get('no_pref_partner');
+			return (!in_array($pref->partner_id, $pref_partners) && !in_array($pref->partner_id, $nopref_partners));
+		});
+
+		foreach($pref_p_new as $new_pref){
+			$partpref = new PartnerPreferences;
+			$partpref->user_id = $user->id;
+			$partpref->partner_id = $new_pref;
+			$partpref->avoid = false;
+			$partpref->save();
+		}
+
+		foreach($nopref_p_new as $new_nopref){
+			$nopartpref = new PartnerPreferences;
+			$nopartpref->user_id = $user->id;
+			$nopartpref->partner_id = $new_nopref;
+			$nopartpref->avoid = true;
+			$nopartpref->save();
+		}
+
+		foreach ($pref_now_avoid as $nopref_id) {
+			$now_avoid = PartnerPreferences::where('id',$nopref_id)->first();
+			$now_avoid->avoid = true;
+			$now_avoid->save();
+		}
+
+		foreach ($avoid_now_pref as $pref_id) {
+			$now_pref = PartnerPreferences::where('id',$pref_id)->first();
+			$now_pref->avoid = false;
+			$now_pref->save();
+		}
+
+		foreach ($pref_p_delete as $todelete) {
+			$todelete->delete();
+		}
+
+		foreach ($nopref_p_delete as $todelete) {
+			$todelete->delete();
+		}
 
 		//Save the new project preferences and delete the old if they removed any
 
 		$user->pref_part_or_proj = Input::get('pref_part_or_proj');
+		$user->save();
 
 		return Redirect::to('home/accountinfo')->with('message','Success');
+	} else {
+		return Redirect::to('home/accountinfo')->with('error','You cant avoid and perfer a person');
+	}
 }); //This will call the controller method changePartPref in GenerateTeams controller
 
 Route::put('home/accountinfo/adminaddteam',function(){

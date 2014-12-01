@@ -7,7 +7,7 @@
 				Edit Partner Preferences
 				</h3>
 			</div>
-			@if(empty($user) || empty($partneroptions) || empty($perferedchoice) || empty($avoidchoice))
+			@if(is_null($user) || is_null($partneroptions) || is_null($perferedchoice) || is_null($avoidchoice))
 				<div class="modal-body" style="max-height: 75%">
 					<div class="alert alert-warning">
 						User information failed to load!
