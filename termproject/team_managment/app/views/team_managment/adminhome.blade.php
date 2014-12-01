@@ -35,7 +35,7 @@
 				<div class="content" style="margin-left: 10px">
 					<div class="page-header">
 						<h2>
-						 {{ $value['projname'] }} <a class="btn btn-link pull-right" href="{{ url('home/editteam/'.$key) }}">edit</a>
+						 {{ $value['projname'] }} <a class="btn btn-link pull-right" href="{{ url('home/editteam/'.$key) }}">Edit</a>
 						</h2>
 					</div>
 					<div class="content" style="margin-left: 10px">

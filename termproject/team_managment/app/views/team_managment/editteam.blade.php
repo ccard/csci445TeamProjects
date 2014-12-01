@@ -10,14 +10,14 @@
 
 @section('content')
 <!-- projectteam is of the form ('projid'=>id, 'projname'=>'projname', 'users'=>array('userid'=>array('name'=>'name', 'email'=>'email')...)) -->
-	<div class="content" style="margin-left: 10px; width: 50%">
+	<div class="content" style="margin-left: 10px">
 		<div class="page-header">
 			<h2>{{ $projectteam['projname'] }} <a id="editname" class="btn btn-link pull-right" data-toggle="modal" data-target="#modaladminadduser">+Add member</a></h2>
 		</div>
-		<div class='content' style="margin-left: 10px">
+		<div class="content" style="margin-left: 10px">
 			@foreach($projectteam['users'] as $key => $value)
 				<div class="form-group">
-					<a class=" btn-link" href="{{ url('users/'.$key.'/info') }}" style="color: #000">{{ $value['name'] }}</a> - {{ $value['email']}}
+					<a class=" btn-link" href="{{ url('users/'.$key.'/info') }}" style="color: #000">{{ $value['name'] }}</a> - <a class="btn-link" href="mailto:{{ $value['email']}}?Subject=CSCI%20307" target="_top">{{ $value['email']}}</a>
 						<div class="pull-right">
 							{{ Form::open(array('method'=>'delete', 'url'=>'home/editteam/'.$projectteam['projid']))}}
 							{{ Form::hidden('userid',$key) }}
