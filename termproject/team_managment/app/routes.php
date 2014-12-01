@@ -439,7 +439,6 @@ Route::get('home/accountinfo/manageprojects', function() {
  
  });
 
-
 //Route::put('home/generateteams','GenerateTeams@generateTeams'); //This will call the controller method generateTemas in GenerateTeams controller
 Route::post('home/generateteams','GenerateTeams@generateTeams'); //This will call the controller method generateTemas in GenerateTeams controller
 
@@ -460,7 +459,7 @@ Route::put('home/accountinfo/passchange',function(){
 			}
 			$user->password = Hash::make($new_pass);
 			$user->save();
-			return Redirect::to('home/accountinfo')->with('message', 'Success');
+			return Redirect::to('home/accountinfo')->with('message', 'Password changed!');
 		} else {
 			return Redirect::to('home/accountinfo')->with('error', "Incorrect password");
 		}
@@ -476,7 +475,7 @@ Route::put('home/accountinfo/namechange',function(){
 	$user->firstname = $firstname;
 	$user->lastname = $lastname;
 	$user->save();
-	return Redirect::to('home/accountinfo')->with('message','Success');
+	return Redirect::to('home/accountinfo')->with('message','Name changed!');
 });
 
 Route::put('home/accountinfo/degchange',function(){
@@ -492,7 +491,7 @@ Route::put('home/accountinfo/degchange',function(){
 
 	$user->save();
 
-	return Redirect::to('home/accountinfo')->with('message','Success');
+	return Redirect::to('home/accountinfo')->with('message','Master/Minor changed!');
 });
 
 Route::put('home/accountinfo/expchange',function(){
@@ -506,7 +505,7 @@ Route::put('home/accountinfo/expchange',function(){
 	$user->experience = $experience;
 	$user->save();
 
-	return Redirect::to('home/accountinfo')->with('message','Success');
+	return Redirect::to('home/accountinfo')->with('message','Experience changed!');
 });
 
 Route::put('home/accountinfo/projprefchange',function(){
@@ -524,7 +523,7 @@ Route::put('home/accountinfo/projprefchange',function(){
 	$project_preferences->third_project_id = $third_project_id;
 	$project_preferences->save();
 
-	return Redirect::to('home/accountinfo')->with('message','Success');
+	return Redirect::to('home/accountinfo')->with('message','Project preferences changed');
 });
 
 Route::put('home/accountinfo/partprefchange',function(){
@@ -627,7 +626,7 @@ Route::put('home/accountinfo/partprefchange',function(){
 		$user->pref_part_or_proj = Input::get('pref_part_or_proj');
 		$user->save();
 
-		return Redirect::to('home/accountinfo')->with('message','Success');
+		return Redirect::to('home/accountinfo')->with('message','Partner preferences changed!');
 	} else {
 		return Redirect::to('home/accountinfo')->with('error','You cant avoid and perfer a person');
 	}
@@ -649,7 +648,7 @@ Route::put('home/accountinfo/adminaddteam',function(){
 		//associates the project team with the user
 		$user->projectTeam()->associate($projteam);
 		$user->save();
-		return Redirect::to('home/editteam/'.$projid)->with('message','Success');
+		return Redirect::to('home/editteam/'.$projid)->with('message','User add to project!');
 	} else {
 		return Redirect::to('home/editteam/'.$projid)->with('error', 'Not admin');
 	}
@@ -765,7 +764,6 @@ Route::delete('home/accountinfo/manageprojects/deleteproj', function(){
 	}
 });
 
-
 Route::delete('home/editteam/{projid}', function($projid){
 	if(Auth::user()->isAdmin()){
 		$userid = Input::get('userid');
@@ -781,7 +779,6 @@ Route::delete('home/editteam/{projid}', function($projid){
 		return Redirect::back()->with('error', 'Not admin');
 	}
 });
-
 
 View::composer('team_managment.firsttimelogin', function($view){
 
