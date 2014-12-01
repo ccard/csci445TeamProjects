@@ -22,7 +22,7 @@
 		<div class="content" style="margin-left: 10px">
 			<div class="form-horizontal">
 				<div class="page-header">
-					<h2>Personal Inforamtion</h2>
+					<h2>Personal Information</h2>
 				</div>
 				<div class="form-group">
 					{{ Form::label('Name',null,array("class"=>"control-label col-sm-2"))}}
@@ -168,7 +168,7 @@
 					{{ Form::label('Experience',null,array("class"=>"control-label col-sm-2"))}}
 					<div class="col-sm-10">
 						{{ Form::textarea('experiencetext',$user->experience,array("class"=>"form-control",'readonly'=>"readonly",'cols'=>"100",'rows'=>"2",0=>'disabled')) }}
-						 <a id="editexperience" class="btn-link pull-right" data-toggle="modal" data-target="#modalexpchange">Edit Expirence</a>
+						 <a id="editexperience" class="btn-link pull-right" data-toggle="modal" data-target="#modalexpchange">Edit Experience</a>
 					</div>
 				</div>
 				<div class="form-group" style="margin-left: 10px">

@@ -56,7 +56,7 @@
 			</div>
 		@else
 			<div class="page-header">
-				<h2> Projects with no users</h2>
+				<h2> Projects with no members</h2>
 			</div>
 			@foreach($no_members as $project)
 				<div class="page-header">

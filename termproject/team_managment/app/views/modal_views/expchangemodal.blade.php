@@ -4,7 +4,7 @@
 			<div class="modal-header">
 				<h3>
 				<button type="button" id="modal-cancel" class="btn btn-link close pull-right" data-dismiss="modal" aria-hidden="true">Cancel</button>
-				Edit Expirence
+				Edit Experience
 				</h3>
 			</div>
 			@if(empty($user))
@@ -19,7 +19,7 @@
 					{{ Form::model($user,array('method'=>'put', 'url'=>'home/accountinfo/expchange'))}}
 					{{ Form::hidden('userid',$user->id) }}
 					<div class="form-group">
-						{{ Form::label('Related Expirence/Goals',null,array("class"=>"control-label col-sm-3")) }}
+						{{ Form::label('Related Experience/Goals',null,array("class"=>"control-label col-sm-3")) }}
 						<div class="col-sm-7">
 							{{ Form::textarea('expirencetext', $user->experience ,array("class"=>"form-control","rows"=>"3")) }}
 						</div>

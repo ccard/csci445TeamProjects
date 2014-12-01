@@ -59,6 +59,8 @@ Route::get('home', function() {
 		$unassigned_user_count=count(User::whereNull('project_team_id')->get());
 		$unassigned_user_emails=User::whereNull('project_team_id')->get()->lists('username');
 
+		$no_members = count(DB::select(DB::raw('select t1.id, t1.title,t1.company from projects t1 left join projectteams t2 on t2.project_id=t1.id where t2.project_id is null')));
+
 		foreach($unassigned_user_emails as $email) {
 			$emails.=$email.',';
 		}
@@ -79,7 +81,12 @@ Route::get('home', function() {
 			}
 		}
 
-		return View::make('team_managment.adminhome')->with('users',$users)->with('projects',$projects)->with('projectteams', $projectteams)->with('emails',$emails)->with('unassignedusers', $unassigned_user_count);
+		return View::make('team_managment.adminhome')->with('users',$users)
+			->with('projects',$projects)
+			->with('projectteams', $projectteams)
+			->with('emails',$emails)
+			->with('unassignedusers', $unassigned_user_count)
+			->with('no_members',$no_members);
 	} else {
 		//dd(is_null(Auth::user()->projectTeam));
 		//If the user has no project preferences then they must be redirected to the firstogin page
@@ -202,37 +209,39 @@ Route::get('home/editteam/{projid}', function($projid) {
 
 	//	$projectteam = array('projid'=>'1','projname'=>'test', 'users'=>array('12'=>array('name'=>'chris','email'=>'test@aol.com'))); //of the form ('projid'=>id, 'projname'=>'projname', 'users'=>array('userid'=>array('name'=>'name', 'email'=>'email')...))
 		$rawteam = ProjectTeam::where('project_id', $projid)->get();
-		$projectteam = [
-			'projid' => $projid,
-			'projname' => $rawteam->first()->project->title,
-			'users' => array()
-		];
-		foreach($rawteam as $teammember) {
-			$user = $teammember->user()->first();
-			if(is_null($user)){
-				dd($projectteam);
-			}
-			$projectteam['users'][$user->id] = [
-				'name' => $user->lastname.'-'.$user->firstname,
-				'email' => $user->username
+		if(count($rawteam) > 0){
+			$projectteam = [
+				'projid' => $projid,
+				'projname' => $rawteam->first()->project->title,
+				'users' => array()
 			];
-		}
+			foreach($rawteam as $teammember) {
+				$user = $teammember->user()->first();
+				
+				$projectteam['users'][$user->id] = [
+					'name' => $user->lastname.'-'.$user->firstname,
+					'email' => $user->username
+				];
+			}
 
-		$nonassignedusers = User::whereNull('project_team_id')->where('is_admin','<>','1')->get();
-		$firstnames = $nonassignedusers->lists('firstname');
-		$lastnames = $nonassignedusers->lists('lastname');
-		$arr = array_map(function($str1, $str2){ return $str1." ".$str2;}, $firstnames, $lastnames);
-		$nonassignedusers = array_combine($nonassignedusers->lists('id'), $arr);
-		//$nonassignusers = array_combine([1],['user']); //combined list of users where the first part is the user id and the second part is the user name
-		if(Session::has('message')){
-			return View::make('team_managment.editteam')->with('projectteam',$projectteam)->with('message',Session::get('message'))
-			->nest('adminaddteam','modal_views.adminaddteammodal',array('projid'=>$projid,'nonassignusers'=>$nonassignedusers));
-		} elseif (Session::has('error')) {
-			return View::make('team_managment.editteam')->with('projectteam',$projectteam)->with('error',Session::get('error'))
-			->nest('adminaddteam','modal_views.adminaddteammodal',array('projid'=>$projid,'nonassignusers'=>$nonassignedusers));
+			$nonassignedusers = User::whereNull('project_team_id')->where('is_admin','<>','1')->get();
+			$firstnames = $nonassignedusers->lists('firstname');
+			$lastnames = $nonassignedusers->lists('lastname');
+			$arr = array_map(function($str1, $str2){ return $str1." ".$str2;}, $firstnames, $lastnames);
+			$nonassignedusers = array_combine($nonassignedusers->lists('id'), $arr);
+			//$nonassignusers = array_combine([1],['user']); //combined list of users where the first part is the user id and the second part is the user name
+			if(Session::has('message')){
+				return View::make('team_managment.editteam')->with('projectteam',$projectteam)->with('message',Session::get('message'))
+				->nest('adminaddteam','modal_views.adminaddteammodal',array('projid'=>$projid,'nonassignusers'=>$nonassignedusers));
+			} elseif (Session::has('error')) {
+				return View::make('team_managment.editteam')->with('projectteam',$projectteam)->with('error',Session::get('error'))
+				->nest('adminaddteam','modal_views.adminaddteammodal',array('projid'=>$projid,'nonassignusers'=>$nonassignedusers));
+			} else {
+				return View::make('team_managment.editteam')->with('projectteam',$projectteam)
+				->nest('adminaddteam','modal_views.adminaddteammodal',array('projid'=>$projid,'nonassignusers'=>$nonassignedusers));
+			}
 		} else {
-			return View::make('team_managment.editteam')->with('projectteam',$projectteam)
-			->nest('adminaddteam','modal_views.adminaddteammodal',array('projid'=>$projid,'nonassignusers'=>$nonassignedusers));
+			return Redirect::to('home');
 		}
 	} else {
 		return Redirect::back();
@@ -514,7 +523,7 @@ Route::put('home/accountinfo/projprefchange',function(){
 
 	$first_project_id = Input::get('first_project_id');
 	$second_project_id = Input::get('second_project_id');
-	$third_project_id = Input::get('first_project_id');
+	$third_project_id = Input::get('third_project_id');
 	
 	//Updates the users perefered projects
 	$project_preferences = ProjectPreferences::where('user_id', intval($userid))->first();

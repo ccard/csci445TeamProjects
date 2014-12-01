@@ -1,7 +1,7 @@
 @extends('masterform')
 
 @section('subHeading')
-	Admin account info
+	Admin account
 @stop
 
 @section('backButton')
@@ -49,7 +49,7 @@
 			</div>
 			<div class="content" style="margin-left: 10px">
 				<a class="btn btn-link" href="{{ url('home/accountinfo/managestudents') }}">Manage Students</a>
-				<a class="btn btn-link" href="{{ url('home/accountinfo/manageunassignedstudents') }}">Manage Unassigned Students</a>
+				<a class="btn btn-link" href="{{ url('home/accountinfo/manageunassignedstudents') }}">Manage Unassigned Students/Projects</a>
 				<a class="btn btn-link" href="{{ url('home/accountinfo/manageprojects') }}">Manage Projects</a>
 			</div>
 		</div>
