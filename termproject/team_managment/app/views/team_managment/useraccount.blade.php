@@ -62,7 +62,7 @@
 					<h2>Project Preferences</h2>
 				</div>
 				<div class="form-group">
-					<label type="label" class="control-label col-sm-2">1<sup>st</sup> prefence</label>  
+					<label type="label" class="control-label col-sm-2">1<sup>st</sup> preference</label>  
 					<div class="col-sm-10">
 						@if(is_null($user->projectPreferences))
 							<div class="alert alert-warning">
@@ -74,7 +74,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label type="label" class="control-label col-sm-2">2<sup>nd</sup> prefence</label>  
+					<label type="label" class="control-label col-sm-2">2<sup>nd</sup> preference</label>  
 						<div class="col-sm-10">
 							@if(is_null($user->projectPreferences))
 								<div class="alert alert-warning">
@@ -183,13 +183,13 @@
 					<h2>Project Preferences <a id="editexperience" class="btn btn-link pull-right" data-toggle="modal" data-target="#modalprojchange">Edit Project Prefereces</a></h2>
 				</div>
 				<div class="form-group">
-					<label type="label" class="control-label col-sm-2">1<sup>st</sup> prefence</label>  
+					<label type="label" class="control-label col-sm-2">1<sup>st</sup> preference</label>  
 					<div class="col-sm-10">
 							{{ Form::select('first_project_id', $projoptions,$user->projectPreferences->first_project_id,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required','autocomplete'=>"off",1=>'disabled')) }}
 					</div>
 				</div>
 				<div class="form-group">
-					<label type="label" class="control-label col-sm-2">2<sup>nd</sup> prefence</label>  
+					<label type="label" class="control-label col-sm-2">2<sup>nd</sup> preference</label>  
 						<div class="col-sm-10">
 							{{ Form::select('second_project_id', $projoptions,$user->projectPreferences->second_project_id,array("class"=>"form-control tip", 'data-toggle'=>'tooltip', 'data-placement'=>'bottom','title'=>'This is a required field',0=>'required','autocomplete'=>"off",1=>'disabled')) }}
 						</div>
