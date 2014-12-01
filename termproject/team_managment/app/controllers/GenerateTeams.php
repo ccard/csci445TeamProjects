@@ -111,7 +111,7 @@ Wrapup: confirm all students are assigned to a team.
 	// if nothing is found... umm... add to unassigned group.			
 		if($keepLooking)  
 		{
-			$assignedTo = $unassigned;
+			
 			$keepLooking = false;	
 		}
 
@@ -124,13 +124,13 @@ Wrapup: confirm all students are assigned to a team.
 	}
 
 	//see how many students are in the unassigned group
-	$free = DB::table('projectteams')->where('project_id',$unassigned)->get();
+	//$free = DB::table('projectteams')->where('project_id',$unassigned)->get();
 
 	
 
 	//Then redirect to home
 	return Redirect::to('home')->with('message', $outcome .' , processed '. ($uCount - 1) . ' students. '
-	 . (($uCount - count($free))-1) . ' are assigned teams. ' . count($free) . ' student(s) need assistance.');
+	 . (($uCount - count($free))-1) . ' are assigned teams. ');
 
 	}
 
