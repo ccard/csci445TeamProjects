@@ -1,4 +1,4 @@
-<?php
+	<?php
 	 use Illuminate\Support\MessageBag;
 /*
 |--------------------------------------------------------------------------
@@ -441,12 +441,17 @@ Route::put('home/accountinfo/expchange',function(){
 
 Route::put('home/accountinfo/projprefchange',function(){
 	$userid = Input::get('userid');
-	$user = NULL;
+	$user = User::where('id', intval($userid))->first();
 
 	$first_project_id = Input::get('first_project_id');
 	$second_project_id = Input::get('second_project_id');
 	$third_project_id = Input::get('first_project_id');
-
+	//get the project preferences object.
+	$project_preferences = ProjectPreferences::where('user_id', intval($userid))->first();
+	$project_preferences->first_project_id = $first_project_id;
+	$project_preferences->second_project_id = $second_project_id;
+	$project_preferences->third_project_id = $third_project_id;
+	$project_preferences->save();
 	//Change the users first second and third project preferences
 
 	return Redirect::to('home/accountinfo')->with('message','Success');
@@ -454,7 +459,7 @@ Route::put('home/accountinfo/projprefchange',function(){
 
 Route::put('home/accountinfo/partprefchange',function(){
 		$userid = Input::get('userid');
-		$user = NULL;
+		$user = User::where('id', intval($userid))->first();
 
 		$pref_partners = Input::get('pref_partner');
 		$nopref_partners = Input::get('no_pref_partner');
@@ -482,43 +487,41 @@ Route::put('home/accountinfo/adminaddteam',function(){
 }); //This will call the controller method adminAddMember in GenerateTeams controller
 
 Route::put('home/accountinfo/managestudents/resetpass',function(){
-		if(Auth::user()->isAdmin()){
-			$userid = Input::get('userid');
-
-			$user = User::where('id', intval($userid))->first();
-					//reset the the password to the hash of the users cwid
-			$user->password = Hash::make($user->cwid);
-			$user->save();
-
-			return Redirect::back()->with('message','Password reset');
-		} else {
-			return Redirect::back()->with('error','Your not authorized');
-		}
+	if(Auth::user()->isAdmin()){
+		$userid = Input::get('userid');
+		$user = User::where('id', intval($userid))->first();
+				//reset the the password to the hash of the users cwid
+		$user->password = Hash::make($user->cwid);
+		$user->save();
+		return Redirect::back()->with('message','Password reset');
+	} else {
+		return Redirect::back()->with('error','Your not authorized');
+	}
 }); //This will call the controller method resetPassword in GenerateTeams controller
 
 Route::post('home/accountinfo/managestudents/newstudent', function(){
 	if(Auth::user()->isAdmin()){
-			$firstname = Input::get('firstname');
-			$lastname = Input::get('lastname');
-			$username = Input::get('username');
-			$cwid = Input::get('cwid');
+		$firstname = Input::get('firstname');
+		$lastname = Input::get('lastname');
+		$username = Input::get('username');
+		$cwid = Input::get('cwid');
 
-			$user = new User();
+		$user = new User();
 
-			$user->firstname = $firstname;
-			$user->lastname = $lastname;
-			$user->username = $username;
-			$user->cwid = $cwid;
-			$user->password = Hash::make($cwid);
+		$user->firstname = $firstname;
+		$user->lastname = $lastname;
+		$user->username = $username;
+		$user->cwid = $cwid;
+		$user->password = Hash::make($cwid);
 
-			if($user->save()){
-				return Redirect::back()->with('message', 'New student saved');
-			} else {
-				return Redirect::back()->with('message', 'Failed to save new student');
-			}
+		if($user->save()){
+			return Redirect::back()->with('message', 'New student saved');
 		} else {
-			return Redirect::back();
+			return Redirect::back()->with('message', 'Failed to save new student');
 		}
+	} else {
+		return Redirect::back();
+	}
 }); //This will call the controller method newStudent in GenerateTeams controller
 
 Route::delete('home/accountinfo/managestudents/deleteuser',function(){
@@ -572,6 +575,15 @@ Route::delete('home/accountinfo/manageprojects/deleteproj', function(){
 
 			Project::find(intval($projid))->delete();
 			//User::where('project_preferences_id', )
+
+
+			//when we delete teh project team, we don't null the user project_team_id.
+			//so, we loop through the users.
+			$team_ids = ProjectTeam::where('project_id', intval($projid))->lists('id');
+			foreach($team_ids as $team_id) {
+				User::where('project_team_id', $team_id)->update(['project_team_id' => NULL]);
+			}
+
 			ProjectTeam::where('project_id', intval($projid))->delete();
 
 			ProjectPreferences::where('first_project_id', intval($projid))->update(array('first_project_id' => NULL));
@@ -590,7 +602,12 @@ Route::delete('home/editteam/{projid}', function($projid){
 	if(Auth::user()->isAdmin()){
 		$userid = Input::get('userid'); //retrives the user id to dis associate with projid
 		//get the user id, and the project id, and find the project team.
-		$projteam = ProjectTeam::where('user_id', intval($userid))->where('project_id', $projid)->delete();
+		$team_ids = ProjectTeam::where('user_id', intval($userid))->where('project_id', $projid)->lists('id');
+		foreach($team_ids as $team_id) {
+			User::where("project_team_id", $team_id)->update(['project_team_id' => NULL]);
+		}
+
+		ProjectTeam::where('user_id', intval($userid))->where('project_id', $projid)->delete();
 		return Redirect::to('home/editteam/'.$projid)->with('message','Remove has no be removed from team! '.$userid); 
 	} else {
 		return Redirect::back()->with('error', 'Not admin');
