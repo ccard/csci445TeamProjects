@@ -111,7 +111,7 @@ Wrapup: confirm all students are assigned to a team.
 	// if nothing is found... umm... add to unassigned group.			
 		if($keepLooking)  
 		{
-			
+			continue;
 			$keepLooking = false;	
 		}
 
@@ -130,7 +130,7 @@ Wrapup: confirm all students are assigned to a team.
 
 	//Then redirect to home
 	return Redirect::to('home')->with('message', $outcome .' , processed '. ($uCount - 1) . ' students. '
-	 . (($uCount - count($free))-1) . ' are assigned teams. ');
+	 . ($uCount-1) . ' are assigned teams. ');
 
 	}
 
